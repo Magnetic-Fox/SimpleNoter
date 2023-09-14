@@ -1,3 +1,16 @@
+# Other Watcom files
+*.mk1
+*.lk1
+*.map
+*.err
+*.sym
+
+# Yet another files
+*.aps
+
+# Compiled resources
+*.res
+
 # Prerequisites
 *.d
 
