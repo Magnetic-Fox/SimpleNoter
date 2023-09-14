@@ -1,3 +1,6 @@
+# Config files
+*.ini
+
 # Other Watcom files
 *.mk1
 *.lk1
