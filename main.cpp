@@ -45,6 +45,15 @@ void ShowInteger(long int integer)
     return;
 }
 
+std::string IntToStr(long int input)
+{
+    std::string temp;
+    char test[32];
+    ltoa(input,test,10);
+    temp=test;
+    return temp;
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     char path[256];
@@ -209,6 +218,18 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     for(long int x=0; x<noteCount; ++x)
                     {
                         SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_ADDSTRING, 0, (LPARAM)toCodePage(m_cp1250,(char*)notes[x].subject.c_str()).c_str());
+                    }
+                    break;
+                case ID_LISTBOX:
+                    switch(HIWORD(lParam))
+                    {
+                        case LBN_DBLCLK:
+                            break;
+                        case LBN_SELCHANGE:
+                            long int index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
+                            SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[index].id).c_str());
+                            SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[index].lastModified.c_str());
+                            break;
                     }
                     break;
             }
