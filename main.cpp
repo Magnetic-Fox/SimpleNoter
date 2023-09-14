@@ -7,6 +7,12 @@
 
 #include "resources.h"
 
+#include "cp1250.hpp"
+#include "wsprocs.hpp"
+#include "noterapi.hpp"
+#include "codepages.hpp"
+#include "inihandling.hpp"
+
 #define ID_BUTTON1  400
 #define ID_BUTTON2  401
 #define ID_BUTTON3  402
@@ -22,6 +28,12 @@
 #define ID_STATIC6  605
 
 HBRUSH g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
+char buffer[65536];
+CODEPAGE m_cp1250;
+NOTER_CONNECTION_SETTINGS connectionSettings;
+NOTER_CREDENTIALS credentials;
+NOTE_SUMMARY *notes=NULL;
+long int noteCount=0;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -35,6 +47,19 @@ void ShowInteger(long int integer)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+    char path[256];
+    GetModuleFileName(hInstance,path,256);
+    std::string iniFile=getDefaultIniFile(path);
+    connectionSettings=getConnectionSettings((char*)iniFile.c_str());
+    credentials=getCredentials((char*)iniFile.c_str());
+    prepareCodePage(m_cp1250,cp1250);
+
+    if(wsInit() == SOCKET_ERROR)
+    {
+        MessageBox(NULL,"Inicjalizacja WinSocka nie powiod³a siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
+        return 1;
+    }
+    
     LPSTR mainWindowClass = "SimpleNoterMain";
     LPSTR editWindowClass = "SimpleNoterEdit";
     
@@ -66,7 +91,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         return 1;
     }
 
-    hwnd = CreateWindow(mainWindowClass, "Simple Noter v0.4", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 608, 440,
+    hwnd = CreateWindow(mainWindowClass, "Simple Noter v0.4", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
                         NULL, NULL, hInstance, NULL);
     if(hwnd == NULL)
     {
@@ -174,6 +199,18 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case ID_ACC_TAB:
                     SetFocus(GetNextDlgTabItem(hwnd,GetFocus(),false));
                     break;
+                case ID_BUTTON1:
+                    if(noteCount>0)
+                    {
+                        freeNoteList(notes);
+                    }
+                    noteCount=noter_getNoteList(connectionSettings,credentials,buffer,notes);
+                    SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_RESETCONTENT, 0, 0);
+                    for(long int x=0; x<noteCount; ++x)
+                    {
+                        SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_ADDSTRING, 0, (LPARAM)toCodePage(m_cp1250,(char*)notes[x].subject.c_str()).c_str());
+                    }
+                    break;
             }
             break;
         case WM_SIZE:
@@ -196,6 +233,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             if(Ctl3dEnabled() && (!Ctl3dUnregister(GetWindowWord(hwnd,GWW_HINSTANCE))))
             {
                 MessageBox(0,"Wyrejestrowanie aplikacji z CTL3D nie powiod³o siê!","Ostrze¿enie",MB_ICONEXCLAMATION);
+            }
+            WSACleanup();
+            if(noteCount>0)
+            {
+                freeNoteList(notes);
             }
             DeleteObject(g_hBrush);
             PostQuitMessage(0);
