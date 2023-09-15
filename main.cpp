@@ -13,21 +13,47 @@
 #include "codepages.hpp"
 #include "inihandling.hpp"
 
-#define ID_BUTTON1  400
-#define ID_BUTTON2  401
-#define ID_BUTTON3  402
-#define ID_BUTTON4  403
+#define APPNAME             "Simple Noter v0.4"
 
-#define ID_LISTBOX  500
+#define ID_BUTTON1          400
+#define ID_BUTTON2          401
+#define ID_BUTTON3          402
+#define ID_BUTTON4          403
+#define ID_LISTBOX          500
+#define ID_STATIC1          600
+#define ID_STATIC2          601
+#define ID_STATIC3          602
+#define ID_STATIC4          603
+#define ID_STATIC5          604
+#define ID_STATIC6          605
 
-#define ID_STATIC1  600
-#define ID_STATIC2  601
-#define ID_STATIC3  602
-#define ID_STATIC4  603
-#define ID_STATIC5  604
-#define ID_STATIC6  605
+#define ID_EDIT_BUTTON1     1400
+#define ID_EDIT_BUTTON2     1401
+#define ID_EDIT_BUTTON3     1402
+#define ID_EDIT_EDITBOX1    1500
+#define ID_EDIT_EDITBOX2    1501
+#define ID_EDIT_STATIC1     1600
+#define ID_EDIT_STATIC2     1601
+#define ID_EDIT_STATIC3     1602
+#define ID_EDIT_STATIC4     1603
+
+LPSTR editWindowClass = "SimpleNoterEdit";
+
+typedef struct editWindow
+{
+    HWND hwnd;
+    HWND hStatic, hStatic2, hStatic3, hStatic4;
+    HWND hEditBox, hEditBox2;
+    HWND hButton, hButton2, hButton3;
+    std::string windowTitle;
+    NOTE *note;
+} EDITWINDOW;
+
+typedef std::map<HWND,EDITWINDOW*> WINDOWMEMORY;
 
 HBRUSH g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
+WINDOWMEMORY winMem;
+
 char buffer[65536];
 CODEPAGE m_cp1250;
 NOTER_CONNECTION_SETTINGS connectionSettings;
@@ -36,6 +62,7 @@ NOTE_SUMMARY *notes=NULL;
 long int noteCount=0;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
 
 void ShowInteger(long int integer)
 {
@@ -54,6 +81,105 @@ std::string IntToStr(long int input)
     return temp;
 }
 
+HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
+{
+    EDITWINDOW *editWin = new EDITWINDOW;
+    HINSTANCE hInstance=(HINSTANCE)GetWindowWord(hwnd,GWW_HINSTANCE);
+    editWin->windowTitle = APPNAME;
+    if(note==NULL)
+    {
+        editWin->windowTitle = editWin->windowTitle +" [Nowa notatka]";
+    }
+    else
+    {
+        editWin->windowTitle = editWin->windowTitle+" ["+toCodePage(m_cp1250,(char*)note->subject.c_str())+"]";
+    }
+    
+    editWin->hwnd =CreateWindow(editWindowClass, editWin->windowTitle.c_str(), WS_OVERLAPPEDWINDOW,
+                                CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
+
+    if(editWin->hwnd==NULL)
+    {
+        delete editWin;
+        return NULL;
+    }
+    else
+    {
+        if(note==NULL)
+        {
+            editWin->note=new NOTE;
+            editWin->note->id=0;
+            editWin->note->subject="";
+            editWin->note->entry="";
+            editWin->note->dateAdded="";
+            editWin->note->lastModified="";
+            editWin->note->locked=false;
+            editWin->note->userAgent="";
+            editWin->note->lastUserAgent;
+        }
+        else
+        {
+            editWin->note=note;
+        }
+        
+        editWin->hStatic = CreateWindow("STATIC", "Tytu³:", WS_CHILD | WS_VISIBLE | SS_LEFT,
+                                        0, 0, 600, 16, editWin->hwnd, (HMENU)ID_EDIT_STATIC1, hInstance, NULL);
+
+        editWin->hEditBox= CreateWindow("EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL,
+                                        0, 16, 600, 24, editWin->hwnd, (HMENU)ID_EDIT_EDITBOX1, hInstance, NULL);
+
+        editWin->hStatic2= CreateWindow("STATIC", "Treœæ:", WS_CHILD | WS_VISIBLE | SS_LEFT,
+                                        0, 40, 600, 16, editWin->hwnd, (HMENU)ID_EDIT_STATIC2, hInstance, NULL);
+
+        editWin->hEditBox2=CreateWindow("EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP | ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN,
+                                        0, 56, 600, 300, editWin->hwnd, (HMENU)ID_EDIT_EDITBOX2, hInstance, NULL);
+
+        if(editWin->note->id==0)
+        {
+            editWin->hButton = CreateWindow("BUTTON", "Dodaj", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+                                            0, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON1, hInstance, NULL);
+        }
+        else
+        {
+            editWin->hButton = CreateWindow("BUTTON", "Aktualizuj", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+                                            0, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON1, hInstance, NULL);
+        }
+
+        editWin->hButton2 =CreateWindow("BUTTON", "W³aœciwoœci", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+                                        96, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON2, hInstance, NULL);
+
+        editWin->hButton3 =CreateWindow("BUTTON", "Zamknij", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+                                        192, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON3, hInstance, NULL);
+
+        editWin->hStatic3 =CreateWindow("STATIC", NULL, WS_CHILD | WS_VISIBLE | SS_GRAYRECT,
+                                        288, 356, 312, 21, editWin->hwnd, (HMENU)ID_EDIT_STATIC3, hInstance, NULL);
+
+        editWin->hStatic4= CreateWindow("STATIC", "Wszystko w porz¹dku", WS_CHILD | WS_VISIBLE | SS_LEFT,
+                                        0, 377, 600, 16, editWin->hwnd, (HMENU)ID_EDIT_STATIC4, hInstance, NULL);
+
+        if(editWin->note->id>0)
+        {
+            SetWindowText(editWin->hEditBox, toCodePage(m_cp1250,(char*)editWin->note->subject.c_str()).c_str());
+            SetWindowText(editWin->hEditBox2,toCodePage(m_cp1250,(char*)editWin->note->entry.c_str()).c_str());
+        }
+        
+        winMem[editWin->hwnd]=editWin;
+        
+        ShowWindow(editWin->hwnd,SW_SHOW);
+        UpdateWindow(editWin->hwnd);
+
+        return editWin->hwnd;
+    }
+}
+
+void deleteWindow(WINDOWMEMORY &winMem, HWND hwnd)
+{
+    delete winMem[hwnd]->note;
+    delete winMem[hwnd];
+    winMem.erase(hwnd);
+    return;
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     char path[256];
@@ -65,12 +191,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     if(wsInit() == SOCKET_ERROR)
     {
-        MessageBox(NULL,"Inicjalizacja WinSocka nie powiod³a siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
+        MessageBox(NULL,"Inicjalizacja sk³adnika WinSock nie powiod³a siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
         return 1;
     }
     
     LPSTR mainWindowClass = "SimpleNoterMain";
-    LPSTR editWindowClass = "SimpleNoterEdit";
     
     WNDCLASS wc = { 0 };
     WNDCLASS wc2= { 0 };
@@ -94,14 +219,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
     wc.lpszClassName = mainWindowClass;
 
+    wc2.style = 0;
+    wc2.lpfnWndProc = WndProc2;
+    wc2.cbClsExtra = 0;
+    wc2.cbWndExtra = 0;
+    wc2.hInstance = hInstance;
+    wc2.hIcon = LoadIcon(hInstance, /*MAKEINTRESOURCE(IDI_ICON2)*/IDI_APPLICATION);
+    wc2.hCursor = LoadCursor(NULL, IDC_ARROW);
+    wc2.hbrBackground = g_hBrush;
+    wc2.lpszMenuName = /*MAKEINTRESOURCE(IDR_MENU2)*/NULL;
+    wc2.lpszClassName = editWindowClass;
+
     if(!RegisterClass(&wc))
     {
         MessageBox(NULL,"Utworzenie klasy okna nie powiod³o siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
         return 1;
     }
 
-    hwnd = CreateWindow(mainWindowClass, "Simple Noter v0.4", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+    if(!RegisterClass(&wc2))
+    {
+        MessageBox(NULL,"Utworzenie klasy okna nie powiod³o siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
+        return 1;
+    }
+
+    hwnd = CreateWindow(mainWindowClass, APPNAME, WS_OVERLAPPEDWINDOW,
+                        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
                         NULL, NULL, hInstance, NULL);
+                        
     if(hwnd == NULL)
     {
         MessageBox(NULL,"Utworzenie okna nie powiod³o siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
@@ -115,29 +259,41 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         return 1;
     }
 
-    hButton = CreateWindow("BUTTON", "Pobierz", WS_CHILD | WS_VISIBLE | WS_TABSTOP, 0, 0, 80, 21,
-                           hwnd, (HMENU)ID_BUTTON1, hInstance, NULL);
+    hButton =  CreateWindow("BUTTON", "Pobierz", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+                            0, 0, 80, 21, hwnd, (HMENU)ID_BUTTON1, hInstance, NULL);
 
-    hButton2= CreateWindow("BUTTON", "Utwórz", WS_CHILD | WS_VISIBLE | WS_TABSTOP, 80, 0, 80, 21,
-                           hwnd, (HMENU)ID_BUTTON2, hInstance, NULL);
+    hButton2 = CreateWindow("BUTTON", "Utwórz", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+                            80, 0, 80, 21, hwnd, (HMENU)ID_BUTTON2, hInstance, NULL);
 
-    hButton3= CreateWindow("BUTTON", "Otwórz", WS_CHILD | WS_VISIBLE | WS_TABSTOP, 160, 0, 80, 21,
-                           hwnd, (HMENU)ID_BUTTON3, hInstance, NULL);
+    hButton3 = CreateWindow("BUTTON", "Otwórz", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+                            160, 0, 80, 21, hwnd, (HMENU)ID_BUTTON3, hInstance, NULL);
 
-    hButton4= CreateWindow("BUTTON", "Zakoñcz", WS_CHILD | WS_VISIBLE | WS_TABSTOP, 240, 0, 80, 21,
-                           hwnd, (HMENU)ID_BUTTON4, hInstance, NULL);
+    hButton4 = CreateWindow("BUTTON", "Zakoñcz", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+                            240, 0, 80, 21, hwnd, (HMENU)ID_BUTTON4, hInstance, NULL);
 
-    hStatic6= CreateWindow("STATIC", NULL, WS_CHILD | WS_VISIBLE | SS_GRAYRECT, 320, 0, 280, 21, hwnd, (HMENU)ID_STATIC6, hInstance, NULL);
+    hStatic6 = CreateWindow("STATIC", NULL, WS_CHILD | WS_VISIBLE | SS_GRAYRECT,
+                            320, 0, 280, 21, hwnd, (HMENU)ID_STATIC6, hInstance, NULL);
 
-    hListBox= CreateWindow("LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP | ES_AUTOVSCROLL | LBS_NOTIFY | LBS_NOINTEGRALHEIGHT,
-                           0, 21, 600, 300, hwnd, (HMENU)ID_LISTBOX, hInstance, NULL);
+    hListBox = CreateWindow("LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER |
+                            WS_VSCROLL | WS_TABSTOP | ES_AUTOVSCROLL | LBS_NOTIFY | LBS_NOINTEGRALHEIGHT,
+                            0, 21, 600, 300, hwnd, (HMENU)ID_LISTBOX, hInstance, NULL);
+                           
     SetWindowPos(hListBox,NULL,0,21,600,300,SWP_NOZORDER);
 
-    hStatic = CreateWindow("STATIC", "ID:", WS_CHILD | WS_VISIBLE | SS_LEFT, 8, 329, 128, 16, hwnd, (HMENU)ID_STATIC1, hInstance, NULL);
-    hStatic2= CreateWindow("STATIC", "Ostatnie zmiany:", WS_CHILD | WS_VISIBLE | SS_LEFT, 8, 346, 128, 16, hwnd, (HMENU)ID_STATIC2, hInstance, NULL);
-    hStatic3= CreateWindow("STATIC", "-- nie wybrano --", WS_CHILD | WS_VISIBLE | SS_LEFT, 137, 329, 454, 16, hwnd, (HMENU)ID_STATIC3, hInstance, NULL);
-    hStatic4= CreateWindow("STATIC", "-- nie wybrano --", WS_CHILD | WS_VISIBLE | SS_LEFT, 137, 346, 454, 16, hwnd, (HMENU)ID_STATIC4, hInstance, NULL);
-    hStatic5= CreateWindow("STATIC", "Wszystko w porz¹dku", WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 370, 600, 16, hwnd, (HMENU)ID_STATIC5, hInstance, NULL);
+    hStatic  = CreateWindow("STATIC", "ID:", WS_CHILD | WS_VISIBLE | SS_LEFT,
+                            8, 329, 128, 16, hwnd, (HMENU)ID_STATIC1, hInstance, NULL);
+                           
+    hStatic2 = CreateWindow("STATIC", "Ostatnie zmiany:", WS_CHILD | WS_VISIBLE | SS_LEFT,
+                            8, 346, 128, 16, hwnd, (HMENU)ID_STATIC2, hInstance, NULL);
+                           
+    hStatic3 = CreateWindow("STATIC", "-- nie wybrano --", WS_CHILD | WS_VISIBLE | SS_LEFT,
+                            137, 329, 454, 16, hwnd, (HMENU)ID_STATIC3, hInstance, NULL);
+                           
+    hStatic4 = CreateWindow("STATIC", "-- nie wybrano --", WS_CHILD | WS_VISIBLE | SS_LEFT,
+                            137, 346, 454, 16, hwnd, (HMENU)ID_STATIC4, hInstance, NULL);
+                           
+    hStatic5 = CreateWindow("STATIC", "Wszystko w porz¹dku", WS_CHILD | WS_VISIBLE | SS_LEFT,
+                            0, 370, 600, 16, hwnd, (HMENU)ID_STATIC5, hInstance, NULL);
     
     if(Ctl3dRegister(hInstance) && Ctl3dEnabled())
     {
@@ -220,10 +376,26 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_ADDSTRING, 0, (LPARAM)toCodePage(m_cp1250,(char*)notes[x].subject.c_str()).c_str());
                     }
                     break;
+                case ID_BUTTON2:
+                    createEditWindow(hwnd,winMem,NULL);
+                    break;
+                case ID_BUTTON3:
+                    long int index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
+                    if(index>=0)
+                    {
+                        NOTE *note=new NOTE;
+                        noter_getNote(connectionSettings,credentials,notes[index].id,buffer,*note);
+                        createEditWindow(hwnd,winMem,note);
+                    }
+                    break;
+                case ID_BUTTON4:
+                    SendMessage(hwnd, WM_CLOSE, 0, 0);
+                    break;
                 case ID_LISTBOX:
                     switch(HIWORD(lParam))
                     {
                         case LBN_DBLCLK:
+                            SendMessage(hwnd, WM_COMMAND, ID_BUTTON3, 0);
                             break;
                         case LBN_SELCHANGE:
                             long int index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
@@ -237,6 +409,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         case WM_SIZE:
             unsigned long int width= LOWORD(lParam);
             unsigned long int height=HIWORD(lParam);
+
+            if(width<240)
+            {
+                width=240;
+            }
+            if(height<240)
+            {
+                height=240;
+            }
 
             SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,width,height-86,SWP_NOZORDER | SWP_NOMOVE);
             SetWindowPos(GetDlgItem(hwnd,ID_STATIC6),NULL,0,0,width-320,21,SWP_NOZORDER | SWP_NOMOVE);
@@ -262,6 +443,92 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             }
             DeleteObject(g_hBrush);
             PostQuitMessage(0);
+            break;
+        default:
+            return DefWindowProc(hwnd,msg,wParam,lParam);
+    }
+    return 0;
+}
+
+LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    switch(msg)
+    {
+        case WM_CTLCOLOR:
+            switch(HIWORD(lParam))
+            {
+                case CTLCOLOR_STATIC:
+                    if((LOWORD(lParam)!=GetDlgItem(hwnd,ID_EDIT_STATIC3)) && (LOWORD(lParam)!=GetDlgItem(hwnd,ID_EDIT_STATIC4)))
+                    {
+                        SetBkMode((HDC)wParam, TRANSPARENT);
+                        return g_hBrush;
+                    }
+                    break;
+                case CTLCOLOR_BTN:
+                    SetBkMode((HDC)wParam, TRANSPARENT);
+                    break;
+            }
+            break;
+        case WM_COMMAND:
+            switch(wParam)
+            {
+                case ID_ACC_TAB:
+                    if(GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2))
+                    {
+                        SendMessage(GetFocus(), WM_CHAR, VK_TAB, 0);
+                    }
+                    else
+                    {
+                        SetFocus(GetNextDlgTabItem(hwnd,GetFocus(),false));
+                    }
+                    break;
+                case ID_EDIT_EDITBOX1:
+                    switch(HIWORD(lParam))
+                    {
+                        case EN_CHANGE:
+                            
+                            break;
+                    }
+                    break;
+                case ID_EDIT_EDITBOX2:
+                    switch(HIWORD(lParam))
+                    {
+                        case EN_CHANGE:
+                            
+                            break;
+                    }
+                    break;
+                case ID_EDIT_BUTTON1:
+                    
+                    break;
+                case ID_EDIT_BUTTON2:
+                    
+                    break;
+                case ID_EDIT_BUTTON3:
+                    SendMessage(hwnd, WM_CLOSE, 0, 0);
+                    break;
+            }   
+            break;
+        case WM_SIZE:
+            unsigned long int width= LOWORD(lParam);
+            unsigned long int height=HIWORD(lParam);
+
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC1),NULL,0,0,width,16,SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_EDITBOX1),NULL,0,0,width,24,SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC2),NULL,0,0,width,16,SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_EDITBOX2),NULL,0,0,width,height-93,SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_BUTTON1),NULL,0,height-37,0,0,SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_BUTTON2),NULL,96,height-37,0,0,SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_BUTTON3),NULL,192,height-37,0,0,SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC3),NULL,288,height-37,width-288,21,SWP_NOZORDER);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC4),NULL,0,height-16,width,16,SWP_NOZORDER);
+            
+            break;
+        case WM_CLOSE:
+            DestroyWindow(hwnd);
+            break;
+        case WM_DESTROY:
+            deleteWindow(winMem,hwnd);
             break;
         default:
             return DefWindowProc(hwnd,msg,wParam,lParam);
