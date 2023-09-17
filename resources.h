@@ -11,7 +11,7 @@
 #define ID_ACC_F1                       203
 
 #define IDR_MENU1                       300
-#define ID_PLIK_ZAKOCZ                  301
-#define ID_POMOC_OPROGRAMIE             302
+#define ID_FILE_EXIT                    301
+#define ID_HELP_ABOUT                   302
 
 #endif

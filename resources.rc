@@ -7,18 +7,18 @@ IDI_ICON1 ICON DISCARDABLE "noter16.ico"
 IDR_ACCELERATORS ACCELERATORS DISCARDABLE
 BEGIN
     VK_TAB, ID_ACC_TAB, VIRTKEY
-    VK_F4, ID_ACC_ALTF4, ALT, VIRTKEY
-    VK_F1, ID_ACC_F1, VIRTKEY
+    VK_F4,  ID_ACC_ALTF4, ALT, VIRTKEY
+    VK_F1,  ID_ACC_F1, VIRTKEY
 END
 
 IDR_MENU1 MENU DISCARDABLE 
 BEGIN
     POPUP "&Plik"
     BEGIN
-        MENUITEM "Za&koñcz\tAlt+F4",            ID_PLIK_ZAKOCZ
+        MENUITEM "Za&koñcz\tAlt+F4",            ID_FILE_EXIT
     END
     POPUP "Pomo&c"
     BEGIN
-        MENUITEM "&O programie",                ID_POMOC_OPROGRAMIE
+        MENUITEM "&O programie",                ID_HELP_ABOUT
     END
 END
