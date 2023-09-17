@@ -568,7 +568,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)getAnswerString(mainLastResult).c_str());
                     }
                     index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
-                    tempString="Czy na pewno chcesz usun¹æ notatkê \"";
+                    tempString="Czy na pewno chcesz usun¹æ notatkê";
+                    tempString=tempString+" \"";
                     tempString=tempString+toCodePage(m_cp1250,(char*)notes[index].subject.c_str());
                     tempString=tempString+"\"?";
                     if(MessageBox(hwnd,(char*)tempString.c_str(),APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES)
