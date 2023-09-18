@@ -3,6 +3,7 @@
 
 
 IDI_ICON1 ICON DISCARDABLE "noter16.ico"
+IDI_ICON2 ICON DISCARDABLE "note.ico"
 
 IDR_ACCELERATORS ACCELERATORS DISCARDABLE
 BEGIN
@@ -45,8 +46,8 @@ CAPTION "W³aœciwoœci notatki"
 FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,115,126,50,14
-    ICON            IDI_ICON1,IDC_STATIC,7,7,20,20
-    LTEXT           "?",IDC_STATIC1,28,10,245,8
+    ICON            IDI_ICON2,IDC_STATIC,7,7,20,20
+    LTEXT           "?",IDC_STATIC1,28,11,245,8
     LTEXT           "ID:",IDC_STATIC,28,30,54,8
     LTEXT           "Data dodania:",IDC_STATIC,28,40,46,8
     LTEXT           "   program:",IDC_STATIC,28,50,54,8
