@@ -176,15 +176,16 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
 {
     EDITWINDOW *editWin = new EDITWINDOW;
     HINSTANCE hInstance=(HINSTANCE)GetWindowWord(hwnd,GWW_HINSTANCE);
-    editWin->windowTitle = APPNAME;
+    
     if(note==NULL)
     {
-        editWin->windowTitle = editWin->windowTitle +" [Nowa notatka]";
+        editWin->windowTitle = "Nowa notatka - ";
     }
     else
     {
-        editWin->windowTitle = editWin->windowTitle+" ["+toCodePage(m_cp1250,(char*)note->subject.c_str())+"]";
+        editWin->windowTitle = toCodePage(m_cp1250,(char*)note->subject.c_str())+" - ";
     }
+    editWin->windowTitle = editWin->windowTitle + APPNAME;
     
     editWin->hwnd =CreateWindow(editWindowClass, editWin->windowTitle.c_str(), WS_OVERLAPPEDWINDOW,
                                 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
@@ -332,7 +333,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc2.cbClsExtra = 0;
     wc2.cbWndExtra = 0;
     wc2.hInstance = hInstance;
-    wc2.hIcon = LoadIcon(hInstance, /*MAKEINTRESOURCE(IDI_ICON2)*/IDI_APPLICATION);
+    wc2.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2));
     wc2.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc2.hbrBackground = g_hBrush;
     wc2.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
@@ -855,8 +856,8 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
-                            winMem[hwnd]->windowTitle = APPNAME;
-                            winMem[hwnd]->windowTitle = winMem[hwnd]->windowTitle+" ["+toCodePage(m_cp1250,(char*)winMem[hwnd]->note->subject.c_str())+"]";
+                            winMem[hwnd]->windowTitle = toCodePage(m_cp1250,(char*)winMem[hwnd]->note->subject.c_str())+" - ";
+                            winMem[hwnd]->windowTitle = winMem[hwnd]->windowTitle+APPNAME;
                             SetWindowText(hwnd,(char*)winMem[hwnd]->windowTitle.c_str());
                         }
                     }
@@ -898,8 +899,8 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             unsigned int result;
             if((winMem[hwnd]!=NULL) && (winMem[hwnd]->subjectChanged || winMem[hwnd]->entryChanged))
             {
-                GetWindowText(hwnd,buffer,32767);
-                result=MessageBox(hwnd,"Czy chcesz zapisaæ zmiany?",buffer,MB_ICONEXCLAMATION | MB_YESNOCANCEL);
+                //GetWindowText(hwnd,buffer,32767);
+                result=MessageBox(hwnd,"Czy chcesz zapisaæ zmiany?",APPNAME,MB_ICONEXCLAMATION | MB_YESNOCANCEL);
             }
             else
             {
@@ -969,8 +970,8 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             }
             else
             {
-                GetWindowText(GetParent(hwnd),buffer,32767);
-                MessageBox(hwnd,(char*)getAnswerString(result).c_str(),buffer,MB_ICONHAND | MB_OK);
+                //GetWindowText(GetParent(hwnd),buffer,32767);
+                MessageBox(hwnd,(char*)getAnswerString(result).c_str(),APPNAME,MB_ICONHAND | MB_OK);
                 EndDialog(hwnd,IDOK);
             }
             break;
@@ -999,8 +1000,8 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     }
                     else
                     {
-                        GetWindowText(GetParent(hwnd),buffer,32767);
-                        MessageBox(hwnd,(char*)getAnswerString(result).c_str(),buffer,MB_ICONHAND | MB_OK);
+                        //GetWindowText(GetParent(hwnd),buffer,32767);
+                        MessageBox(hwnd,(char*)getAnswerString(result).c_str(),APPNAME,MB_ICONHAND | MB_OK);
                     }
                     break;
                 case IDC_BUTTON2:
@@ -1014,8 +1015,8 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     }
                     else
                     {
-                        GetWindowText(GetParent(hwnd),buffer,32767);
-                        MessageBox(hwnd,(char*)getAnswerString(result).c_str(),buffer,MB_ICONHAND | MB_OK);
+                        //GetWindowText(GetParent(hwnd),buffer,32767);
+                        MessageBox(hwnd,(char*)getAnswerString(result).c_str(),APPNAME,MB_ICONHAND | MB_OK);
                     }
                     break;
             }
