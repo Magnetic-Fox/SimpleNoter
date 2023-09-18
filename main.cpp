@@ -357,7 +357,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc2.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2));
     wc2.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc2.hbrBackground = g_hBrush;
-    wc2.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
+    wc2.lpszMenuName = MAKEINTRESOURCE(IDR_MENU2);
     wc2.lpszClassName = editWindowClass;
 
     if(!RegisterClass(&wc))
@@ -524,6 +524,24 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             {
                 case ID_ACC_TAB:
                     SetFocus(GetNextDlgTabItem(hwnd,GetFocus(),false));
+                    break;
+                case ID_ACC_CTRLN:
+                    SendMessage(hwnd, WM_COMMAND, ID_BUTTON2, 0);
+                    break;
+                case ID_ACC_ENTER:
+                    if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON3)))
+                    {
+                        SendMessage(hwnd, WM_COMMAND, ID_BUTTON3, 0);
+                    }
+                    break;
+                case ID_ACC_F5:
+                    SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_ACC_F5);
+                    break;
+                case ID_ACC_F8:
+                    if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON5)))
+                    {
+                        SendMessage(hwnd, WM_COMMAND, ID_BUTTON5, 0);
+                    }
                     break;
                 case ID_ACC_ALTF4:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON4, 0);
@@ -754,6 +772,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     unsigned long int width;
     unsigned long int height;
+    unsigned long int sel;
     switch(msg)
     {
         case WM_CTLCOLOR:
@@ -771,9 +790,99 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     break;
             }
             break;
+        case WM_INITMENU:
+            if(winMem[hwnd]->note->id==0)
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_PROPERTIES,MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_TONEWNOTE,MF_GRAYED);
+                ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,"Dodaj\tCtrl+S");
+                if((winMem[hwnd]->subjectChanged) && (winMem[hwnd]->entryChanged))
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,MF_ENABLED);
+                }
+                else
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,MF_GRAYED);
+                }
+            }
+            else
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_PROPERTIES,MF_ENABLED);
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_TONEWNOTE,MF_ENABLED);
+                ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,"Aktualizuj\tCtrl+S");
+                if((winMem[hwnd]->subjectChanged) || (winMem[hwnd]->entryChanged))
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,MF_ENABLED);
+                }
+                else
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,MF_GRAYED);
+                }
+            }
+            if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
+            {
+                if(SendMessage(GetFocus(), EM_CANUNDO, 0, 0))
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_UNDO,MF_ENABLED);
+                }
+                else
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_UNDO,MF_GRAYED);
+                }
+                sel=SendMessage(GetFocus(), EM_GETSEL, 0, 0);
+                if(HIWORD(sel)!=LOWORD(sel))
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_CUT,MF_ENABLED);
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_COPY,MF_ENABLED);
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_CLEAR,MF_ENABLED);
+                }
+                else
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_CUT,MF_GRAYED);
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_COPY,MF_GRAYED);
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_CLEAR,MF_GRAYED);
+                }
+                if(OpenClipboard(GetFocus()))
+                {
+                    if(IsClipboardFormatAvailable(CF_TEXT) || IsClipboardFormatAvailable(CF_OEMTEXT))
+                    {
+                        EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE,MF_ENABLED);
+                    }
+                    else
+                    {
+                        EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE,MF_GRAYED);
+                    }
+                    CloseClipboard();
+                }
+                else
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE,MF_GRAYED);
+                }
+                if((GetWindowTextLength(GetFocus())>0) && (GetWindowTextLength(GetFocus())>(HIWORD(sel)-LOWORD(sel))))
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_SELECTALL,MF_ENABLED);
+                }
+                else
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_SELECTALL,MF_GRAYED);
+                }
+            }
+            else
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_EDIT_UNDO,MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),ID_EDIT_CUT,MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),ID_EDIT_COPY,MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE,MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),ID_EDIT_CLEAR,MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),ID_EDIT_SELECTALL,MF_GRAYED);
+            }
+            break;
         case WM_COMMAND:
             switch(wParam)
             {
+                case ID_ACC_ENTER:
+                    SendMessage(GetFocus(), WM_CHAR, VK_RETURN, 0);
+                    break;
                 case ID_ACC_TAB:
                     if(GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2))
                     {
@@ -783,6 +892,84 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     {
                         SetFocus(GetNextDlgTabItem(hwnd,GetFocus(),false));
                     }
+                    break;
+                case ID_ACC_CTRLS:
+                    SendMessage(hwnd, WM_COMMAND, ID_FILE_ADDUP, 0);
+                    break;
+                case ID_ACC_CTRLALTN:
+                    if(winMem[hwnd]->note->id!=0)
+                    {
+                        SendMessage(hwnd, WM_COMMAND, ID_FILE_TONEWNOTE, 0);
+                    }
+                    break;
+                case ID_ACC_CTRLA:
+                    SendMessage(hwnd, WM_COMMAND, ID_EDIT_SELECTALL, 0);
+                    break;
+                case ID_ACC_ALTF4:
+                    SendMessage(hwnd, WM_COMMAND, ID_EDIT_BUTTON3, 0);
+                    break;
+                case ID_FILE_ADDUP:
+                    if(IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1)))
+                    {
+                        SendMessage(hwnd, WM_COMMAND, ID_EDIT_BUTTON1, 0);
+                    }
+                    break;
+                case ID_FILE_PROPERTIES:
+                    if(IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON2)))
+                    {
+                        SendMessage(hwnd, WM_COMMAND, ID_EDIT_BUTTON2, 0);
+                    }
+                    break;
+                case ID_FILE_TONEWNOTE:
+                    winMem[hwnd]->note->id=0;
+                    EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),true);
+                    EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),false);
+                    SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),"Dodaj");
+                    winMem[hwnd]->subjectChanged=true;
+                    winMem[hwnd]->entryChanged=true;
+                    makeEditWindowTitle(winMem[hwnd],NULL,true);
+                    break;
+                case ID_FILE_EXIT:
+                    SendMessage(hwnd, WM_COMMAND, ID_EDIT_BUTTON3, 0);
+                    break;
+                case ID_EDIT_UNDO:
+                    if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
+                    {
+                        SendMessage(GetFocus(),WM_UNDO,0,0);
+                    }
+                    break;
+                case ID_EDIT_CUT:
+                    if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
+                    {
+                        SendMessage(GetFocus(),WM_CUT,0,0);
+                    }
+                    break;
+                case ID_EDIT_COPY:
+                    if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
+                    {
+                        SendMessage(GetFocus(),WM_COPY,0,0);
+                    }
+                    break;
+                case ID_EDIT_PASTE:
+                    if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
+                    {
+                        SendMessage(GetFocus(),WM_PASTE,0,0);
+                    }
+                    break;
+                case ID_EDIT_CLEAR:
+                    if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
+                    {
+                        SendMessage(GetFocus(),WM_CLEAR,0,0);
+                    }
+                    break;
+                case ID_EDIT_SELECTALL:
+                    if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
+                    {
+                        SendMessage(GetFocus(),EM_SETSEL,0,65535);
+                    }
+                    break;
+                case ID_HELP_ABOUT:
+                    MakeDialogBox(hwnd,IDD_DIALOG2,DlgProc2);
                     break;
                 case ID_EDIT_EDITBOX1:
                     switch(HIWORD(lParam))
@@ -978,7 +1165,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC4),(char*)toCodePage(m_cp1250,(char*)tempNote.userAgent.c_str()).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC5),(char*)toCodePage(m_cp1250,(char*)tempNote.lastModified.c_str()).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC6),(char*)toCodePage(m_cp1250,(char*)tempNote.lastUserAgent.c_str()).c_str());
-                if(winMem[GetParent(hwnd)]->note->locked)
+                if(tempNote.locked)
                 {
                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),true);
