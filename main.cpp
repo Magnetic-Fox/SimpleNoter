@@ -166,6 +166,24 @@ std::string IntToStr(long int input)
     return temp;
 }
 
+void makeEditWindowTitle(EDITWINDOW *editWin, NOTE *note, bool set)
+{
+    if(note==NULL)
+    {
+        editWin->windowTitle = "~ Nowa notatka ~ - ";
+    }
+    else
+    {
+        editWin->windowTitle = toCodePage(m_cp1250,(char*)note->subject.c_str())+" - ";
+    }
+    editWin->windowTitle = editWin->windowTitle + APPNAME;
+    if(set)
+    {
+        SetWindowText(editWin->hwnd,(char*)editWin->windowTitle.c_str());
+    }
+    return;
+}
+
 //////////////////////////////////////
 //
 //  OKNO EDYCJI
@@ -176,7 +194,8 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
 {
     EDITWINDOW *editWin = new EDITWINDOW;
     HINSTANCE hInstance=(HINSTANCE)GetWindowWord(hwnd,GWW_HINSTANCE);
-    
+
+    /*
     if(note==NULL)
     {
         editWin->windowTitle = "Nowa notatka - ";
@@ -186,6 +205,8 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
         editWin->windowTitle = toCodePage(m_cp1250,(char*)note->subject.c_str())+" - ";
     }
     editWin->windowTitle = editWin->windowTitle + APPNAME;
+    */
+    makeEditWindowTitle(editWin,note,false);
     
     editWin->hwnd =CreateWindow(editWindowClass, editWin->windowTitle.c_str(), WS_OVERLAPPEDWINDOW,
                                 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
@@ -845,9 +866,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),"Aktualizuj");
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
-                            winMem[hwnd]->windowTitle = APPNAME;
-                            winMem[hwnd]->windowTitle = winMem[hwnd]->windowTitle+" ["+toCodePage(m_cp1250,(char*)winMem[hwnd]->note->subject.c_str())+"]";
-                            SetWindowText(hwnd,(char*)winMem[hwnd]->windowTitle.c_str());
+                            makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true);
                         }
                     }
                     else
@@ -860,9 +879,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
-                            winMem[hwnd]->windowTitle = toCodePage(m_cp1250,(char*)winMem[hwnd]->note->subject.c_str())+" - ";
-                            winMem[hwnd]->windowTitle = winMem[hwnd]->windowTitle+APPNAME;
-                            SetWindowText(hwnd,(char*)winMem[hwnd]->windowTitle.c_str());
+                            makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true);
                         }
                     }
                     break;
