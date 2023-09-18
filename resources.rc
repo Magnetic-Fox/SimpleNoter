@@ -1,6 +1,30 @@
 #include "resources.h"
 
-
+VS_VERSION VERSIONINFO
+FILEVERSION 0, 4, 0, 0
+PRODUCTVERSION 0, 4, 0, 0
+FILETYPE 0x1L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041504e2"
+        BEGIN
+            VALUE "CompanyName", "Magnetic-Fox\0"
+            VALUE "FileVersion", "0.4\0"
+            VALUE "FileDescription", "Simple Noter\0"
+            VALUE "InternalName", "SNoter04.exe\0"
+            VALUE "LegalCopyright", "©2021-2023 Magnetic-Fox\0"
+            VALUE "LegalTrademarks", "Noter™\0"
+            VALUE "OriginalFilename", "SimpleNoter.exe\0"
+            VALUE "ProductName", "Simple Noter v0.4\0"
+            VALUE "ProductVersion", "0.4\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0415, 1250
+    END
+END
 
 IDI_ICON1 ICON DISCARDABLE "noter16.ico"
 IDI_ICON2 ICON DISCARDABLE "note.ico"
