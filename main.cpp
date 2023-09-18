@@ -68,8 +68,19 @@ std::string tempString;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK DlgProc(HWND, UINT, WPARAM, LPARAM);
 
 HWND g_hwnd;
+
+long int inline MakeDialogBox(HWND hwnd, unsigned int type, void* procedure)
+{
+    long int result;
+    HANDLE instHandle=(HINSTANCE)GetWindowWord(hwnd,GWW_HINSTANCE);
+    FARPROC proc=MakeProcInstance((FARPROC)procedure, instHandle);
+    result=DialogBox(instHandle, MAKEINTRESOURCE(type), hwnd, (DLGPROC)proc);
+    FreeProcInstance(proc);
+    return result;
+}
 
 std::string getAnswerString(int answerCode)
 {
@@ -799,6 +810,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         winMem[hwnd]->lastResult=0;
                         SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
+                    MakeDialogBox(hwnd,IDD_DIALOG1,DlgProc);
                     break;
                 case ID_EDIT_BUTTON3:
                     if(winMem[hwnd]->lastResult!=0)
@@ -856,4 +868,97 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             return DefWindowProc(hwnd,msg,wParam,lParam);
     }
     return 0;
+}
+
+BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    NOTE tempNote;
+    int result;
+    switch(msg)
+    {
+        case WM_INITDIALOG:
+            /*
+            if(Ctl3dEnabled())
+            {
+                unsigned int ctlRegs=CTL3D_ALL;
+                Ctl3dSubclassDlg(hwnd,ctlRegs);
+            }
+            */
+            result=noter_getNote(connectionSettings,credentials,winMem[GetParent(hwnd)]->note->id,buffer,tempNote);
+            if(result>=0)
+            {
+                SetWindowText(GetDlgItem(hwnd,IDC_STATIC1),(char*)toCodePage(m_cp1250,(char*)tempNote.subject.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_STATIC2),(char*)IntToStr(tempNote.id).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_STATIC3),(char*)toCodePage(m_cp1250,(char*)tempNote.dateAdded.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_STATIC4),(char*)toCodePage(m_cp1250,(char*)tempNote.userAgent.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_STATIC5),(char*)toCodePage(m_cp1250,(char*)tempNote.lastModified.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_STATIC6),(char*)toCodePage(m_cp1250,(char*)tempNote.lastUserAgent.c_str()).c_str());
+                if(winMem[GetParent(hwnd)]->note->locked)
+                {
+                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),true);
+                }
+                else
+                {
+                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),true);
+                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),false);
+                }
+            }
+            else
+            {
+                GetWindowText(GetParent(hwnd),buffer,32767);
+                MessageBox(hwnd,(char*)getAnswerString(result).c_str(),buffer,MB_ICONHAND | MB_OK);
+                EndDialog(hwnd,IDOK);
+            }
+            break;
+        case WM_CTLCOLOR:
+            switch(HIWORD(lParam))
+            {
+                case CTLCOLOR_BTN:
+                    SetBkMode((HDC)wParam, TRANSPARENT);
+                    break;
+            }
+            break;
+        case WM_COMMAND:
+            switch(wParam)
+            {
+                case IDOK:
+                    EndDialog(hwnd,IDOK);
+                    break;
+                case IDC_BUTTON1:
+                    result=noter_lockNote(connectionSettings,credentials,winMem[GetParent(hwnd)]->note->id,buffer);
+                    if(result>=0)
+                    {
+                        winMem[GetParent(hwnd)]->note->locked=true;
+                        tempNote.locked=true;
+                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),false);
+                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),true);
+                    }
+                    else
+                    {
+                        GetWindowText(GetParent(hwnd),buffer,32767);
+                        MessageBox(hwnd,(char*)getAnswerString(result).c_str(),buffer,MB_ICONHAND | MB_OK);
+                    }
+                    break;
+                case IDC_BUTTON2:
+                    result=noter_unlockNote(connectionSettings,credentials,winMem[GetParent(hwnd)]->note->id,buffer);
+                    if(result>=0)
+                    {
+                        winMem[GetParent(hwnd)]->note->locked=false;
+                        tempNote.locked=false;
+                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),true);
+                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),false);
+                    }
+                    else
+                    {
+                        GetWindowText(GetParent(hwnd),buffer,32767);
+                        MessageBox(hwnd,(char*)getAnswerString(result).c_str(),buffer,MB_ICONHAND | MB_OK);
+                    }
+                    break;
+            }
+            break;
+        default:
+            return FALSE;
+    }
+    return TRUE;
 }
