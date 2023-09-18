@@ -14,6 +14,7 @@
 #include "inihandling.hpp"
 
 #define APPNAME             "Simple Noter v0.4"
+#define HELPFILE            "SNOTER04.HLP"
 
 #define ID_BUTTON1          1400
 #define ID_BUTTON2          1401
@@ -546,6 +547,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case ID_ACC_ALTF4:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON4, 0);
                     break;
+                case ID_ACC_F1:
+                    SendMessage(hwnd, WM_COMMAND, ID_HELP_HELP, 0);
+                    break;
                 case ID_FILE_NEW:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON2, 0);
                     break;
@@ -560,6 +564,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     break;
                 case ID_FILE_EXIT:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON4, 0);
+                    break;
+                case ID_HELP_HELP:
+                    WinHelp(g_hwnd,HELPFILE,HELP_CONTENTS,0);
+                    break;
+                case ID_HELP_HOWTO:
+                    WinHelp(g_hwnd,"",HELP_HELPONHELP,0);
                     break;
                 case ID_HELP_ABOUT:
                     MakeDialogBox(hwnd,IDD_DIALOG2,DlgProc2);
@@ -754,6 +764,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 freeNoteList(notes);
             }
             DeleteObject(g_hBrush);
+            WinHelp(g_hwnd,"",HELP_QUIT,0);
             PostQuitMessage(0);
             break;
         default:
@@ -908,6 +919,9 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case ID_ACC_ALTF4:
                     SendMessage(hwnd, WM_COMMAND, ID_EDIT_BUTTON3, 0);
                     break;
+                case ID_ACC_F1:
+                    SendMessage(hwnd, WM_COMMAND, ID_HELP_HELP, 0);
+                    break;
                 case ID_FILE_ADDUP:
                     if(IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1)))
                     {
@@ -921,6 +935,11 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     }
                     break;
                 case ID_FILE_TONEWNOTE:
+                    if(winMem[hwnd]->lastResult!=0)
+                    {
+                        winMem[hwnd]->lastResult=0;
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                    }
                     winMem[hwnd]->note->id=0;
                     EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),true);
                     EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),false);
@@ -928,6 +947,8 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     winMem[hwnd]->subjectChanged=true;
                     winMem[hwnd]->entryChanged=true;
                     makeEditWindowTitle(winMem[hwnd],NULL,true);
+                    SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),"Przekierowano na now¹ notatkê.");
+                    winMem[hwnd]->lastResult=1024;
                     break;
                 case ID_FILE_EXIT:
                     SendMessage(hwnd, WM_COMMAND, ID_EDIT_BUTTON3, 0);
@@ -935,40 +956,91 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case ID_EDIT_UNDO:
                     if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
                     {
+                        if(winMem[hwnd]->lastResult!=0)
+                        {
+                            winMem[hwnd]->lastResult=0;
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        }
                         SendMessage(GetFocus(),WM_UNDO,0,0);
                     }
                     break;
                 case ID_EDIT_CUT:
                     if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
                     {
+                        if(winMem[hwnd]->lastResult!=0)
+                        {
+                            winMem[hwnd]->lastResult=0;
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        }
                         SendMessage(GetFocus(),WM_CUT,0,0);
                     }
                     break;
                 case ID_EDIT_COPY:
                     if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
                     {
+                        if(winMem[hwnd]->lastResult!=0)
+                        {
+                            winMem[hwnd]->lastResult=0;
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        }
                         SendMessage(GetFocus(),WM_COPY,0,0);
                     }
                     break;
                 case ID_EDIT_PASTE:
                     if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
                     {
+                        if(winMem[hwnd]->lastResult!=0)
+                        {
+                            winMem[hwnd]->lastResult=0;
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        }
                         SendMessage(GetFocus(),WM_PASTE,0,0);
                     }
                     break;
                 case ID_EDIT_CLEAR:
                     if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
                     {
+                        if(winMem[hwnd]->lastResult!=0)
+                        {
+                            winMem[hwnd]->lastResult=0;
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        }
                         SendMessage(GetFocus(),WM_CLEAR,0,0);
                     }
                     break;
                 case ID_EDIT_SELECTALL:
                     if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)))
                     {
+                        if(winMem[hwnd]->lastResult!=0)
+                        {
+                            winMem[hwnd]->lastResult=0;
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        }
                         SendMessage(GetFocus(),EM_SETSEL,0,65535);
                     }
                     break;
+                case ID_HELP_HELP:
+                    if(winMem[hwnd]->lastResult!=0)
+                    {
+                        winMem[hwnd]->lastResult=0;
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                    }
+                    WinHelp(g_hwnd,HELPFILE,HELP_CONTENTS,0);
+                    break;
+                case ID_HELP_HOWTO:
+                    if(winMem[hwnd]->lastResult!=0)
+                    {
+                        winMem[hwnd]->lastResult=0;
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                    }
+                    WinHelp(g_hwnd,"",HELP_HELPONHELP,0);
+                    break;
                 case ID_HELP_ABOUT:
+                    if(winMem[hwnd]->lastResult!=0)
+                    {
+                        winMem[hwnd]->lastResult=0;
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                    }
                     MakeDialogBox(hwnd,IDD_DIALOG2,DlgProc2);
                     break;
                 case ID_EDIT_EDITBOX1:
