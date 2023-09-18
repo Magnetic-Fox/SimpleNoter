@@ -66,6 +66,7 @@ BEGIN
     POPUP "Pomo&c"
     BEGIN
         MENUITEM "&Pomoc\tF1",                  ID_HELP_HELP
+        MENUITEM "&Korzystanie z Pomocy"        ID_HELP_HOWTO
         MENUITEM SEPARATOR
         MENUITEM "&O programie...",             ID_HELP_ABOUT
     END
@@ -96,6 +97,7 @@ BEGIN
     POPUP "Pomo&c"
     BEGIN
         MENUITEM "&Pomoc\tF1",                  ID_HELP_HELP
+        MENUITEM "&Korzystanie z Pomocy"        ID_HELP_HOWTO
         MENUITEM SEPARATOR
         MENUITEM "O programie...",              ID_HELP_ABOUT
     END

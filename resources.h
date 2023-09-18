@@ -28,7 +28,8 @@
 #define ID_OPTIONS_CONNECTION           307
 #define ID_OPTIONS_CREDENTIALS          308
 #define ID_HELP_HELP                    309
-#define ID_HELP_ABOUT                   310
+#define ID_HELP_HOWTO                   310
+#define ID_HELP_ABOUT                   311
 
 #define IDD_DIALOG1                     400
 #define IDC_BUTTON1                     401
