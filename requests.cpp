@@ -124,7 +124,14 @@ std::string URLencode(char* input)
             {
                 conv[y]=toupper(conv[y]);
             }
-            temp=temp+'%'+conv;
+            if(input[x]<16)
+            {
+                temp=temp+"%0"+conv;
+            }
+            else
+            {
+                temp=temp+'%'+conv;
+            }
         }
     }
     return temp;
