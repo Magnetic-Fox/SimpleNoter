@@ -15,11 +15,27 @@ IDR_MENU1 MENU DISCARDABLE
 BEGIN
     POPUP "&Plik"
     BEGIN
+        MENUITEM "&Nowa\tCtrl+N",               ID_FILE_NEW
+        MENUITEM "&Otwórz\tCtrl+O",             ID_FILE_OPEN, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "Pobierz listê\tF5",           ID_FILE_RELOAD
+        MENUITEM "Usuñ\tDel",                   ID_FILE_DELETE, GRAYED
+        MENUITEM SEPARATOR
         MENUITEM "Za&koñcz\tAlt+F4",            ID_FILE_EXIT
+    END
+    POPUP "&Opcje"
+    BEGIN
+        MENUITEM "Preferencje...",              ID_OPTIONS_PREFERENCES
+        MENUITEM SEPARATOR
+        MENUITEM "Po³¹czenie...",               ID_OPTIONS_CONNECTION
+        MENUITEM "U¿ytkownik...",               ID_OPTIONS_CREDENTIALS
+
     END
     POPUP "Pomo&c"
     BEGIN
-        MENUITEM "&O programie",                ID_HELP_ABOUT
+        MENUITEM "&Pomoc\tF1",                  ID_HELP_HELP
+        MENUITEM SEPARATOR
+        MENUITEM "&O programie...",             ID_HELP_ABOUT
     END
 END
 
@@ -43,4 +59,27 @@ BEGIN
     LTEXT           "?",IDC_STATIC6,90,70,183,8
     PUSHBUTTON      "&Zablokuj",IDC_BUTTON1,90,90,50,14
     PUSHBUTTON      "O&dblokuj",IDC_BUTTON2,140,90,50,14
+END
+
+IDD_DIALOG2 DIALOG DISCARDABLE  0, 0, 200, 144
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Informacje o programie"
+FONT 10, "System"
+BEGIN
+    DEFPUSHBUTTON   "&OK",IDOK,143,7,50,14
+    ICON            IDI_ICON1,IDC_STATIC,7,7,20,20
+    LTEXT           "SimpleNoter v0.4",IDC_STATIC7,28,7,110,8
+    LTEXT           "wersja 16-bitowa",IDC_STATIC,28,17,56,8
+    LTEXT           "Projekt i program:",IDC_STATIC,28,37,59,8
+    LTEXT           "Bart³omiej ""Magnetic-Fox"" Wêgrzyn",IDC_STATIC,28,47,
+                    119,8
+    LTEXT           "W oprogramowaniu wykorzystano\nnastêpuj¹ce biblioteki:",
+                    IDC_STATIC,28,67,157,16
+    LTEXT           "json-parser ©2012-2021 the json-parser authors",
+                    IDC_STATIC,36,85,157,8
+    LTEXT           "utf8_decode.c ©2005 JSON.org",IDC_STATIC,36,95,102,8
+    LTEXT           "utf8_encode.cpp © Ondøej Hruška",IDC_STATIC,36,105,110,
+                    8
+    LTEXT           "©2021-2023 Bart³omiej ""Magnetic-Fox"" Wêgrzyn",
+                    IDC_STATIC,28,125,160,8
 END
