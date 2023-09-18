@@ -15,28 +15,28 @@
 
 #define APPNAME             "Simple Noter v0.4"
 
-#define ID_BUTTON1          400
-#define ID_BUTTON2          401
-#define ID_BUTTON3          402
-#define ID_BUTTON4          403
-#define ID_BUTTON5          404
-#define ID_LISTBOX          500
-#define ID_STATIC1          600
-#define ID_STATIC2          601
-#define ID_STATIC3          602
-#define ID_STATIC4          603
-#define ID_STATIC5          604
-#define ID_STATIC6          605
+#define ID_BUTTON1          1400
+#define ID_BUTTON2          1401
+#define ID_BUTTON3          1402
+#define ID_BUTTON4          1403
+#define ID_BUTTON5          1404
+#define ID_LISTBOX          1500
+#define ID_STATIC1          1600
+#define ID_STATIC2          1601
+#define ID_STATIC3          1602
+#define ID_STATIC4          1603
+#define ID_STATIC5          1604
+#define ID_STATIC6          1605
 
-#define ID_EDIT_BUTTON1     1400
-#define ID_EDIT_BUTTON2     1401
-#define ID_EDIT_BUTTON3     1402
-#define ID_EDIT_EDITBOX1    1500
-#define ID_EDIT_EDITBOX2    1501
-#define ID_EDIT_STATIC1     1600
-#define ID_EDIT_STATIC2     1601
-#define ID_EDIT_STATIC3     1602
-#define ID_EDIT_STATIC4     1603
+#define ID_EDIT_BUTTON1     2400
+#define ID_EDIT_BUTTON2     2401
+#define ID_EDIT_BUTTON3     2402
+#define ID_EDIT_EDITBOX1    2500
+#define ID_EDIT_EDITBOX2    2501
+#define ID_EDIT_STATIC1     2600
+#define ID_EDIT_STATIC2     2601
+#define ID_EDIT_STATIC3     2602
+#define ID_EDIT_STATIC4     2603
 
 LPSTR editWindowClass = "SimpleNoterEdit";
 
@@ -48,7 +48,7 @@ typedef struct editWindow
     HWND hButton, hButton2, hButton3;
     std::string windowTitle;
     bool subjectChanged, entryChanged;
-    int lastResult;
+    long int lastResult;
     NOTE *note;
 } EDITWINDOW;
 
@@ -82,7 +82,7 @@ long int inline MakeDialogBox(HWND hwnd, unsigned int type, void* procedure)
     return result;
 }
 
-std::string getAnswerString(int answerCode)
+std::string getAnswerString(long int answerCode)
 {
     switch(answerCode)
     {
@@ -207,7 +207,7 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
             editWin->note->lastModified="";
             editWin->note->locked=false;
             editWin->note->userAgent="";
-            editWin->note->lastUserAgent;
+            editWin->note->lastUserAgent="";
         }
         else
         {
@@ -466,6 +466,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     std::string tempString="";
     long int index;
     long int result;
+    unsigned long int width;
+    unsigned long int height;
     switch(msg)
     {
         case WM_CTLCOLOR:
@@ -668,8 +670,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             }
             break;
         case WM_SIZE:
-            unsigned long int width= LOWORD(lParam);
-            unsigned long int height=HIWORD(lParam);
+            width= LOWORD(lParam);
+            height=HIWORD(lParam);
 
             if(width<240)
             {
@@ -729,6 +731,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    unsigned long int width;
+    unsigned long int height;
     switch(msg)
     {
         case WM_CTLCOLOR:
@@ -881,8 +885,8 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             }   
             break;
         case WM_SIZE:
-            unsigned long int width= LOWORD(lParam);
-            unsigned long int height=HIWORD(lParam);
+            width= LOWORD(lParam);
+            height=HIWORD(lParam);
 
             SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC1),NULL,0,0,width,16,SWP_NOZORDER | SWP_NOMOVE);
             SetWindowPos(GetDlgItem(hwnd,ID_EDIT_EDITBOX1),NULL,0,0,width,24,SWP_NOZORDER | SWP_NOMOVE);
@@ -937,7 +941,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     NOTE tempNote;
-    int result;
+    long int result;
     switch(msg)
     {
         case WM_INITDIALOG:
@@ -1039,7 +1043,6 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 BOOL CALLBACK DlgProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     NOTE tempNote;
-    int result;
     switch(msg)
     {
         case WM_INITDIALOG:
