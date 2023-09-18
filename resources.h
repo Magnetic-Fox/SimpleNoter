@@ -14,4 +14,15 @@
 #define ID_FILE_EXIT                    301
 #define ID_HELP_ABOUT                   302
 
+#define IDD_DIALOG1                     400
+#define IDC_BUTTON1                     401
+#define IDC_BUTTON2                     402
+#define IDC_STATIC                      403
+#define IDC_STATIC1                     404
+#define IDC_STATIC2                     405
+#define IDC_STATIC3                     406
+#define IDC_STATIC4                     407
+#define IDC_STATIC5                     408
+#define IDC_STATIC6                     409
+
 #endif

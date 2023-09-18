@@ -22,3 +22,25 @@ BEGIN
         MENUITEM "&O programie",                ID_HELP_ABOUT
     END
 END
+
+IDD_DIALOG1 DIALOG DISCARDABLE  0, 0, 280, 147
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "W³aœciwoœci notatki"
+FONT 10, "System"
+BEGIN
+    DEFPUSHBUTTON   "&OK",IDOK,115,126,50,14
+    ICON            IDI_ICON1,IDC_STATIC,7,7,20,20
+    LTEXT           "?",IDC_STATIC1,28,10,245,8
+    LTEXT           "ID:",IDC_STATIC,28,30,54,8
+    LTEXT           "Data dodania:",IDC_STATIC,28,40,46,8
+    LTEXT           "   program:",IDC_STATIC,28,50,54,8
+    LTEXT           "Ostatnia edycja:",IDC_STATIC,28,60,54,8
+    LTEXT           "   program:",IDC_STATIC,28,70,54,8
+    LTEXT           "?",IDC_STATIC2,90,30,183,8
+    LTEXT           "?",IDC_STATIC3,90,40,183,8
+    LTEXT           "?",IDC_STATIC4,90,50,183,8
+    LTEXT           "?",IDC_STATIC5,90,60,183,8
+    LTEXT           "?",IDC_STATIC6,90,70,183,8
+    PUSHBUTTON      "&Zablokuj",IDC_BUTTON1,90,90,50,14
+    PUSHBUTTON      "O&dblokuj",IDC_BUTTON2,140,90,50,14
+END
