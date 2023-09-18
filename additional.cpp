@@ -40,7 +40,7 @@ std::string makeUserAgent(char* userAgent)
 std::string getCurrentDirectory(char* input)
 {
     std::string currentDirectory="";
-    unsigned int pos;
+    unsigned int pos=0;
     for(int x=strlen(input)-1; x>=0; --x)
     {
         if(input[x]=='\\')
