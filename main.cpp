@@ -1,20 +1,18 @@
 #include <windows.h>
 #include <ctl3d.h>
-#include <stdlib.h>
-#include <string.h>
 #include <string>
 #include <map>
 
 #include "resources.h"
 
+#include "debug.hpp"
 #include "cp1250.hpp"
 #include "wsprocs.hpp"
 #include "noterapi.hpp"
 #include "codepages.hpp"
+#include "constants.hpp"
+#include "conversion.hpp"
 #include "inihandling.hpp"
-
-#define APPNAME             "Simple Noter v0.4"
-#define HELPFILE            "SNOTER04.HLP"
 
 #define ID_BUTTON1          1400
 #define ID_BUTTON2          1401
@@ -57,7 +55,7 @@ typedef std::map<HWND,EDITWINDOW*> WINDOWMEMORY;
 
 HBRUSH g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
 WINDOWMEMORY winMem;
-
+HWND g_hwnd;
 char buffer[65536];
 CODEPAGE m_cp1250;
 NOTER_CONNECTION_SETTINGS connectionSettings;
@@ -70,8 +68,125 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc2(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK DlgProc3(HWND, UINT, WPARAM, LPARAM);
 
-HWND g_hwnd;
+void inline lockExitButton(HWND hwnd)
+{
+    EnableWindow(GetDlgItem(hwnd,ID_BUTTON4),false);
+    return;
+}
+
+void inline unlockExitButton(HWND hwnd)
+{
+    EnableWindow(GetDlgItem(hwnd,ID_BUTTON4),true);
+    return;
+}
+
+void inline lockRefreshButton(HWND hwnd)
+{
+    EnableWindow(GetDlgItem(hwnd,ID_BUTTON1),false);
+    return;
+}
+
+void inline unlockRefreshButton(HWND hwnd)
+{
+    EnableWindow(GetDlgItem(hwnd,ID_BUTTON1),true);
+    return;
+}
+
+void inline lockOpenButton(HWND hwnd)
+{
+    EnableWindow(GetDlgItem(hwnd,ID_BUTTON3),false);
+    return;
+}
+
+void inline unlockOpenButton(HWND hwnd)
+{
+    EnableWindow(GetDlgItem(hwnd,ID_BUTTON3),true);
+    return;
+}
+
+void inline lockDeleteButton(HWND hwnd)
+{
+    EnableWindow(GetDlgItem(hwnd,ID_BUTTON5),false);
+    return;
+}
+
+void inline unlockDeleteButton(HWND hwnd)
+{
+    EnableWindow(GetDlgItem(hwnd,ID_BUTTON5),true);
+    return;
+}
+
+void inline main_LockAllButtons(HWND hwnd)
+{
+    lockExitButton(hwnd);
+    lockRefreshButton(hwnd);
+    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0)
+    {
+        lockOpenButton(hwnd);
+        lockDeleteButton(hwnd);
+    }
+    return;
+}
+
+void inline main_UnlockAllButtons(HWND hwnd)
+{
+    unlockExitButton(hwnd);
+    unlockRefreshButton(hwnd);
+    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0)
+    {
+        unlockOpenButton(hwnd);
+        unlockDeleteButton(hwnd);
+    }
+    return;
+}
+
+void inline edit_LockAllButtons(HWND hwnd)
+{
+    main_LockAllButtons(g_hwnd);
+    EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
+    EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),false);
+    return;
+}
+
+void inline edit_UnlockAllButtons(HWND hwnd)
+{
+    main_UnlockAllButtons(g_hwnd);
+    if(winMem[hwnd]->note->id!=0)
+    {
+        EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),true);
+    }
+    return;
+}
+
+void inline properties_LockAllButtons(HWND hwnd)
+{
+    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),false);
+    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),false);
+    edit_LockAllButtons(GetParent(hwnd));
+    return;
+}
+
+void inline properties_UnlockAllButtons(HWND hwnd)
+{
+    edit_UnlockAllButtons(GetParent(hwnd));
+    return;
+}
+
+unsigned int getState(HWND hwnd)
+{
+    WINDOWPLACEMENT wp = { 0 };
+    wp.length=sizeof(WINDOWPLACEMENT);
+    if(GetWindowPlacement(hwnd,&wp))
+    {
+        return wp.showCmd;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
 long int inline MakeDialogBox(HWND hwnd, unsigned int type, void* procedure)
 {
@@ -81,90 +196,6 @@ long int inline MakeDialogBox(HWND hwnd, unsigned int type, void* procedure)
     result=DialogBox(instHandle, MAKEINTRESOURCE(type), hwnd, (DLGPROC)proc);
     FreeProcInstance(proc);
     return result;
-}
-
-std::string getAnswerString(long int answerCode)
-{
-    switch(answerCode)
-    {
-        case ERROR_WRONG_RESPONSE:
-            return "Nie uda³o siê po³¹czyæ z serwerem.";
-        case ERROR_SERVICE_DISABLED:
-            return "Us³uga tymczasowo niedostêpna.";
-        case ERROR_INTERNAL_SERVER_ERROR:
-            return "B³¹d wewnêtrzny serwera.";
-        case ERROR_NOTE_ALREADY_UNLOCKED:
-            return "Notatka ju¿ odblokowana.";
-        case ERROR_NOTE_ALREADY_LOCKED:
-            return "Notatka ju¿ zablokowana.";
-        case ERROR_NOTE_LOCKED:
-            return "Notatka jest zablokowana.";
-        case ERROR_USER_REMOVAL_FAILURE:
-            return "Usuniêcie u¿ytkownika nie powiod³o siê.";
-        case ERROR_USER_NOT_EXISTS:
-            return "Dany u¿ytkownik nie istnieje.";
-        case ERROR_NOTE_NOT_EXISTS:
-            return "Dana notatka nie istnieje.";
-        case ERROR_NO_NECESSARY_INFORMATION:
-            return "Brak wymaganych informacji (temat lub treœæ).";
-        case ERROR_USER_DEACTIVATED:
-            return "U¿ytkownik zablokowany.";
-        case ERROR_LOGIN_INCORRECT:
-            return "Nieprawid³owe dane logowania.";
-        case ERROR_UNKNOWN_ACTION:
-            return "Nieprawid³owe polecenie.";
-        case ERROR_NO_CREDENTIALS:
-            return "Brak danych logowania.";
-        case ERROR_USER_EXISTS:
-            return "Podana nazwa u¿ytkownika jest ju¿ zajêta.";
-        case ERROR_NO_USABLE_INFORMATION:
-            return "Brak u¿ytecznych informacji w ¿¹daniu.";
-        case ERROR_INVALID_METHOD:
-            return "Nieobs³ugiwane ¿¹danie.";
-        case INFO_OK:
-            return "Wszystko w porz¹dku.";
-        case INFO_USER_CREATED:
-            return "U¿ytkownik zosta³ zarejestrowany.";
-        case INFO_USER_UPDATED:
-            return "Dane u¿ytkownika zosta³y zaktualizowane.";
-        case INFO_USER_REMOVED:
-            return "U¿ytkownik zosta³ usuniêty.";
-        case INFO_LIST_SUCCESSFUL:
-            return "Lista notatek zosta³a za³adowana.";
-        case INFO_NOTE_RETRIEVED:
-            return "Notatka zosta³a za³adowana.";
-        case INFO_NOTE_CREATED:
-            return "Notatka zosta³a utworzona.";
-        case INFO_NOTE_UPDATED:
-            return "Notatka zosta³a zaktualizowana.";
-        case INFO_NOTE_DELETED:
-            return "Notatka zosta³a usuniêta.";
-        case INFO_USER_INFO_RETRIEVED:
-            return "Informacje o u¿ytkowniku zosta³y za³adowane.";
-        case INFO_NOTE_LOCKED:
-            return "Notatka zosta³a zablokowana.";
-        case INFO_NOTE_UNLOCKED:
-            return "Notatka zosta³a odblokowana.";
-        default:
-            return "Nieznany kod odpowiedzi.";
-    }
-}
-
-void ShowInteger(long int integer)
-{
-    char test[20];
-    ltoa(integer,test,10);
-    MessageBox(0,test,"ShowInteger",MB_OK);
-    return;
-}
-
-std::string IntToStr(long int input)
-{
-    std::string temp;
-    char test[32];
-    ltoa(input,test,10);
-    temp=test;
-    return temp;
 }
 
 void makeEditWindowTitle(EDITWINDOW *editWin, NOTE *note, bool set)
@@ -196,17 +227,6 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
     EDITWINDOW *editWin = new EDITWINDOW;
     HINSTANCE hInstance=(HINSTANCE)GetWindowWord(hwnd,GWW_HINSTANCE);
 
-    /*
-    if(note==NULL)
-    {
-        editWin->windowTitle = "Nowa notatka - ";
-    }
-    else
-    {
-        editWin->windowTitle = toCodePage(m_cp1250,(char*)note->subject.c_str())+" - ";
-    }
-    editWin->windowTitle = editWin->windowTitle + APPNAME;
-    */
     makeEditWindowTitle(editWin,note,false);
     
     editWin->hwnd =CreateWindow(editWindowClass, editWin->windowTitle.c_str(), WS_OVERLAPPEDWINDOW,
@@ -291,7 +311,8 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
         
         winMem[editWin->hwnd]=editWin;
         
-        ShowWindow(editWin->hwnd,SW_SHOW);
+        //ShowWindow(editWin->hwnd,SW_SHOW);
+        ShowWindow(editWin->hwnd,getState(hwnd));
         UpdateWindow(editWin->hwnd);
 
         return editWin->hwnd;
@@ -519,6 +540,38 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,MF_GRAYED);
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,MF_GRAYED);
             }
+            if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON1)))
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_RELOAD,MF_ENABLED);
+            }
+            else
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_RELOAD,MF_GRAYED);
+            }
+            if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON3)))
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,MF_ENABLED);
+            }
+            else
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,MF_GRAYED);
+            }
+            if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4)))
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_EXIT,MF_ENABLED);
+            }
+            else
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_EXIT,MF_GRAYED);
+            }
+            if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON5)))
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,MF_ENABLED);
+            }
+            else
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,MF_GRAYED);
+            }
             break;
         case WM_COMMAND:
             switch(wParam)
@@ -530,19 +583,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON2, 0);
                     break;
                 case ID_ACC_ENTER:
-                    if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON3)))
-                    {
-                        SendMessage(hwnd, WM_COMMAND, ID_BUTTON3, 0);
-                    }
+                    SendMessage(hwnd, WM_COMMAND, ID_BUTTON3, 0);
                     break;
                 case ID_ACC_F5:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_ACC_F5);
                     break;
                 case ID_ACC_F8:
-                    if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON5)))
-                    {
-                        SendMessage(hwnd, WM_COMMAND, ID_BUTTON5, 0);
-                    }
+                    SendMessage(hwnd, WM_COMMAND, ID_BUTTON5, 0);
                     break;
                 case ID_ACC_ALTF4:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON4, 0);
@@ -565,6 +612,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case ID_FILE_EXIT:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON4, 0);
                     break;
+                case ID_OPTIONS_PREFERENCES:
+                    MakeDialogBox(hwnd,IDD_DIALOG3,DlgProc3);
+                    break;
                 case ID_HELP_HELP:
                     WinHelp(g_hwnd,HELPFILE,HELP_CONTENTS,0);
                     break;
@@ -575,6 +625,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     MakeDialogBox(hwnd,IDD_DIALOG2,DlgProc2);
                     break;
                 case ID_BUTTON1:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON1)))
+                    {
+                        break;
+                    }
+                    main_LockAllButtons(hwnd);
                     SetWindowText(GetDlgItem(hwnd,ID_STATIC5),"Pobieranie listy notatek...");
                     if(noteCount>0)
                     {
@@ -603,23 +658,28 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         mainLastResult=INFO_LIST_SUCCESSFUL;
                         if(lParam!=0)
                         {
-                            tempString=getAnswerString(mainLastResult)+" Iloœæ: "+IntToStr(noteCount)+".";
+                            tempString=noter_getAnswerString(mainLastResult)+" Iloœæ: "+IntToStr(noteCount)+".";
                             SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)tempString.c_str());
                         }
                     }
                     else
                     {
                         mainLastResult=noteCount;
-                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)getAnswerString(mainLastResult).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                         EnableWindow(GetDlgItem(hwnd,ID_BUTTON3),false);
                         EnableWindow(GetDlgItem(hwnd,ID_BUTTON5),false);
                     }
+                    main_UnlockAllButtons(hwnd);
                     break;
                 case ID_BUTTON2:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON2)))
+                    {
+                        break;
+                    }
                     if(mainLastResult!=0)
                     {
                         mainLastResult=0;
-                        // SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)getAnswerString(mainLastResult).c_str());
+                        // SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                     }
                     SetWindowText(GetDlgItem(hwnd,ID_STATIC5),"Tworzenie okna edycji...");
                     if(createEditWindow(hwnd,winMem,NULL)==NULL)
@@ -629,14 +689,19 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     }
                     else
                     {
-                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)getAnswerString(INFO_OK).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(INFO_OK).c_str());
                     }
                     break;
                 case ID_BUTTON3:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON3)))
+                    {
+                        break;
+                    }
+                    main_LockAllButtons(hwnd);
                     if(mainLastResult!=0)
                     {
                         mainLastResult=0;
-                        // SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)getAnswerString(mainLastResult).c_str());
+                        // SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                     }
                     SetWindowText(GetDlgItem(hwnd,ID_STATIC5),"Pobieranie notatki...");
                     index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
@@ -649,10 +714,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             HWND tempHwnd=createEditWindow(hwnd,winMem,note);
                             if(tempHwnd!=NULL)
                             {
-                                tempString=getAnswerString(result)+" Data ostatniej modyfikacji: "+toCodePage(m_cp1250,(char*)note->lastModified.c_str())+".";
+                                tempString=noter_getAnswerString(result)+" Data ostatniej modyfikacji: "+toCodePage(m_cp1250,(char*)note->lastModified.c_str())+".";
                                 SetWindowText(GetDlgItem(tempHwnd,ID_EDIT_STATIC4),(char*)tempString.c_str());
                                 winMem[tempHwnd]->lastResult=result;
-                                SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)getAnswerString(INFO_OK).c_str());
+                                SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(INFO_OK).c_str());
                             }
                             else
                             {
@@ -663,23 +728,32 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         else
                         {
                             mainLastResult=result;
-                            SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)getAnswerString(mainLastResult).c_str());
+                            SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                         }
                     }
+                    main_UnlockAllButtons(hwnd);
                     break;
                 case ID_BUTTON4:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4)))
+                    {
+                        break;
+                    }
                     if(mainLastResult!=0)
                     {
                         mainLastResult=0;
-                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)getAnswerString(mainLastResult).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                     }
                     SendMessage(hwnd, WM_CLOSE, 0, 0);
                     break;
                 case ID_BUTTON5:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON5)))
+                    {
+                        break;
+                    }
                     if(mainLastResult!=0)
                     {
                         mainLastResult=0;
-                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)getAnswerString(mainLastResult).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                     }
                     index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
                     tempString="Czy na pewno chcesz usun¹æ notatkê";
@@ -688,8 +762,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     tempString=tempString+"\"?";
                     if(MessageBox(hwnd,(char*)tempString.c_str(),APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES)
                     {
+                        main_LockAllButtons(hwnd);
                         mainLastResult=noter_deleteNote(connectionSettings,credentials,notes[index].id,buffer);
-                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)getAnswerString(mainLastResult).c_str());
+                        main_UnlockAllButtons(hwnd);
+                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                         if(mainLastResult==INFO_NOTE_DELETED)
                         {
                             SendMessage(hwnd,WM_COMMAND,ID_BUTTON1,0);
@@ -711,7 +787,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             if(mainLastResult!=0)
                             {
                                 mainLastResult=0;
-                                SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)getAnswerString(mainLastResult).c_str());
+                                SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                             }
                             break;
                     }
@@ -741,16 +817,19 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
             break;
         case WM_CLOSE:
-            if(winMem.size()>0)
+            if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4)))
             {
-                for(WINDOWMEMORY::iterator it = winMem.begin(); it != winMem.end(); ++it)
+                if(winMem.size()>0)
                 {
-                    SendMessage(it->second->hwnd, WM_CLOSE, 0, 0);
+                    for(WINDOWMEMORY::iterator it = winMem.begin(); it != winMem.end(); ++it)
+                    {
+                        SendMessage(it->second->hwnd, WM_CLOSE, 0, 0);
+                    }
                 }
-            }
-            if(winMem.size()==0)
-            {
-                DestroyWindow(hwnd);
+                if(winMem.size()==0)
+                {
+                    DestroyWindow(hwnd);
+                }
             }
             break;
         case WM_DESTROY:
@@ -784,6 +863,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     unsigned long int width;
     unsigned long int height;
     unsigned long int sel;
+    unsigned int result;
     switch(msg)
     {
         case WM_CTLCOLOR:
@@ -807,7 +887,8 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_PROPERTIES,MF_GRAYED);
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_TONEWNOTE,MF_GRAYED);
                 ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,"Dodaj\tCtrl+S");
-                if((winMem[hwnd]->subjectChanged) && (winMem[hwnd]->entryChanged))
+                //if((winMem[hwnd]->subjectChanged) && (winMem[hwnd]->entryChanged))
+                if(IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1)))
                 {
                     EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,MF_ENABLED);
                 }
@@ -818,10 +899,18 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             }
             else
             {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_PROPERTIES,MF_ENABLED);
+                if(IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON2)))
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_FILE_PROPERTIES,MF_ENABLED);
+                }
+                else
+                {
+                    EnableMenuItem(GetMenu(hwnd),ID_FILE_PROPERTIES,MF_GRAYED);
+                }
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_TONEWNOTE,MF_ENABLED);
                 ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,"Aktualizuj\tCtrl+S");
-                if((winMem[hwnd]->subjectChanged) || (winMem[hwnd]->entryChanged))
+                //if((winMem[hwnd]->subjectChanged) || (winMem[hwnd]->entryChanged))
+                if(IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1)))
                 {
                     EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,MF_ENABLED);
                 }
@@ -938,7 +1027,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     if(winMem[hwnd]->lastResult!=0)
                     {
                         winMem[hwnd]->lastResult=0;
-                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
                     winMem[hwnd]->note->id=0;
                     EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),true);
@@ -959,7 +1048,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         if(winMem[hwnd]->lastResult!=0)
                         {
                             winMem[hwnd]->lastResult=0;
-                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                         }
                         SendMessage(GetFocus(),WM_UNDO,0,0);
                     }
@@ -970,7 +1059,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         if(winMem[hwnd]->lastResult!=0)
                         {
                             winMem[hwnd]->lastResult=0;
-                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                         }
                         SendMessage(GetFocus(),WM_CUT,0,0);
                     }
@@ -981,7 +1070,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         if(winMem[hwnd]->lastResult!=0)
                         {
                             winMem[hwnd]->lastResult=0;
-                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                         }
                         SendMessage(GetFocus(),WM_COPY,0,0);
                     }
@@ -992,7 +1081,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         if(winMem[hwnd]->lastResult!=0)
                         {
                             winMem[hwnd]->lastResult=0;
-                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                         }
                         SendMessage(GetFocus(),WM_PASTE,0,0);
                     }
@@ -1003,7 +1092,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         if(winMem[hwnd]->lastResult!=0)
                         {
                             winMem[hwnd]->lastResult=0;
-                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                         }
                         SendMessage(GetFocus(),WM_CLEAR,0,0);
                     }
@@ -1014,7 +1103,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         if(winMem[hwnd]->lastResult!=0)
                         {
                             winMem[hwnd]->lastResult=0;
-                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                         }
                         SendMessage(GetFocus(),EM_SETSEL,0,65535);
                     }
@@ -1023,7 +1112,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     if(winMem[hwnd]->lastResult!=0)
                     {
                         winMem[hwnd]->lastResult=0;
-                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
                     WinHelp(g_hwnd,HELPFILE,HELP_CONTENTS,0);
                     break;
@@ -1031,7 +1120,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     if(winMem[hwnd]->lastResult!=0)
                     {
                         winMem[hwnd]->lastResult=0;
-                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
                     WinHelp(g_hwnd,"",HELP_HELPONHELP,0);
                     break;
@@ -1039,7 +1128,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     if(winMem[hwnd]->lastResult!=0)
                     {
                         winMem[hwnd]->lastResult=0;
-                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
                     MakeDialogBox(hwnd,IDD_DIALOG2,DlgProc2);
                     break;
@@ -1067,7 +1156,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                                 if(winMem[hwnd]->lastResult!=0)
                                 {
                                     winMem[hwnd]->lastResult=0;
-                                    SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                                    SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                                 }
                             }
                             break;
@@ -1097,17 +1186,21 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                                 if(winMem[hwnd]->lastResult!=0)
                                 {
                                     winMem[hwnd]->lastResult=0;
-                                    SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                                    SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                                 }
                             }
                             break;
                     }
                     break;
                 case ID_EDIT_BUTTON1:
+                    if((!IsWindowEnabled(GetDlgItem(g_hwnd,ID_BUTTON4))) || (!IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1))))
+                    {
+                        break;
+                    }
                     if(winMem[hwnd]->lastResult!=0)
                     {
                         winMem[hwnd]->lastResult=0;
-                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
                     GetWindowText(GetDlgItem(hwnd,ID_EDIT_EDITBOX1),buffer,65535);
                     winMem[hwnd]->note->subject=fromCodePage(cp1250,buffer);
@@ -1115,46 +1208,66 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     winMem[hwnd]->note->entry=fromCodePage(cp1250,buffer);
                     if(winMem[hwnd]->note->id==0)
                     {
+                        edit_LockAllButtons(hwnd);
                         winMem[hwnd]->lastResult=noter_addNote(connectionSettings,credentials,*winMem[hwnd]->note,buffer);
-                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
-                        if(winMem[hwnd]->lastResult>0)
+                        edit_UnlockAllButtons(hwnd);
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        if(winMem[hwnd]->lastResult>=0)
                         {
                             SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);
-                            EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
-                            EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),true);
+                            //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
+                            //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),true);
                             SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),"Aktualizuj");
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
                             makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true);
                         }
+                        else
+                        {
+                            EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),true);
+                        }
                     }
                     else
                     {
+                        edit_LockAllButtons(hwnd);
                         winMem[hwnd]->lastResult=noter_updateNote(connectionSettings,credentials,*winMem[hwnd]->note,buffer);
-                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
-                        if(winMem[hwnd]->lastResult>0)
+                        edit_UnlockAllButtons(hwnd);
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        if(winMem[hwnd]->lastResult>=0)
                         {
                             SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);
-                            EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
+                            //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
                             makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true);
                         }
+                        else
+                        {
+                            EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),true);
+                        }
                     }
                     break;
                 case ID_EDIT_BUTTON2:
+                    if((!IsWindowEnabled(GetDlgItem(g_hwnd,ID_BUTTON4))) || (!IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON2))))
+                    {
+                        break;
+                    }
                     if(winMem[hwnd]->lastResult!=0)
                     {
                         winMem[hwnd]->lastResult=0;
-                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
                     MakeDialogBox(hwnd,IDD_DIALOG1,DlgProc);
                     break;
                 case ID_EDIT_BUTTON3:
+                    if((!IsWindowEnabled(GetDlgItem(g_hwnd,ID_BUTTON4))) || (!IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON3))))
+                    {
+                        break;
+                    }
                     if(winMem[hwnd]->lastResult!=0)
                     {
                         winMem[hwnd]->lastResult=0;
-                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)getAnswerString(winMem[hwnd]->lastResult).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
                     SendMessage(hwnd, WM_CLOSE, 0, 0);
                     break;
@@ -1176,7 +1289,10 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             
             break;
         case WM_CLOSE:
-            unsigned int result;
+            if((!IsWindowEnabled(GetDlgItem(g_hwnd,ID_BUTTON4))) || (!IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON3))))
+            {
+                break;
+            }
             if((winMem[hwnd]!=NULL) && (winMem[hwnd]->subjectChanged || winMem[hwnd]->entryChanged))
             {
                 //GetWindowText(hwnd,buffer,32767);
@@ -1221,14 +1337,9 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     switch(msg)
     {
         case WM_INITDIALOG:
-            /*
-            if(Ctl3dEnabled())
-            {
-                unsigned int ctlRegs=CTL3D_ALL;
-                Ctl3dSubclassDlg(hwnd,ctlRegs);
-            }
-            */
+            properties_LockAllButtons(hwnd);
             result=noter_getNote(connectionSettings,credentials,winMem[GetParent(hwnd)]->note->id,buffer,tempNote);
+            properties_UnlockAllButtons(hwnd);
             if(result>=0)
             {
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC1),(char*)toCodePage(m_cp1250,(char*)tempNote.subject.c_str()).c_str());
@@ -1251,10 +1362,11 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             else
             {
                 //GetWindowText(GetParent(hwnd),buffer,32767);
-                MessageBox(hwnd,(char*)getAnswerString(result).c_str(),APPNAME,MB_ICONHAND | MB_OK);
+                MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),APPNAME,MB_ICONHAND | MB_OK);
                 EndDialog(hwnd,IDOK);
             }
             break;
+            /*
         case WM_CTLCOLOR:
             switch(HIWORD(lParam))
             {
@@ -1263,6 +1375,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     break;
             }
             break;
+            */
         case WM_COMMAND:
             switch(wParam)
             {
@@ -1281,7 +1394,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     else
                     {
                         //GetWindowText(GetParent(hwnd),buffer,32767);
-                        MessageBox(hwnd,(char*)getAnswerString(result).c_str(),APPNAME,MB_ICONHAND | MB_OK);
+                        MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),APPNAME,MB_ICONHAND | MB_OK);
                     }
                     break;
                 case IDC_BUTTON2:
@@ -1296,7 +1409,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     else
                     {
                         //GetWindowText(GetParent(hwnd),buffer,32767);
-                        MessageBox(hwnd,(char*)getAnswerString(result).c_str(),APPNAME,MB_ICONHAND | MB_OK);
+                        MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),APPNAME,MB_ICONHAND | MB_OK);
                     }
                     break;
             }
@@ -1331,6 +1444,7 @@ BOOL CALLBACK DlgProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             */
             SetWindowText(GetDlgItem(hwnd,IDC_STATIC7),APPNAME);
             break;
+            /*
         case WM_CTLCOLOR:
             switch(HIWORD(lParam))
             {
@@ -1339,6 +1453,7 @@ BOOL CALLBACK DlgProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     break;
             }
             break;
+            */
         case WM_COMMAND:
             switch(wParam)
             {
@@ -1346,6 +1461,111 @@ BOOL CALLBACK DlgProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     EndDialog(hwnd,IDOK);
                     break;
             }
+        case WM_CLOSE:
+            EndDialog(hwnd,IDOK);
+            break;
+        default:
+            return FALSE;
+    }
+    return TRUE;
+}
+
+//////////////////////////////////////
+//
+//  DIALOG PREFERENCJI
+//
+//////////////////////////////////////
+
+BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    bool enabled, option1, option2;
+    switch(msg)
+    {
+        case WM_INITDIALOG:
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"Normalne okno");
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"Zminimalizowane");
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"Zmaksymalizowane");
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)"Normalne okno");
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)"Zminimalizowane");
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)"Zmaksymalizowane");
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_SETCURSEL, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_SETCURSEL, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), WM_PAINT, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), WM_PAINT, 0, 0);
+            option1=true;
+            option2=true;
+            if(option1)
+            {
+                CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO1);
+                EnableWindow(GetDlgItem(hwnd,IDC_COMBO1),false);
+            }
+            else
+            {
+                CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO2);
+                EnableWindow(GetDlgItem(hwnd,IDC_COMBO1),true);
+            }
+            if(option2)
+            {
+                CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO3);
+                EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),false);
+            }
+            else
+            {
+                CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO4);
+                EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),true);
+            }
+            enabled=IsDlgButtonChecked(hwnd, IDC_CHECK3);
+            EnableWindow(GetDlgItem(hwnd,IDC_CHECK4),enabled);
+            EnableWindow(GetDlgItem(hwnd,IDC_CHECK5),enabled);
+            EnableWindow(GetDlgItem(hwnd,IDC_CHECK6),enabled);
+            EnableWindow(GetDlgItem(hwnd,IDC_CHECK7),enabled);
+            EnableWindow(GetDlgItem(hwnd,IDC_CHECK8),enabled);
+            break;
+            /*
+        case WM_CTLCOLOR:
+            switch(HIWORD(lParam))
+            {
+                case CTLCOLOR_BTN:
+                    SetBkMode((HDC)wParam, TRANSPARENT);
+                    break;
+            }
+            break;
+            */
+        case WM_COMMAND:
+            switch(wParam)
+            {
+                case IDOK:
+                    EndDialog(hwnd,IDOK);
+                    break;
+                case IDCANCEL:
+                    EndDialog(hwnd,IDCANCEL);
+                    break;
+                case IDC_RADIO1:
+                    CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO1);
+                    EnableWindow(GetDlgItem(hwnd,IDC_COMBO1),false);
+                    break;
+                case IDC_RADIO2:
+                    CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO2);
+                    EnableWindow(GetDlgItem(hwnd,IDC_COMBO1),true);
+                    break;
+                case IDC_RADIO3:
+                    CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO3);
+                    EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),false);
+                    break;
+                case IDC_RADIO4:
+                    CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO4);
+                    EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),true);
+                    break;
+                case IDC_CHECK3:
+                    enabled=IsDlgButtonChecked(hwnd, IDC_CHECK3);
+                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK4),enabled);
+                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK5),enabled);
+                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK6),enabled);
+                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK7),enabled);
+                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK8),enabled);
+                    break;
+            }
+            break;
         case WM_CLOSE:
             EndDialog(hwnd,IDOK);
             break;
