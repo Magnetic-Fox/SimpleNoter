@@ -53,16 +53,58 @@ typedef struct editWindow
 
 typedef std::map<HWND,EDITWINDOW*> WINDOWMEMORY;
 
+typedef struct mainSettings
+{
+    bool mainWindowSystem, editWindowSystem;
+    unsigned int mainWindowStyle, editWindowStyle;
+    bool autoReload, use3DControls, use3DButtons, use3DLists, use3DEdits, use3DCombos, use3DDialogs;
+} MAINSETTINGS;
+
+MAINSETTINGS getMainSettings(char* iniFile)
+{
+    MAINSETTINGS mainSettings;
+    mainSettings.mainWindowSystem=(GetPrivateProfileInt("Settings","MainWindowSystem",1,iniFile)==1);
+    mainSettings.editWindowSystem=(GetPrivateProfileInt("Settings","EditWindowSystem",1,iniFile)==1);
+    mainSettings.mainWindowStyle=GetPrivateProfileInt("Settings","MainWindowStyle",0,iniFile);
+    mainSettings.editWindowStyle=GetPrivateProfileInt("Settings","EditWindowStyle",0,iniFile);
+    mainSettings.autoReload=(GetPrivateProfileInt("Settings","AutoReload",1,iniFile)==1);
+    mainSettings.use3DControls=(GetPrivateProfileInt("Settings","Use3DControls",0,iniFile)==1);
+    mainSettings.use3DButtons=(GetPrivateProfileInt("Settings","Use3DButtons",0,iniFile)==1);
+    mainSettings.use3DLists=(GetPrivateProfileInt("Settings","Use3DLists",0,iniFile)==1);
+    mainSettings.use3DEdits=(GetPrivateProfileInt("Settings","Use3DEdits",0,iniFile)==1);
+    mainSettings.use3DCombos=(GetPrivateProfileInt("Settings","Use3DCombos",0,iniFile)==1);
+    mainSettings.use3DDialogs=(GetPrivateProfileInt("Settings","Use3DDialogs",0,iniFile)==1);
+    return mainSettings;
+}
+
+void saveMainSettings(MAINSETTINGS &mainSettings, char* iniFile)
+{
+    WritePrivateProfileString("Settings","MainWindowSystem",(char*)IntToStr(mainSettings.mainWindowSystem).c_str(),iniFile);
+    WritePrivateProfileString("Settings","EditWindowSystem",(char*)IntToStr(mainSettings.editWindowSystem).c_str(),iniFile);
+    WritePrivateProfileString("Settings","MainWindowStyle",(char*)IntToStr(mainSettings.mainWindowStyle).c_str(),iniFile);
+    WritePrivateProfileString("Settings","EditWindowStyle",(char*)IntToStr(mainSettings.editWindowStyle).c_str(),iniFile);
+    WritePrivateProfileString("Settings","AutoReload",(char*)IntToStr(mainSettings.autoReload).c_str(),iniFile);
+    WritePrivateProfileString("Settings","Use3DControls",(char*)IntToStr(mainSettings.use3DControls).c_str(),iniFile);
+    WritePrivateProfileString("Settings","Use3DButtons",(char*)IntToStr(mainSettings.use3DButtons).c_str(),iniFile);
+    WritePrivateProfileString("Settings","Use3DLists",(char*)IntToStr(mainSettings.use3DLists).c_str(),iniFile);
+    WritePrivateProfileString("Settings","Use3DEdits",(char*)IntToStr(mainSettings.use3DEdits).c_str(),iniFile);
+    WritePrivateProfileString("Settings","Use3DCombos",(char*)IntToStr(mainSettings.use3DCombos).c_str(),iniFile);
+    WritePrivateProfileString("Settings","Use3DDialogs",(char*)IntToStr(mainSettings.use3DDialogs).c_str(),iniFile);
+    return;
+}
+
 HBRUSH g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
 WINDOWMEMORY winMem;
 HWND g_hwnd;
 char buffer[65536];
 CODEPAGE m_cp1250;
-NOTER_CONNECTION_SETTINGS connectionSettings;
+NOTER_CONNECTION_SETTINGS connectionSettings ;
 NOTER_CREDENTIALS credentials;
+MAINSETTINGS mainSettings;
 NOTE_SUMMARY *notes=NULL;
 long int noteCount=0;
 long int mainLastResult=0;
+unsigned int ctlRegs=0;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
@@ -310,9 +352,20 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
         editWin->lastResult=0;
         
         winMem[editWin->hwnd]=editWin;
+
+        if(mainSettings.use3DControls && Ctl3dEnabled())
+        {
+            Ctl3dSubclassDlg(editWin->hwnd,ctlRegs);
+        }
         
-        //ShowWindow(editWin->hwnd,SW_SHOW);
-        ShowWindow(editWin->hwnd,getState(hwnd));
+        if(mainSettings.editWindowSystem)
+        {
+            ShowWindow(editWin->hwnd,getState(hwnd));
+        }
+        else
+        {
+            ShowWindow(editWin->hwnd,(mainSettings.editWindowStyle+1));
+        }
         UpdateWindow(editWin->hwnd);
 
         return editWin->hwnd;
@@ -339,6 +392,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     std::string iniFile=getDefaultIniFile(buffer);
     connectionSettings=getConnectionSettings((char*)iniFile.c_str());
     credentials=getCredentials((char*)iniFile.c_str());
+    mainSettings=getMainSettings((char*)iniFile.c_str());
     prepareCodePage(m_cp1250,cp1250);
 
     if(wsInit() == SOCKET_ERROR)
@@ -451,35 +505,54 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                            
     hStatic5 = CreateWindow("STATIC", "Wszystko w porz¹dku.", WS_CHILD | WS_VISIBLE | SS_LEFT,
                             0, 370, 600, 16, hwnd, (HMENU)ID_STATIC5, hInstance, NULL);
-    
-    if(Ctl3dRegister(hInstance) && Ctl3dEnabled())
+
+    if(mainSettings.use3DControls)
     {
-        unsigned int ctlRegs=(CTL3D_ALL) & ~(CTL3D_STATICFRAMES);
-        // unsigned int ctlRegs=CTL3D_ALL;
-        //Ctl3dSubclassDlg(hwnd,ctlRegs);
-        
-        /*
-        Ctl3dSubclassCtl(hPrzycisk);
-        Ctl3dSubclassCtl(hPrzycisk2);
-        Ctl3dSubclassCtl(hPrzycisk3);
-        
-        Ctl3dSubclassCtl(hText);
-        Ctl3dSubclassCtl(hCheckBox);
-        Ctl3dSubclassCtl(hListBox);
-        Ctl3dSubclassCtl(hListBox2);
-        Ctl3dSubclassCtl(hText2);
-        */
-        //Ctl3dAutoSubclass(hInstance);
+        if(Ctl3dRegister(hInstance) && Ctl3dEnabled())
+        {
+            ctlRegs=(CTL3D_ALL) & ~(CTL3D_STATICFRAMES);
+            if(!mainSettings.use3DButtons)
+            {
+                ctlRegs=ctlRegs & ~(CTL3D_BUTTONS);
+            }
+            if(!mainSettings.use3DLists)
+            {
+                ctlRegs=ctlRegs & ~(CTL3D_LISTBOXES);
+            }
+            if(!mainSettings.use3DEdits)
+            {
+                ctlRegs=ctlRegs & ~(CTL3D_EDITS);
+            }
+            if(!mainSettings.use3DCombos)
+            {
+                ctlRegs=ctlRegs & ~(CTL3D_COMBOS);
+            }
+            Ctl3dSubclassDlg(hwnd,ctlRegs);
+            if(mainSettings.use3DDialogs)
+            {
+                Ctl3dAutoSubclass(hInstance);
+            }
+        }
+        else
+        {
+            MessageBox(hwnd,"Zarejestrowanie CTL3D nie powiod³o siê!","Ostrze¿enie",MB_ICONEXCLAMATION);
+        }
+    }
+
+    if(mainSettings.mainWindowSystem)
+    {
+        ShowWindow(hwnd,nCmdShow);
     }
     else
     {
-        MessageBox(hwnd,"Zarejestrowanie CTL3D nie powiod³o siê!","Ostrze¿enie",MB_ICONEXCLAMATION);
+        ShowWindow(hwnd,(mainSettings.mainWindowStyle+1));
     }
-
-    ShowWindow(hwnd,nCmdShow);
     UpdateWindow(hwnd);
 
-    SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
+    if(mainSettings.autoReload)
+    {
+        SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
+    }
 
     while(GetMessage(&Komunikat, NULL, 0, 0 ))
     {
@@ -1478,7 +1551,8 @@ BOOL CALLBACK DlgProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    bool enabled, option1, option2;
+    bool enabled;
+    std::string iniFile;
     switch(msg)
     {
         case WM_INITDIALOG:
@@ -1488,13 +1562,11 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)"Normalne okno");
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)"Zminimalizowane");
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)"Zmaksymalizowane");
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_SETCURSEL, 0, 0);
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_SETCURSEL, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_SETCURSEL, mainSettings.mainWindowStyle, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_SETCURSEL, mainSettings.editWindowStyle, 0);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), WM_PAINT, 0, 0);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), WM_PAINT, 0, 0);
-            option1=true;
-            option2=true;
-            if(option1)
+            if(mainSettings.mainWindowSystem)
             {
                 CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO1);
                 EnableWindow(GetDlgItem(hwnd,IDC_COMBO1),false);
@@ -1504,7 +1576,7 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO2);
                 EnableWindow(GetDlgItem(hwnd,IDC_COMBO1),true);
             }
-            if(option2)
+            if(mainSettings.editWindowSystem)
             {
                 CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO3);
                 EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),false);
@@ -1513,6 +1585,62 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             {
                 CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO4);
                 EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),true);
+            }
+            if(mainSettings.autoReload)
+            {
+                CheckDlgButton(hwnd, IDC_CHECK2, BST_CHECKED);
+            }
+            else
+            {
+                CheckDlgButton(hwnd, IDC_CHECK2, BST_UNCHECKED);
+            }
+            if(mainSettings.use3DControls)
+            {
+                CheckDlgButton(hwnd, IDC_CHECK3, BST_CHECKED);
+            }
+            else
+            {
+                CheckDlgButton(hwnd, IDC_CHECK3, BST_UNCHECKED);
+            }
+            if(mainSettings.use3DButtons)
+            {
+                CheckDlgButton(hwnd, IDC_CHECK4, BST_CHECKED);
+            }
+            else
+            {
+                CheckDlgButton(hwnd, IDC_CHECK4, BST_UNCHECKED);
+            }
+            if(mainSettings.use3DLists)
+            {
+                CheckDlgButton(hwnd, IDC_CHECK5, BST_CHECKED);
+            }
+            else
+            {
+                CheckDlgButton(hwnd, IDC_CHECK5, BST_UNCHECKED);
+            }
+            if(mainSettings.use3DEdits)
+            {
+                CheckDlgButton(hwnd, IDC_CHECK6, BST_CHECKED);
+            }
+            else
+            {
+                CheckDlgButton(hwnd, IDC_CHECK6, BST_UNCHECKED);
+            }
+            if(mainSettings.use3DCombos)
+            {
+                CheckDlgButton(hwnd, IDC_CHECK7, BST_CHECKED);
+            }
+            else
+            {
+                CheckDlgButton(hwnd, IDC_CHECK7, BST_UNCHECKED);
+            }
+            if(mainSettings.use3DDialogs)
+            {
+                CheckDlgButton(hwnd, IDC_CHECK8, BST_CHECKED);
+            }
+            else
+            {
+                CheckDlgButton(hwnd, IDC_CHECK8, BST_UNCHECKED);
             }
             enabled=IsDlgButtonChecked(hwnd, IDC_CHECK3);
             EnableWindow(GetDlgItem(hwnd,IDC_CHECK4),enabled);
@@ -1535,6 +1663,20 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             switch(wParam)
             {
                 case IDOK:
+                    GetModuleFileName(GetWindowWord(g_hwnd,GWW_HINSTANCE),buffer,32767);
+                    iniFile=getDefaultIniFile(buffer);
+                    mainSettings.mainWindowSystem=IsDlgButtonChecked(hwnd, IDC_RADIO1);
+                    mainSettings.editWindowSystem=IsDlgButtonChecked(hwnd, IDC_RADIO3);
+                    mainSettings.mainWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_COMBO1), CB_GETCURSEL, 0, 0);
+                    mainSettings.editWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_COMBO2), CB_GETCURSEL, 0, 0);
+                    mainSettings.autoReload=IsDlgButtonChecked(hwnd, IDC_CHECK2);
+                    mainSettings.use3DControls=IsDlgButtonChecked(hwnd, IDC_CHECK3);
+                    mainSettings.use3DButtons=IsDlgButtonChecked(hwnd, IDC_CHECK4);
+                    mainSettings.use3DLists=IsDlgButtonChecked(hwnd, IDC_CHECK5);
+                    mainSettings.use3DEdits=IsDlgButtonChecked(hwnd, IDC_CHECK6);
+                    mainSettings.use3DCombos=IsDlgButtonChecked(hwnd, IDC_CHECK7);
+                    mainSettings.use3DDialogs=IsDlgButtonChecked(hwnd, IDC_CHECK8);
+                    saveMainSettings(mainSettings,(char*)iniFile.c_str());
                     EndDialog(hwnd,IDOK);
                     break;
                 case IDCANCEL:
