@@ -67,7 +67,7 @@ MAINSETTINGS getMainSettings(char* iniFile)
     mainSettings.editWindowSystem=(GetPrivateProfileInt("Settings","EditWindowSystem",1,iniFile)==1);
     mainSettings.mainWindowStyle=GetPrivateProfileInt("Settings","MainWindowStyle",0,iniFile);
     mainSettings.editWindowStyle=GetPrivateProfileInt("Settings","EditWindowStyle",0,iniFile);
-    mainSettings.autoReload=(GetPrivateProfileInt("Settings","AutoReload",1,iniFile)==1);
+    mainSettings.autoReload=(GetPrivateProfileInt("Settings","AutoReload",0,iniFile)==1);
     mainSettings.use3DControls=(GetPrivateProfileInt("Settings","Use3DControls",0,iniFile)==1);
     mainSettings.use3DButtons=(GetPrivateProfileInt("Settings","Use3DButtons",0,iniFile)==1);
     mainSettings.use3DLists=(GetPrivateProfileInt("Settings","Use3DLists",0,iniFile)==1);
