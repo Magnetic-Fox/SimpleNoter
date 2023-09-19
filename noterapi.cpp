@@ -1,5 +1,72 @@
 #include "noterapi.hpp"
 
+std::string noter_getAnswerString(long int answerCode)
+{
+    switch(answerCode)
+    {
+        case ERROR_WRONG_RESPONSE:
+            return "Nie uda³o siê po³¹czyæ z serwerem.";
+        case ERROR_SERVICE_DISABLED:
+            return "Us³uga tymczasowo niedostêpna.";
+        case ERROR_INTERNAL_SERVER_ERROR:
+            return "B³¹d wewnêtrzny serwera.";
+        case ERROR_NOTE_ALREADY_UNLOCKED:
+            return "Notatka ju¿ odblokowana.";
+        case ERROR_NOTE_ALREADY_LOCKED:
+            return "Notatka ju¿ zablokowana.";
+        case ERROR_NOTE_LOCKED:
+            return "Notatka jest zablokowana.";
+        case ERROR_USER_REMOVAL_FAILURE:
+            return "Usuniêcie u¿ytkownika nie powiod³o siê.";
+        case ERROR_USER_NOT_EXISTS:
+            return "Dany u¿ytkownik nie istnieje.";
+        case ERROR_NOTE_NOT_EXISTS:
+            return "Dana notatka nie istnieje.";
+        case ERROR_NO_NECESSARY_INFORMATION:
+            return "Brak wymaganych informacji (temat lub treœæ).";
+        case ERROR_USER_DEACTIVATED:
+            return "U¿ytkownik zablokowany.";
+        case ERROR_LOGIN_INCORRECT:
+            return "Nieprawid³owe dane logowania.";
+        case ERROR_UNKNOWN_ACTION:
+            return "Nieprawid³owe polecenie.";
+        case ERROR_NO_CREDENTIALS:
+            return "Brak danych logowania.";
+        case ERROR_USER_EXISTS:
+            return "Podana nazwa u¿ytkownika jest ju¿ zajêta.";
+        case ERROR_NO_USABLE_INFORMATION:
+            return "Brak u¿ytecznych informacji w ¿¹daniu.";
+        case ERROR_INVALID_METHOD:
+            return "Nieobs³ugiwane ¿¹danie.";
+        case INFO_OK:
+            return "Wszystko w porz¹dku.";
+        case INFO_USER_CREATED:
+            return "U¿ytkownik zosta³ zarejestrowany.";
+        case INFO_USER_UPDATED:
+            return "Dane u¿ytkownika zosta³y zaktualizowane.";
+        case INFO_USER_REMOVED:
+            return "U¿ytkownik zosta³ usuniêty.";
+        case INFO_LIST_SUCCESSFUL:
+            return "Lista notatek zosta³a za³adowana.";
+        case INFO_NOTE_RETRIEVED:
+            return "Notatka zosta³a za³adowana.";
+        case INFO_NOTE_CREATED:
+            return "Notatka zosta³a utworzona.";
+        case INFO_NOTE_UPDATED:
+            return "Notatka zosta³a zaktualizowana.";
+        case INFO_NOTE_DELETED:
+            return "Notatka zosta³a usuniêta.";
+        case INFO_USER_INFO_RETRIEVED:
+            return "Informacje o u¿ytkowniku zosta³y za³adowane.";
+        case INFO_NOTE_LOCKED:
+            return "Notatka zosta³a zablokowana.";
+        case INFO_NOTE_UNLOCKED:
+            return "Notatka zosta³a odblokowana.";
+        default:
+            return "Nieznany kod odpowiedzi.";
+    }
+}
+
 NOTER_CREDENTIALS noter_prepareCredentials(char* username, char* password)
 {
     NOTER_CREDENTIALS credentials;

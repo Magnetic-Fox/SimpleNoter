@@ -63,6 +63,7 @@ typedef struct NOTER_NOTES
     long int noteCount;
 } NOTER_NOTES;
 
+std::string noter_getAnswerString(long int);
 NOTER_CREDENTIALS noter_prepareCredentials(char*, char*);
 NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char*, unsigned int, char*, char*);
 bool noter_checkAndPrepareResponse(HEADERS&, char*&, unsigned int&, json_value*&, NAMEDESCRIPTOR&);
