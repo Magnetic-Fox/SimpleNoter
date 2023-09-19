@@ -36,6 +36,7 @@ NOTE_SUMMARY *notes=NULL;
 long int noteCount=0;
 long int mainLastResult=0;
 unsigned int ctlRegs=0;
+bool check3DChanged;
 
 //////////////////////////////////////
 //
@@ -1382,6 +1383,7 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     switch(msg)
     {
         case WM_INITDIALOG:
+            check3DChanged=false;
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"Normalne okno");
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"Zminimalizowane");
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"Zmaksymalizowane");
@@ -1503,6 +1505,10 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     mainSettings.use3DCombos=IsDlgButtonChecked(hwnd, IDC_CHECK7);
                     mainSettings.use3DDialogs=IsDlgButtonChecked(hwnd, IDC_CHECK8);
                     saveMainSettings(mainSettings,(char*)iniFile.c_str());
+                    if(check3DChanged)
+                    {
+                        MessageBox(hwnd,"Aby zmiany ustawieñ kontrolek 3D odnios³y skutek, wymagane jest ponowne uruchomienie programu.","Informacja",MB_ICONINFORMATION | MB_OK);
+                    }
                     EndDialog(hwnd,IDOK);
                     break;
                 case IDCANCEL:
@@ -1525,12 +1531,28 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),true);
                     break;
                 case IDC_CHECK3:
+                    check3DChanged=true;
                     enabled=IsDlgButtonChecked(hwnd, IDC_CHECK3);
                     EnableWindow(GetDlgItem(hwnd,IDC_CHECK4),enabled);
                     EnableWindow(GetDlgItem(hwnd,IDC_CHECK5),enabled);
                     EnableWindow(GetDlgItem(hwnd,IDC_CHECK6),enabled);
                     EnableWindow(GetDlgItem(hwnd,IDC_CHECK7),enabled);
                     EnableWindow(GetDlgItem(hwnd,IDC_CHECK8),enabled);
+                    break;
+                case IDC_CHECK4:
+                    check3DChanged=true;
+                    break;
+                case IDC_CHECK5:
+                    check3DChanged=true;
+                    break;
+                case IDC_CHECK6:
+                    check3DChanged=true;
+                    break;
+                case IDC_CHECK7:
+                    check3DChanged=true;
+                    break;
+                case IDC_CHECK8:
+                    check3DChanged=true;
                     break;
             }
             break;
