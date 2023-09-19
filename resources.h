@@ -56,4 +56,19 @@
 #define ID_EDIT_CLEAR                   608
 #define ID_EDIT_SELECTALL               609
 
+#define IDD_DIALOG3                     700
+#define IDC_RADIO1                      701
+#define IDC_RADIO2                      702
+#define IDC_COMBO1                      703
+#define IDC_RADIO3                      704
+#define IDC_RADIO4                      705
+#define IDC_COMBO2                      706
+#define IDC_CHECK2                      707
+#define IDC_CHECK3                      708
+#define IDC_CHECK4                      709
+#define IDC_CHECK5                      710
+#define IDC_CHECK6                      711
+#define IDC_CHECK7                      712
+#define IDC_CHECK8                      713
+
 #endif
