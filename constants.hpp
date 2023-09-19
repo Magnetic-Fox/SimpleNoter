@@ -2,7 +2,9 @@
 #define CONSTANTS_H
 
 #define MATCH_VERSION   "1.0"
-#define USER_AGENT      "SimpleNoter/0.1"
+#define USER_AGENT      "SimpleNoter/0.4"
 #define INI_FILE        "config.ini"
+#define APPNAME         "Simple Noter v0.4"
+#define HELPFILE        "SNOTER04.HLP"
 
 #endif
