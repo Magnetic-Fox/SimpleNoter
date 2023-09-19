@@ -180,6 +180,6 @@ BEGIN
                     WS_TABSTOP,19,134,181,10
     CONTROL         "Listy rozsuwane",IDC_CHECK7,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,19,145,181,10
-    CONTROL         "Okienka",IDC_CHECK8,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Dialogi",IDC_CHECK8,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,19,156,181,10
 END
