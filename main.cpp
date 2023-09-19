@@ -7,91 +7,22 @@
 
 #include "debug.hpp"
 #include "cp1250.hpp"
+#include "helpers.hpp"
 #include "wsprocs.hpp"
 #include "noterapi.hpp"
 #include "codepages.hpp"
 #include "constants.hpp"
 #include "conversion.hpp"
+#include "definitions.hpp"
 #include "inihandling.hpp"
 
-#define ID_BUTTON1          1400
-#define ID_BUTTON2          1401
-#define ID_BUTTON3          1402
-#define ID_BUTTON4          1403
-#define ID_BUTTON5          1404
-#define ID_LISTBOX          1500
-#define ID_STATIC1          1600
-#define ID_STATIC2          1601
-#define ID_STATIC3          1602
-#define ID_STATIC4          1603
-#define ID_STATIC5          1604
-#define ID_STATIC6          1605
-
-#define ID_EDIT_BUTTON1     2400
-#define ID_EDIT_BUTTON2     2401
-#define ID_EDIT_BUTTON3     2402
-#define ID_EDIT_EDITBOX1    2500
-#define ID_EDIT_EDITBOX2    2501
-#define ID_EDIT_STATIC1     2600
-#define ID_EDIT_STATIC2     2601
-#define ID_EDIT_STATIC3     2602
-#define ID_EDIT_STATIC4     2603
+//////////////////////////////////////
+//
+//  ZMIENNE GLOBALNE
+//
+//////////////////////////////////////
 
 LPSTR editWindowClass = "SimpleNoterEdit";
-
-typedef struct editWindow
-{
-    HWND hwnd;
-    HWND hStatic, hStatic2, hStatic3, hStatic4;
-    HWND hEditBox, hEditBox2;
-    HWND hButton, hButton2, hButton3;
-    std::string windowTitle;
-    bool subjectChanged, entryChanged;
-    long int lastResult;
-    NOTE *note;
-} EDITWINDOW;
-
-typedef std::map<HWND,EDITWINDOW*> WINDOWMEMORY;
-
-typedef struct mainSettings
-{
-    bool mainWindowSystem, editWindowSystem;
-    unsigned int mainWindowStyle, editWindowStyle;
-    bool autoReload, use3DControls, use3DButtons, use3DLists, use3DEdits, use3DCombos, use3DDialogs;
-} MAINSETTINGS;
-
-MAINSETTINGS getMainSettings(char* iniFile)
-{
-    MAINSETTINGS mainSettings;
-    mainSettings.mainWindowSystem=(GetPrivateProfileInt("Settings","MainWindowSystem",1,iniFile)==1);
-    mainSettings.editWindowSystem=(GetPrivateProfileInt("Settings","EditWindowSystem",1,iniFile)==1);
-    mainSettings.mainWindowStyle=GetPrivateProfileInt("Settings","MainWindowStyle",0,iniFile);
-    mainSettings.editWindowStyle=GetPrivateProfileInt("Settings","EditWindowStyle",0,iniFile);
-    mainSettings.autoReload=(GetPrivateProfileInt("Settings","AutoReload",0,iniFile)==1);
-    mainSettings.use3DControls=(GetPrivateProfileInt("Settings","Use3DControls",0,iniFile)==1);
-    mainSettings.use3DButtons=(GetPrivateProfileInt("Settings","Use3DButtons",0,iniFile)==1);
-    mainSettings.use3DLists=(GetPrivateProfileInt("Settings","Use3DLists",0,iniFile)==1);
-    mainSettings.use3DEdits=(GetPrivateProfileInt("Settings","Use3DEdits",0,iniFile)==1);
-    mainSettings.use3DCombos=(GetPrivateProfileInt("Settings","Use3DCombos",0,iniFile)==1);
-    mainSettings.use3DDialogs=(GetPrivateProfileInt("Settings","Use3DDialogs",0,iniFile)==1);
-    return mainSettings;
-}
-
-void saveMainSettings(MAINSETTINGS &mainSettings, char* iniFile)
-{
-    WritePrivateProfileString("Settings","MainWindowSystem",(char*)IntToStr(mainSettings.mainWindowSystem).c_str(),iniFile);
-    WritePrivateProfileString("Settings","EditWindowSystem",(char*)IntToStr(mainSettings.editWindowSystem).c_str(),iniFile);
-    WritePrivateProfileString("Settings","MainWindowStyle",(char*)IntToStr(mainSettings.mainWindowStyle).c_str(),iniFile);
-    WritePrivateProfileString("Settings","EditWindowStyle",(char*)IntToStr(mainSettings.editWindowStyle).c_str(),iniFile);
-    WritePrivateProfileString("Settings","AutoReload",(char*)IntToStr(mainSettings.autoReload).c_str(),iniFile);
-    WritePrivateProfileString("Settings","Use3DControls",(char*)IntToStr(mainSettings.use3DControls).c_str(),iniFile);
-    WritePrivateProfileString("Settings","Use3DButtons",(char*)IntToStr(mainSettings.use3DButtons).c_str(),iniFile);
-    WritePrivateProfileString("Settings","Use3DLists",(char*)IntToStr(mainSettings.use3DLists).c_str(),iniFile);
-    WritePrivateProfileString("Settings","Use3DEdits",(char*)IntToStr(mainSettings.use3DEdits).c_str(),iniFile);
-    WritePrivateProfileString("Settings","Use3DCombos",(char*)IntToStr(mainSettings.use3DCombos).c_str(),iniFile);
-    WritePrivateProfileString("Settings","Use3DDialogs",(char*)IntToStr(mainSettings.use3DDialogs).c_str(),iniFile);
-    return;
-}
 
 HBRUSH g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
 WINDOWMEMORY winMem;
@@ -106,83 +37,27 @@ long int noteCount=0;
 long int mainLastResult=0;
 unsigned int ctlRegs=0;
 
+//////////////////////////////////////
+//
+//  PROTOTYPY FUNKCJI
+//
+//////////////////////////////////////
+
+void inline edit_LockAllButtons(HWND);
+void inline edit_UnlockAllButtons(HWND);
+void inline properties_LockAllButtons(HWND);
+void inline properties_UnlockAllButtons(HWND);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc2(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc3(HWND, UINT, WPARAM, LPARAM);
 
-void inline lockExitButton(HWND hwnd)
-{
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON4),false);
-    return;
-}
-
-void inline unlockExitButton(HWND hwnd)
-{
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON4),true);
-    return;
-}
-
-void inline lockRefreshButton(HWND hwnd)
-{
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON1),false);
-    return;
-}
-
-void inline unlockRefreshButton(HWND hwnd)
-{
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON1),true);
-    return;
-}
-
-void inline lockOpenButton(HWND hwnd)
-{
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON3),false);
-    return;
-}
-
-void inline unlockOpenButton(HWND hwnd)
-{
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON3),true);
-    return;
-}
-
-void inline lockDeleteButton(HWND hwnd)
-{
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON5),false);
-    return;
-}
-
-void inline unlockDeleteButton(HWND hwnd)
-{
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON5),true);
-    return;
-}
-
-void inline main_LockAllButtons(HWND hwnd)
-{
-    lockExitButton(hwnd);
-    lockRefreshButton(hwnd);
-    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0)
-    {
-        lockOpenButton(hwnd);
-        lockDeleteButton(hwnd);
-    }
-    return;
-}
-
-void inline main_UnlockAllButtons(HWND hwnd)
-{
-    unlockExitButton(hwnd);
-    unlockRefreshButton(hwnd);
-    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0)
-    {
-        unlockOpenButton(hwnd);
-        unlockDeleteButton(hwnd);
-    }
-    return;
-}
+//////////////////////////////////////
+//
+//  DODATKOWE PROCEDURY
+//
+//////////////////////////////////////
 
 void inline edit_LockAllButtons(HWND hwnd)
 {
@@ -216,48 +91,6 @@ void inline properties_UnlockAllButtons(HWND hwnd)
     return;
 }
 
-unsigned int getState(HWND hwnd)
-{
-    WINDOWPLACEMENT wp = { 0 };
-    wp.length=sizeof(WINDOWPLACEMENT);
-    if(GetWindowPlacement(hwnd,&wp))
-    {
-        return wp.showCmd;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-long int inline MakeDialogBox(HWND hwnd, unsigned int type, void* procedure)
-{
-    long int result;
-    HANDLE instHandle=(HINSTANCE)GetWindowWord(hwnd,GWW_HINSTANCE);
-    FARPROC proc=MakeProcInstance((FARPROC)procedure, instHandle);
-    result=DialogBox(instHandle, MAKEINTRESOURCE(type), hwnd, (DLGPROC)proc);
-    FreeProcInstance(proc);
-    return result;
-}
-
-void makeEditWindowTitle(EDITWINDOW *editWin, NOTE *note, bool set)
-{
-    if(note==NULL)
-    {
-        editWin->windowTitle = "~ Nowa notatka ~ - ";
-    }
-    else
-    {
-        editWin->windowTitle = toCodePage(m_cp1250,(char*)note->subject.c_str())+" - ";
-    }
-    editWin->windowTitle = editWin->windowTitle + APPNAME;
-    if(set)
-    {
-        SetWindowText(editWin->hwnd,(char*)editWin->windowTitle.c_str());
-    }
-    return;
-}
-
 //////////////////////////////////////
 //
 //  OKNO EDYCJI
@@ -269,7 +102,7 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
     EDITWINDOW *editWin = new EDITWINDOW;
     HINSTANCE hInstance=(HINSTANCE)GetWindowWord(hwnd,GWW_HINSTANCE);
 
-    makeEditWindowTitle(editWin,note,false);
+    makeEditWindowTitle(editWin,note,false,m_cp1250);
     
     editWin->hwnd =CreateWindow(editWindowClass, editWin->windowTitle.c_str(), WS_OVERLAPPEDWINDOW,
                                 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
@@ -372,14 +205,6 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
     }
 }
 
-void deleteWindow(WINDOWMEMORY &winMem, HWND hwnd)
-{
-    delete winMem[hwnd]->note;
-    delete winMem[hwnd];
-    winMem.erase(hwnd);
-    return;
-}
-
 //////////////////////////////////////
 //
 //  G£ÓWNA CZÊŒÆ PROGRAMU
@@ -388,6 +213,20 @@ void deleteWindow(WINDOWMEMORY &winMem, HWND hwnd)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+    LPSTR mainWindowClass = "SimpleNoterMain";
+    
+    WNDCLASS wc = { 0 };
+    WNDCLASS wc2= { 0 };
+
+    HWND hwnd;
+    HWND hButton, hButton2, hButton3, hButton4, hButton5;
+    HWND hListBox;
+    HWND hStatic, hStatic2, hStatic3, hStatic4, hStatic5, hStatic6;
+    HWND temp;
+
+    HACCEL hAccel;
+    MSG msg;
+    
     GetModuleFileName(hInstance,buffer,32767);
     std::string iniFile=getDefaultIniFile(buffer);
     connectionSettings=getConnectionSettings((char*)iniFile.c_str());
@@ -400,20 +239,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         MessageBox(NULL,"Inicjalizacja sk³adnika WinSock nie powiod³a siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
         return 1;
     }
-    
-    LPSTR mainWindowClass = "SimpleNoterMain";
-    
-    WNDCLASS wc = { 0 };
-    WNDCLASS wc2= { 0 };
-
-    HWND hwnd;
-    HWND hButton, hButton2, hButton3, hButton4, hButton5;
-    HWND hListBox;
-    HWND hStatic, hStatic2, hStatic3, hStatic4, hStatic5, hStatic6;
-
-    HACCEL hAccel;
-    MSG Komunikat;
-    
+        
     wc.style = 0;
     wc.lpfnWndProc = WndProc;
     wc.cbClsExtra = 0;
@@ -554,21 +380,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
     }
 
-    while(GetMessage(&Komunikat, NULL, 0, 0 ))
+    while(GetMessage(&msg, NULL, 0, 0 ))
     {
-        HWND temp=GetParent(Komunikat.hwnd);
+        temp=GetParent(msg.hwnd);
         if(temp==NULL)
         {
-            temp=Komunikat.hwnd;
+            temp=msg.hwnd;
         }
-        if(!TranslateAccelerator(temp, hAccel, &Komunikat))
+        if(!TranslateAccelerator(temp, hAccel, &msg))
         {
-            TranslateMessage(&Komunikat);
-            DispatchMessage(&Komunikat);
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
         }
     }
-    
-    return 0;
+
+    return msg.wParam;
 }
 
 //////////////////////////////////////
@@ -1108,7 +934,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),"Dodaj");
                     winMem[hwnd]->subjectChanged=true;
                     winMem[hwnd]->entryChanged=true;
-                    makeEditWindowTitle(winMem[hwnd],NULL,true);
+                    makeEditWindowTitle(winMem[hwnd],NULL,true,m_cp1250);
                     SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),"Przekierowano na now¹ notatkê.");
                     winMem[hwnd]->lastResult=1024;
                     break;
@@ -1293,7 +1119,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),"Aktualizuj");
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
-                            makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true);
+                            makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true,m_cp1250);
                         }
                         else
                         {
@@ -1312,7 +1138,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
-                            makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true);
+                            makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true,m_cp1250);
                         }
                         else
                         {
