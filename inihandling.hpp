@@ -9,6 +9,7 @@
 #include "definitions.hpp"
 #include "constants.hpp"
 #include "conversion.hpp"
+#include "simplecrypto.hpp"
 
 NOTER_CREDENTIALS getCredentials(char*);
 void saveCredentials(NOTER_CREDENTIALS&, char*);

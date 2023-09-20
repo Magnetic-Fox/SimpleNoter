@@ -7,14 +7,14 @@ NOTER_CREDENTIALS getCredentials(char* iniFile)
     char password[256];
     GetPrivateProfileString("Credentials","Username",NULL,username,256,iniFile);
     GetPrivateProfileString("Credentials","Password",NULL,password,256,iniFile);
-    credentials=noter_prepareCredentials(username,password);
+    credentials=noter_prepareCredentials((char*)base64_decode(username).c_str(),(char*)makeSecureString_B64(false,password,(char*)base64_decode(username).c_str()).c_str());
     return credentials;
 }
 
 void saveCredentials(NOTER_CREDENTIALS &credentials, char* iniFile)
 {
-    WritePrivateProfileString("Credentials","Username",(char*)credentials.username.c_str(),iniFile);
-    WritePrivateProfileString("Credentials","Password",(char*)credentials.password.c_str(),iniFile);
+    WritePrivateProfileString("Credentials","Username",(char*)base64_encode((char*)credentials.username.c_str()).c_str(),iniFile);
+    WritePrivateProfileString("Credentials","Password",(char*)makeSecureString_B64(true,(char*)credentials.password.c_str(),(char*)credentials.username.c_str()).c_str(),iniFile);
     return;
 }
 
