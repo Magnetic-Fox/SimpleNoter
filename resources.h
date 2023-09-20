@@ -94,4 +94,17 @@
 #define IDC_BUTTON7                     910
 #define IDC_BUTTON8                     911
 
+#define IDD_DIALOG6                     1000
+#define IDC_EDIT6                       1001
+#define IDC_EDIT7                       1002
+#define IDC_EDIT8                       1003
+
+#define IDD_DIALOG7                     1100
+#define IDC_EDIT12                      1101
+
+#define IDD_DIALOG8                     1200
+#define IDC_EDIT9                       1201
+#define IDC_EDIT10                      1202
+#define IDC_EDIT11                      1203
+
 #endif
