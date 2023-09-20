@@ -11,6 +11,13 @@ NOTER_CREDENTIALS getCredentials(char* iniFile)
     return credentials;
 }
 
+void saveCredentials(NOTER_CREDENTIALS &credentials, char* iniFile)
+{
+    WritePrivateProfileString("Credentials","Username",(char*)credentials.username.c_str(),iniFile);
+    WritePrivateProfileString("Credentials","Password",(char*)credentials.password.c_str(),iniFile);
+    return;
+}
+
 NOTER_CONNECTION_SETTINGS getConnectionSettings(char* iniFile)
 {
     NOTER_CONNECTION_SETTINGS connectionSettings;

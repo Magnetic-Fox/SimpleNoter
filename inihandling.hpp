@@ -11,6 +11,7 @@
 #include "conversion.hpp"
 
 NOTER_CREDENTIALS getCredentials(char*);
+void saveCredentials(NOTER_CREDENTIALS&, char*);
 NOTER_CONNECTION_SETTINGS getConnectionSettings(char*);
 void saveConnectionSettings(NOTER_CONNECTION_SETTINGS&, char*);
 MAINSETTINGS getMainSettings(char*);
