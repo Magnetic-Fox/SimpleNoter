@@ -1,5 +1,19 @@
 #include "helpers.hpp"
 
+bool checkIfInt(char* input)
+{
+    unsigned long int x=0;
+    while(input[x]!=0x00)
+    {
+        if((input[x]<0x30) || (input[x]>0x39))
+        {
+            return false;
+        }
+        ++x;
+    }
+    return true;
+}
+
 unsigned int getState(HWND hwnd)
 {
     WINDOWPLACEMENT wp = { 0 };

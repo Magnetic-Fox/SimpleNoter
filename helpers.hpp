@@ -7,6 +7,7 @@
 #include "codepages.hpp"
 #include "constants.hpp"
 
+bool checkIfInt(char*);
 unsigned int getState(HWND);
 void deleteWindow(WINDOWMEMORY&, HWND);
 void makeEditWindowTitle(EDITWINDOW*, NOTE*, bool, CODEPAGE&);

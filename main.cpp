@@ -1601,20 +1601,6 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 //
 //////////////////////////////////////
 
-bool checkIfInt(char* input)
-{
-    unsigned long int x=0;
-    while(input[x]!=0x00)
-    {
-        if((input[x]<0x30) || (input[x]>0x39))
-        {
-            return false;
-        }
-        ++x;
-    }
-    return true;
-}
-
 BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     NOTER_SERVER_INFO serverInfo;
