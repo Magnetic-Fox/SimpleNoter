@@ -24,6 +24,14 @@ NOTER_CONNECTION_SETTINGS getConnectionSettings(char* iniFile)
     return connectionSettings;
 }
 
+void saveConnectionSettings(NOTER_CONNECTION_SETTINGS &connectionSettings, char* iniFile)
+{
+    WritePrivateProfileString("Server","IP",(char*)connectionSettings.ipAddress.c_str(),iniFile);
+    WritePrivateProfileString("Server","Port",(char*)IntToStr(connectionSettings.port).c_str(),iniFile);
+    WritePrivateProfileString("Server","Share",(char*)connectionSettings.share.c_str(),iniFile);
+    return;
+}
+
 MAINSETTINGS getMainSettings(char* iniFile)
 {
     MAINSETTINGS mainSettings;

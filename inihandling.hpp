@@ -12,6 +12,7 @@
 
 NOTER_CREDENTIALS getCredentials(char*);
 NOTER_CONNECTION_SETTINGS getConnectionSettings(char*);
+void saveConnectionSettings(NOTER_CONNECTION_SETTINGS&, char*);
 MAINSETTINGS getMainSettings(char*);
 void saveMainSettings(MAINSETTINGS&, char*);
 std::string inline getDefaultIniFile(char*);
