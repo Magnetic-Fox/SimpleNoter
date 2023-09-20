@@ -183,3 +183,28 @@ BEGIN
     CONTROL         "Dialogi",IDC_CHECK8,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,19,156,181,10
 END
+
+IDD_DIALOG4 DIALOG DISCARDABLE  0, 0, 200, 170
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Ustawienia po³¹czenia"
+FONT 10, "System"
+BEGIN
+    DEFPUSHBUTTON   "&OK",IDOK,93,149,50,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,143,149,50,14
+    GROUPBOX        "Dane po³¹czenia",IDC_STATIC,7,7,186,78
+    LTEXT           "Adres IP:",IDC_STATIC,11,21,30,8
+    EDITTEXT        IDC_EDIT1,50,20,124,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "F",IDC_BUTTON3,176,20,12,12
+    LTEXT           "Port:",IDC_STATIC,11,35,16,8
+    EDITTEXT        IDC_EDIT2,50,34,138,12,ES_AUTOHSCROLL
+    LTEXT           "Udzia³:",IDC_STATIC,11,49,26,8
+    EDITTEXT        IDC_EDIT3,50,48,138,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "&Testuj",IDC_BUTTON4,138,62,50,14
+    GROUPBOX        "Informacje o serwerze",IDC_STATIC,7,85,186,60
+    LTEXT           "Nazwa:",IDC_STATIC,11,99,25,8
+    LTEXT           "Strefa czasowa:",IDC_STATIC,11,113,53,8
+    LTEXT           "Wersja:",IDC_STATIC,11,127,27,8
+    LTEXT           "-- nie po³¹czono --",IDC_STATIC8,70,99,118,8
+    LTEXT           "-- nie po³¹czono --",IDC_STATIC9,70,113,118,8
+    LTEXT           "-- nie po³¹czono --",IDC_STATIC10,70,127,118,8
+END

@@ -71,4 +71,14 @@
 #define IDC_CHECK7                      712
 #define IDC_CHECK8                      713
 
+#define IDD_DIALOG4                     800
+#define IDC_EDIT1                       801
+#define IDC_BUTTON3                     802
+#define IDC_EDIT2                       803
+#define IDC_EDIT3                       804
+#define IDC_BUTTON4                     805
+#define IDC_STATIC8                     806
+#define IDC_STATIC9                     807
+#define IDC_STATIC10                    808
+
 #endif
