@@ -36,7 +36,7 @@ NOTE_SUMMARY *notes=NULL;
 long int noteCount=0;
 long int mainLastResult=0;
 unsigned int ctlRegs=0;
-bool check3DChanged;
+bool check3DChanged, editsChanged;
 
 //////////////////////////////////////
 //
@@ -53,6 +53,7 @@ LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc2(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc3(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK DlgProc4(HWND, UINT, WPARAM, LPARAM);
 
 //////////////////////////////////////
 //
@@ -89,6 +90,26 @@ void inline properties_LockAllButtons(HWND hwnd)
 void inline properties_UnlockAllButtons(HWND hwnd)
 {
     edit_UnlockAllButtons(GetParent(hwnd));
+    return;
+}
+
+void inline connection_LockAllButtons(HWND hwnd)
+{
+    main_LockAllButtons(GetParent(hwnd));
+    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),false);
+    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),false);
+    EnableWindow(GetDlgItem(hwnd,IDOK),false);
+    EnableWindow(GetDlgItem(hwnd,IDCANCEL),false);
+    return;
+}
+
+void inline connection_UnlockAllButtons(HWND hwnd)
+{
+    main_UnlockAllButtons(GetParent(hwnd));
+    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),true);
+    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),true);
+    EnableWindow(GetDlgItem(hwnd,IDOK),true);
+    EnableWindow(GetDlgItem(hwnd,IDCANCEL),true);
     return;
 }
 
@@ -514,6 +535,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     break;
                 case ID_OPTIONS_PREFERENCES:
                     MakeDialogBox(hwnd,IDD_DIALOG3,DlgProc3);
+                    break;
+                case ID_OPTIONS_CONNECTION:
+                    if((MakeDialogBox(hwnd,IDD_DIALOG4,DlgProc4)==IDOK) && (editsChanged))
+                    {
+                        if(MessageBox(hwnd,"Czy chcesz prze³adowaæ listê notatek?",APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES)
+                        {
+                            SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
+                        }
+                    }
                     break;
                 case ID_HELP_HELP:
                     WinHelp(g_hwnd,HELPFILE,HELP_CONTENTS,0);
@@ -1557,6 +1587,218 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             }
             break;
         case WM_CLOSE:
+            EndDialog(hwnd,IDCANCEL);
+            break;
+        default:
+            return FALSE;
+    }
+    return TRUE;
+}
+
+//////////////////////////////////////
+//
+//  DIALOG USTAWIEÑ PO£¥CZENIA
+//
+//////////////////////////////////////
+
+bool checkIfInt(char* input)
+{
+    unsigned long int x=0;
+    while(input[x]!=0x00)
+    {
+        if((input[x]<0x30) || (input[x]>0x39))
+        {
+            return false;
+        }
+        ++x;
+    }
+    return true;
+}
+
+BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    NOTER_SERVER_INFO serverInfo;
+    NOTER_CONNECTION_SETTINGS tempConnectionSettings;
+    char* ipAddress=NULL;
+    std::string iniFile;
+    switch(msg)
+    {
+        case WM_INITDIALOG:
+            SetWindowText(GetDlgItem(hwnd,IDC_EDIT1),(char*)connectionSettings.ipAddress.c_str());
+            SetWindowText(GetDlgItem(hwnd,IDC_EDIT2),(char*)IntToStr(connectionSettings.port).c_str());
+            SetWindowText(GetDlgItem(hwnd,IDC_EDIT3),(char*)connectionSettings.share.c_str());
+            if((connectionSettings.ipAddress.length()>0) && (connectionSettings.port>0) && (connectionSettings.share.length()>0))
+            {
+                connection_LockAllButtons(hwnd);
+                serverInfo=noter_getServerInfo(connectionSettings,buffer);
+                connection_UnlockAllButtons(hwnd);
+                if(serverInfo.version==MATCH_VERSION)
+                {
+                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),(char*)toCodePage(m_cp1250,(char*)serverInfo.name.c_str()).c_str());
+                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),(char*)toCodePage(m_cp1250,(char*)serverInfo.timezone.c_str()).c_str());
+                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(m_cp1250,(char*)serverInfo.version.c_str()).c_str());
+                }
+            }
+            editsChanged=false;
+            break;
+        case WM_COMMAND:
+            switch(wParam)
+            {
+                case IDOK:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDOK)))
+                    {
+                        break;
+                    }
+                    GetWindowText(GetDlgItem(hwnd,IDC_EDIT2),buffer,65535);
+                    if(checkIfInt(buffer))
+                    {
+                        if(editsChanged)
+                        {
+                            GetWindowText(GetDlgItem(hwnd,IDC_EDIT1),buffer,65535);
+                            connectionSettings.ipAddress=buffer;
+                            GetWindowText(GetDlgItem(hwnd,IDC_EDIT2),buffer,65535);
+                            connectionSettings.port=StrToInt(buffer);
+                            GetWindowText(GetDlgItem(hwnd,IDC_EDIT3),buffer,65535);
+                            connectionSettings.share=buffer;
+                            GetModuleFileName(GetWindowWord(g_hwnd,GWW_HINSTANCE),buffer,32767);
+                            iniFile=getDefaultIniFile(buffer);
+                            saveConnectionSettings(connectionSettings,(char*)iniFile.c_str());
+                        }
+                        EndDialog(hwnd,IDOK);
+                    }
+                    else
+                    {
+                        MessageBox(hwnd,"Nieprawid³owy numer portu.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                    }
+                    break;
+                case IDCANCEL:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDCANCEL)))
+                    {
+                        break;
+                    }
+                    EndDialog(hwnd,IDCANCEL);
+                    break;
+                case IDC_BUTTON3:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON3)))
+                    {
+                        break;
+                    }
+                    GetWindowText(GetDlgItem(hwnd,IDC_EDIT1),buffer,65535);
+                    ipAddress=getHostIP(buffer);
+                    if(ipAddress!=NULL)
+                    {
+                        SetWindowText(GetDlgItem(hwnd,IDC_EDIT1),ipAddress);
+                    }
+                    else
+                    {
+                        MessageBox(hwnd,"Nie uda³o siê odnaleŸæ hosta.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                    }
+                    break;
+                case IDC_BUTTON4:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON4)))
+                    {
+                        break;
+                    }
+                    unsigned int test=0;
+                    GetWindowText(GetDlgItem(hwnd,IDC_EDIT2),buffer,65535);
+                    if(checkIfInt(buffer))
+                    {
+                        GetWindowText(GetDlgItem(hwnd,IDC_EDIT1),buffer,65535);
+                        tempConnectionSettings.ipAddress=buffer;
+                        GetWindowText(GetDlgItem(hwnd,IDC_EDIT2),buffer,65535);
+                        tempConnectionSettings.port=StrToInt(buffer);
+                        GetWindowText(GetDlgItem(hwnd,IDC_EDIT3),buffer,65535);
+                        tempConnectionSettings.share=buffer;
+                        connection_LockAllButtons(hwnd);
+                        serverInfo=noter_getServerInfo(tempConnectionSettings,buffer);
+                        connection_UnlockAllButtons(hwnd);
+                        if(serverInfo.version==MATCH_VERSION)
+                        {
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),(char*)toCodePage(m_cp1250,(char*)serverInfo.name.c_str()).c_str());
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),(char*)toCodePage(m_cp1250,(char*)serverInfo.timezone.c_str()).c_str());
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(m_cp1250,(char*)serverInfo.version.c_str()).c_str());
+                            MessageBox(hwnd,"Uda³o siê prawid³owo zestawiæ po³¹czenie.","Informacja",MB_ICONINFORMATION | MB_OK);
+                        }
+                        else
+                        {
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),"-- nie po³¹czono --");
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),"-- nie po³¹czono --");
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),"-- nie po³¹czono --");
+                            MessageBox(hwnd,"Po³¹czenie nie powiod³o siê.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox(hwnd,"Nieprawid³owy numer portu.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                    }
+                    break;
+                case IDC_EDIT1:
+                case IDC_EDIT2:
+                case IDC_EDIT3:
+                    switch(HIWORD(lParam))
+                    {
+                        case EN_CHANGE:
+                            if(GetWindowTextLength(GetDlgItem(hwnd,wParam))==0)
+                            {
+                                EnableWindow(GetDlgItem(hwnd,IDOK),false);
+                                if(wParam==IDC_EDIT1)
+                                {
+                                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),false);
+                                }
+                                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),false);
+                            }
+                            else
+                            {
+                                if(wParam==IDC_EDIT1)
+                                {
+                                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),true);
+                                }
+                                if((GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT1))>0)
+                                    && (GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT2))>0)
+                                    && (GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT3))>0))
+                                {
+                                    EnableWindow(GetDlgItem(hwnd,IDOK),true);
+                                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),true);
+                                }
+                            }
+                            editsChanged=true;
+                            break;
+                    }
+                    break;
+            }
+            break;
+        case WM_CLOSE:
+            if(IsWindowEnabled(GetDlgItem(hwnd,IDOK)))
+            {
+                EndDialog(hwnd,IDCANCEL);
+            }
+            break;
+        default:
+            return FALSE;
+    }
+    return TRUE;
+}
+
+/*
+BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    switch(msg)
+    {
+        case WM_INITDIALOG:
+        
+            break;
+        case WM_COMMAND:
+            switch(wParam)
+            {
+                case IDOK:
+                    EndDialog(hwnd,IDOK);
+                    break;
+                case IDCANCEL:
+                    EndDialog(hwnd,IDCANCEL);
+                    break;
+            }
+            break;
+        case WM_CLOSE:
             EndDialog(hwnd,IDOK);
             break;
         default:
@@ -1564,3 +1806,4 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
     return TRUE;
 }
+*/
