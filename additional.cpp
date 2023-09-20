@@ -2,7 +2,7 @@
 
 std::string winVersionString(void)
 {
-    std::string temp="Windows OS ";
+    std::string temp="Windows ";
     char conv[8];
 
     DWORD dwVersion = 0; 
