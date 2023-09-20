@@ -5,7 +5,6 @@
 
 #include "resources.h"
 
-#include "simplecrypto.hpp"
 #include "debug.hpp"
 #include "cp1250.hpp"
 #include "helpers.hpp"
@@ -470,11 +469,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
     UpdateWindow(hwnd);
 
-    if((mainSettings.autoReload)
-        && (noter_connectionSettingsAvailable(connectionSettings))
-        && (noter_credentialsAvailable(credentials)))
+    if(noter_connectionSettingsAvailable(connectionSettings))
     {
-        SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
+        if(noter_credentialsAvailable(credentials))
+        {
+            if(mainSettings.autoReload)
+            {
+                SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
+            }
+        }
+        else
+        {
+            lockRefreshButton(hwnd);
+            lockOpenButton(hwnd);
+            lockDeleteButton(hwnd);
+            SendMessage(hwnd, WM_COMMAND, ID_OPTIONS_CREDENTIALS, 0);
+        }
+    }
+    else
+    {
+        lockRefreshButton(hwnd);
+        lockOpenButton(hwnd);
+        lockDeleteButton(hwnd);
+        SendMessage(hwnd, WM_COMMAND, ID_OPTIONS_CONNECTION, 0);
+        if(noter_connectionSettingsAvailable(connectionSettings))
+        {
+            SendMessage(hwnd, WM_COMMAND, ID_OPTIONS_CREDENTIALS, 0);
+        }
     }
 
     while(GetMessage(&msg, NULL, 0, 0 ))
@@ -568,6 +589,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             {
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,MF_GRAYED);
             }
+            if(noter_connectionSettingsAvailable(connectionSettings))
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_OPTIONS_CREDENTIALS,MF_ENABLED);
+            }
+            else
+            {
+                EnableMenuItem(GetMenu(hwnd),ID_OPTIONS_CREDENTIALS,MF_GRAYED);
+            }
             break;
         case WM_COMMAND:
             switch(wParam)
@@ -614,7 +643,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case ID_OPTIONS_CONNECTION:
                     if((MakeDialogBox(hwnd,IDD_DIALOG4,DlgProc4)==IDOK) && (editsChanged))
                     {
-                        if(MessageBox(hwnd,"Czy chcesz prze³adowaæ listê notatek?",APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES)
+                        if((noter_credentialsAvailable(credentials)) && (MessageBox(hwnd,"Czy chcesz prze³adowaæ listê notatek?",APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES))
                         {
                             SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
                         }
@@ -623,7 +652,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case ID_OPTIONS_CREDENTIALS:
                     if((MakeDialogBox(hwnd,IDD_DIALOG5,DlgProc5)==IDOK) && (editsChanged))
                     {
-                        SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
+                        if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCOUNT, 0, 0)>0)
+                        {
+                            SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
+                        }
+                        else
+                        {
+                            if(MessageBox(hwnd,"Czy chcesz prze³adowaæ listê notatek?",APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES)
+                            {
+                                SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
+                            }
+                        }
                     }
                     break;
                 case ID_HELP_HELP:
@@ -1706,6 +1745,12 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(m_cp1250,(char*)serverInfo.version.c_str()).c_str());
                 }
             }
+            else
+            {
+                EnableWindow(GetDlgItem(hwnd,IDOK),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),false);
+            }
             editsChanged=false;
             break;
         case WM_COMMAND:
@@ -1887,6 +1932,7 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 }
                 else
                 {
+                    EnableWindow(GetDlgItem(hwnd,IDOK),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
@@ -1894,6 +1940,7 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             }
             else
             {
+                EnableWindow(GetDlgItem(hwnd,IDOK),false);
                 EnableWindow(GetDlgItem(hwnd,IDC_BUTTON5),false);
                 EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),false);
                 EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
@@ -2049,6 +2096,9 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                                     GetModuleFileName(GetWindowWord(g_hwnd,GWW_HINSTANCE),buffer,32767);
                                     iniFile=getDefaultIniFile(buffer);
                                     saveCredentials(credentials,(char*)iniFile.c_str());
+                                    lockRefreshButton(GetParent(hwnd));
+                                    lockOpenButton(GetParent(hwnd));
+                                    lockDeleteButton(GetParent(hwnd));
                                     EndDialog(hwnd,IDOK);
                                 }
                             }
