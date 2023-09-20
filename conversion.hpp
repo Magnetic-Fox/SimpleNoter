@@ -5,5 +5,6 @@
 #include <stdlib.h>
 
 std::string IntToStr(long int);
+unsigned int StrToInt(char*);
 
 #endif

@@ -8,3 +8,8 @@ std::string IntToStr(long int input)
     temp=test;
     return temp;
 }
+
+unsigned int StrToInt(char* input)
+{
+    return atoi(input);
+}
