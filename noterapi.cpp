@@ -1,5 +1,15 @@
 #include "noterapi.hpp"
 
+bool noter_credentialsAvailable(NOTER_CREDENTIALS &credentials)
+{
+    return ((credentials.username.length()>0) && (credentials.password.length()>0));
+}
+
+bool noter_connectionSettingsAvailable(NOTER_CONNECTION_SETTINGS &connectionSettings)
+{
+    return ((connectionSettings.ipAddress.length()>0) && (connectionSettings.port>0) && (connectionSettings.share.length()>0));
+}
+
 std::string noter_getAnswerString(long int answerCode)
 {
     switch(answerCode)
