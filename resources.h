@@ -81,4 +81,17 @@
 #define IDC_STATIC9                     807
 #define IDC_STATIC10                    808
 
+#define IDD_DIALOG5                     900
+#define IDC_EDIT4                       901
+#define IDC_BUTTON5                     902
+#define IDC_EDIT5                       903
+#define IDC_BUTTON6                     904
+#define IDC_STATIC11                    905
+#define IDC_STATIC12                    906
+#define IDC_STATIC13                    907
+#define IDC_STATIC14                    908
+#define IDC_STATIC15                    909
+#define IDC_BUTTON7                     910
+#define IDC_BUTTON8                     911
+
 #endif

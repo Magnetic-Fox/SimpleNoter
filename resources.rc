@@ -208,3 +208,32 @@ BEGIN
     LTEXT           "-- nie po³¹czono --",IDC_STATIC9,70,113,118,8
     LTEXT           "-- nie po³¹czono --",IDC_STATIC10,70,127,118,8
 END
+
+IDD_DIALOG5 DIALOG DISCARDABLE  0, 0, 200, 204
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Ustawienia u¿ytkownika"
+FONT 10, "System"
+BEGIN
+    DEFPUSHBUTTON   "&OK",IDOK,93,183,50,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,143,183,50,14
+    GROUPBOX        "Dane logowania",IDC_STATIC,7,7,186,65
+    LTEXT           "Nazwa u¿ytkownika:",IDC_STATIC,11,21,70,8
+    EDITTEXT        IDC_EDIT4,84,20,90,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "R",IDC_BUTTON5,176,20,12,12
+    LTEXT           "Has³o:",IDC_STATIC,11,35,70,8
+    EDITTEXT        IDC_EDIT5,84,34,104,12,ES_PASSWORD | ES_AUTOHSCROLL
+    PUSHBUTTON      "&Testuj",IDC_BUTTON6,138,48,50,14
+    GROUPBOX        "Informacje o u¿ytkowniku",IDC_STATIC,7,72,186,106
+    LTEXT           "ID:",IDC_STATIC,11,86,10,8
+    LTEXT           "Data rejestracji:",IDC_STATIC,11,100,53,8
+    LTEXT           "...u¿yto do tego:",IDC_STATIC,11,114,53,8
+    LTEXT           "Ostatnie zmiany:",IDC_STATIC,11,128,56,8
+    LTEXT           "...u¿yto do tego:",IDC_STATIC,11,142,53,8
+    LTEXT           "-- nie zalogowano --",IDC_STATIC11,74,86,114,8
+    LTEXT           "-- nie zalogowano --",IDC_STATIC12,74,100,114,8
+    LTEXT           "-- nie zalogowano --",IDC_STATIC13,74,114,114,8
+    LTEXT           "-- nie zalogowano --",IDC_STATIC14,74,128,114,8
+    LTEXT           "-- nie zalogowano --",IDC_STATIC15,74,142,114,8
+    PUSHBUTTON      "Zmieñ &has³o",IDC_BUTTON8,56,156,66,14
+    PUSHBUTTON      "&Usuñ konto...",IDC_BUTTON7,122,156,66,14
+END
