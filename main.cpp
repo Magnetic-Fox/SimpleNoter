@@ -5,6 +5,7 @@
 
 #include "resources.h"
 
+#include "base64.hpp"
 #include "debug.hpp"
 #include "cp1250.hpp"
 #include "helpers.hpp"
@@ -64,6 +65,33 @@ BOOL CALLBACK DlgProc8(HWND, UINT, WPARAM, LPARAM);
 //  DODATKOWE PROCEDURY
 //
 //////////////////////////////////////
+
+void inline main_LockAllButtons(HWND hwnd)
+{
+    lockExitButton(hwnd);
+    lockRefreshButton(hwnd);
+    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0)
+    {
+        lockOpenButton(hwnd);
+        lockDeleteButton(hwnd);
+    }
+    return;
+}
+
+void inline main_UnlockAllButtons(HWND hwnd)
+{
+    unlockExitButton(hwnd);
+    if(noter_connectionSettingsAvailable(connectionSettings) && noter_credentialsAvailable(credentials))
+    {
+        unlockRefreshButton(hwnd);
+        if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0)
+        {
+            unlockOpenButton(hwnd);
+            unlockDeleteButton(hwnd);
+        }
+    }
+    return;
+}
 
 void inline edit_LockAllButtons(HWND hwnd)
 {
@@ -279,7 +307,7 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
 //////////////////////////////////////
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-{
+{   
     LPSTR mainWindowClass = "SimpleNoterMain";
     
     WNDCLASS wc = { 0 };
@@ -442,7 +470,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
     UpdateWindow(hwnd);
 
-    if(mainSettings.autoReload)
+    if((mainSettings.autoReload)
+        && (noter_connectionSettingsAvailable(connectionSettings))
+        && (noter_credentialsAvailable(credentials)))
     {
         SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
     }
@@ -1890,6 +1920,7 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         GetModuleFileName(GetWindowWord(g_hwnd,GWW_HINSTANCE),buffer,32767);
                         iniFile=getDefaultIniFile(buffer);
                         saveCredentials(credentials,(char*)iniFile.c_str());
+                        EnableWindow(GetDlgItem(GetParent(hwnd),ID_BUTTON1),true);
                     }
                     EndDialog(hwnd,IDOK);
                     break;

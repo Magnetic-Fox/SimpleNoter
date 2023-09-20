@@ -19,8 +19,6 @@ void inline lockOpenButton(HWND);
 void inline unlockOpenButton(HWND);
 void inline lockDeleteButton(HWND);
 void inline unlockDeleteButton(HWND);
-void inline main_LockAllButtons(HWND);
-void inline main_UnlockAllButtons(HWND);
 long int inline MakeDialogBox(HWND, unsigned int, void*);
 
 void inline lockExitButton(HWND hwnd)
@@ -68,30 +66,6 @@ void inline lockDeleteButton(HWND hwnd)
 void inline unlockDeleteButton(HWND hwnd)
 {
     EnableWindow(GetDlgItem(hwnd,ID_BUTTON5),true);
-    return;
-}
-
-void inline main_LockAllButtons(HWND hwnd)
-{
-    lockExitButton(hwnd);
-    lockRefreshButton(hwnd);
-    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0)
-    {
-        lockOpenButton(hwnd);
-        lockDeleteButton(hwnd);
-    }
-    return;
-}
-
-void inline main_UnlockAllButtons(HWND hwnd)
-{
-    unlockExitButton(hwnd);
-    unlockRefreshButton(hwnd);
-    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0)
-    {
-        unlockOpenButton(hwnd);
-        unlockDeleteButton(hwnd);
-    }
     return;
 }
 
