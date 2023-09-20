@@ -308,18 +308,6 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    /*
-    MessageBox(0,
-                (char*)secureString(false,
-                                    (char*)base64_decode((char*)base64_encode((char*)secureString(true,
-                                                        "To bêdzie taki prosty test, który móg³by jednak zadzia³aæ... No i super, bo wychodzi³oby na to, ¿e bêdzie to dzia³a³o i to w dodatku jak cholera :) Przytuli³bym Fendera. ;)",
-                                                        "Cycki").c_str()).c_str()).c_str(),
-                                    "Cycki").c_str(),"",0);
-                                    */
-    //MessageBox(0,(char*)makeSecureString_B64(false,(char*)makeSecureString_B64(true,"No to teraz pora na kolejny naprawdê d³ugi test, ¿eby sprawdziæ, czy wszystko bêdzie dzia³a³o tak, jak powinno. Prawdê mówi¹c to mam nadziejê, ¿e siê uda, bo ju¿ mam trochê dosyæ tego rzeŸbienia w gównie. :P","Fender").c_str(),"Fender").c_str(),"",0);
-
-    //MessageBox(0,(char*)makeSecureString_B64(true,"","").c_str(),"",0);
-    
     LPSTR mainWindowClass = "SimpleNoterMain";
     
     WNDCLASS wc = { 0 };
