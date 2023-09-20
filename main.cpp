@@ -30,7 +30,7 @@ HWND g_hwnd;
 char buffer[65536];
 CODEPAGE m_cp1250;
 NOTER_CONNECTION_SETTINGS connectionSettings ;
-NOTER_CREDENTIALS credentials, *auxCredentials;
+NOTER_CREDENTIALS credentials, tempCredentials, *auxCredentials;
 MAINSETTINGS mainSettings;
 NOTE_SUMMARY *notes=NULL;
 long int noteCount=0;
@@ -55,6 +55,9 @@ BOOL CALLBACK DlgProc2(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc3(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc4(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc5(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK DlgProc6(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK DlgProc7(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK DlgProc8(HWND, UINT, WPARAM, LPARAM);
 
 //////////////////////////////////////
 //
@@ -134,6 +137,22 @@ void inline credentials_UnlockAllButtons(HWND hwnd)
         EnableWindow(GetDlgItem(hwnd,IDC_BUTTON5),true);
     }
     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),true);
+    EnableWindow(GetDlgItem(hwnd,IDOK),true);
+    EnableWindow(GetDlgItem(hwnd,IDCANCEL),true);
+    return;
+}
+
+void inline userEdit_LockAllButtons(HWND hwnd)
+{
+    main_LockAllButtons(GetParent(GetParent(hwnd)));
+    EnableWindow(GetDlgItem(hwnd,IDOK),false);
+    EnableWindow(GetDlgItem(hwnd,IDCANCEL),false);
+    return;
+}
+
+void inline userEdit_UnlockAllButtons(HWND hwnd)
+{
+    main_UnlockAllButtons(GetParent(GetParent(hwnd)));
     EnableWindow(GetDlgItem(hwnd,IDOK),true);
     EnableWindow(GetDlgItem(hwnd,IDCANCEL),true);
     return;
@@ -1730,7 +1749,7 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         connection_LockAllButtons(hwnd);
                         serverInfo=noter_getServerInfo(tempConnectionSettings,buffer);
                         connection_UnlockAllButtons(hwnd);
-                        if(serverInfo.version==MATCH_VERSION)
+                        if(noter_checkServerVersion(serverInfo))
                         {
                             SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),(char*)toCodePage(m_cp1250,(char*)serverInfo.name.c_str()).c_str());
                             SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),(char*)toCodePage(m_cp1250,(char*)serverInfo.timezone.c_str()).c_str());
@@ -1805,7 +1824,6 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    NOTER_CREDENTIALS tempCredentials;
     USER_INFO userInfo;
     long int result;
     std::string tempString, iniFile;
@@ -1852,6 +1870,7 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
             }
             editsChanged=false;
+            editsChanged2=false;
             useTestCredentials=false;
             break;
         case WM_COMMAND:
@@ -1879,12 +1898,27 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     {
                         break;
                     }
+                    if((editsChanged2) && (MessageBox(hwnd,"Dane logowania uleg³y zmianie na serwerze.\nCzy na pewno chcesz porzuciæ zmiany?",APPNAME,MB_ICONQUESTION | MB_YESNO)==IDNO))
+                    {
+                        break;
+                    }
                     EndDialog(hwnd,IDCANCEL);
                     break;
                 case IDC_BUTTON5:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON5)))
                     {
                         break;
+                    }
+                    auxCredentials=&tempCredentials;
+                    if(MakeDialogBox(hwnd,IDD_DIALOG6,DlgProc6)==IDOK)
+                    {
+                        if(editsChanged2)
+                        {
+                            SetWindowText(GetDlgItem(hwnd,IDC_EDIT4),(char*)tempCredentials.username.c_str());
+                            SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),(char*)tempCredentials.password.c_str());
+                            useTestCredentials=true;
+                            SendMessage(hwnd, WM_COMMAND, IDC_BUTTON6, IDC_BUTTON5);
+                        }
                     }
                     break;
                 case IDC_BUTTON6:
@@ -1903,20 +1937,33 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             credentials_LockAllButtons(hwnd);
                             result=noter_getUserInfo(connectionSettings,tempCredentials,buffer,userInfo);
                             credentials_UnlockAllButtons(hwnd);
-                            if(result>0)
+                            if(result>=0)
                             {
                                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC11),(char*)IntToStr(userInfo.ID).c_str());
                                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC12),(char*)userInfo.dateRegistered.c_str());
                                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),(char*)userInfo.userAgent.c_str());
                                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),(char*)userInfo.lastChanged.c_str());
                                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),(char*)userInfo.lastUserAgent.c_str());
-                                useTestCredentials=true;
+                                if(editsChanged)
+                                {
+                                    useTestCredentials=true;
+                                }
                                 EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),true);
                                 EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),true);
-                                MessageBox(hwnd,"Uda³o siê prawid³owo zalogowaæ.","Informacja",MB_ICONINFORMATION | MB_OK);
+                                if(lParam!=IDC_BUTTON5)
+                                {
+                                    MessageBox(hwnd,"Uda³o siê prawid³owo zalogowaæ.","Informacja",MB_ICONINFORMATION | MB_OK);
+                                }
                             }
                             else
                             {
+                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC11),"-- nie zalogowano --");
+                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC12),"-- nie zalogowano --");
+                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),"-- nie zalogowano --");
+                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),"-- nie zalogowano --");
+                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),"-- nie zalogowano --");
+                                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
+                                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
                                 MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),"B³¹d",MB_ICONEXCLAMATION | MB_OK);
                             }
                         }
@@ -1950,7 +1997,30 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                                     +"?\nKontynuacja usunie wszystkie notatki oraz informacje o u¿ytkowniku przechowywane na serwerze.\nOperacja ta jest nieodwracalna!!!\n\nCzy na pewno chcesz usun¹æ swoje konto?";
                         if(MessageBox(hwnd,(char*)tempString.c_str(),APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES)
                         {
-                            
+                            if(MakeDialogBox(hwnd,IDD_DIALOG7,DlgProc7)==IDOK)
+                            {
+                                if(useTestCredentials)
+                                {
+                                    SetWindowText(GetDlgItem(hwnd,IDC_EDIT4),"");
+                                    SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),"");
+                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC11),"-- nie zalogowano --");
+                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC12),"-- nie zalogowano --");
+                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),"-- nie zalogowano --");
+                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),"-- nie zalogowano --");
+                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),"-- nie zalogowano --");
+                                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
+                                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
+                                }
+                                else
+                                {
+                                    credentials.username="";
+                                    credentials.password="";
+                                    GetModuleFileName(GetWindowWord(g_hwnd,GWW_HINSTANCE),buffer,32767);
+                                    iniFile=getDefaultIniFile(buffer);
+                                    saveCredentials(credentials,(char*)iniFile.c_str());
+                                    EndDialog(hwnd,IDOK);
+                                }
+                            }
                         }
                     }
                     else
@@ -1969,9 +2039,22 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     }
                     else
                     {
-                        auxCredentials=&credentials;
+                        tempCredentials=credentials;
+                        auxCredentials=&tempCredentials;
                     }
-                    
+                    if(noter_credentialsAvailable(*auxCredentials))
+                    {
+                        if(MakeDialogBox(hwnd,IDD_DIALOG8,DlgProc8)==IDOK)
+                        {
+                            SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),(char*)tempCredentials.password.c_str());
+                            useTestCredentials=true;
+                            SendMessage(hwnd, WM_COMMAND, IDC_BUTTON6, IDC_BUTTON5);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox(hwnd,"Brak danych logowania.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                    }
                     break;
                 case IDC_EDIT4:
                 case IDC_EDIT5:
@@ -1995,10 +2078,11 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             }
                             break;
                     }
+                    break;
             }
             break;
         case WM_CLOSE:
-            EndDialog(hwnd,IDCANCEL);
+            SendMessage(hwnd, WM_COMMAND, IDCANCEL, 0);
             break;
         default:
             return FALSE;
@@ -2012,26 +2096,96 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 //
 //////////////////////////////////////
 
-/*
 BOOL CALLBACK DlgProc6(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    NOTER_CREDENTIALS tempCredentials;
+    std::string tempUserName, tempPassword, tempSecPassword, tempString;
+    long int result;
     switch(msg)
     {
         case WM_INITDIALOG:
-        
+            EnableWindow(GetDlgItem(hwnd,IDOK),false);
+            editsChanged2=false;
             break;
         case WM_COMMAND:
             switch(wParam)
             {
                 case IDOK:
-                    EndDialog(hwnd,IDOK);
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDOK)))
+                    {
+                        break;
+                    }
+                    GetWindowText(GetDlgItem(hwnd,IDC_EDIT6),buffer,65535);
+                    tempUserName=buffer;
+                    GetWindowText(GetDlgItem(hwnd,IDC_EDIT7),buffer,65535);
+                    tempPassword=buffer;
+                    GetWindowText(GetDlgItem(hwnd,IDC_EDIT8),buffer,65535);
+                    tempSecPassword=buffer;
+                    if(tempPassword==tempSecPassword)
+                    {
+                        tempCredentials.username=tempUserName;
+                        tempCredentials.password=tempPassword;
+                        userEdit_LockAllButtons(hwnd);
+                        result=noter_registerUser(connectionSettings,tempCredentials,buffer);
+                        userEdit_UnlockAllButtons(hwnd);
+                        if(result>=0)
+                        {
+                            auxCredentials->username=tempCredentials.username;
+                            auxCredentials->password=tempCredentials.password;
+                            MessageBox(hwnd,"Uda³o siê prawid³owo zarejestrowaæ nowego u¿ytkownika.",APPNAME,MB_ICONINFORMATION | MB_OK);
+                            EndDialog(hwnd,IDOK);
+                        }
+                        else
+                        {
+                            tempString="Nie uda³o siê zarejestrowaæ nowego u¿ytkownika.\n"+noter_getAnswerString(result);
+                            MessageBox(hwnd,(char*)tempString.c_str(),APPNAME,MB_ICONEXCLAMATION | MB_OK);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox(hwnd,"Has³a nie s¹ takie same!",APPNAME,MB_ICONEXCLAMATION | MB_OK);
+                    }
                     break;
                 case IDCANCEL:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDCANCEL)))
+                    {
+                        break;
+                    }
+                    editsChanged2=false;
                     EndDialog(hwnd,IDCANCEL);
                     break;
+                case IDC_EDIT6:
+                case IDC_EDIT7:
+                case IDC_EDIT8:
+                    switch(HIWORD(lParam))
+                    {
+                        case EN_CHANGE:
+                            editsChanged2=true;
+                            if(GetWindowTextLength(GetDlgItem(hwnd,wParam))==0)
+                            {
+                                EnableWindow(GetDlgItem(hwnd,IDOK),false);
+                            }
+                            else
+                            {
+                                if(GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT6))>0
+                                    && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT7))>0
+                                    && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT8))>0)
+                                {
+                                    EnableWindow(GetDlgItem(hwnd,IDOK),true);
+                                }
+                            }
+                            break;
+                    }
+                    break;
+                            
             }
             break;
         case WM_CLOSE:
+            if(!IsWindowEnabled(GetDlgItem(hwnd,IDCANCEL)))
+            {
+                break;
+            }
+            editsChanged2=false;
             EndDialog(hwnd,IDCANCEL);
             break;
         default:
@@ -2039,7 +2193,6 @@ BOOL CALLBACK DlgProc6(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
     return TRUE;
 }
-*/
 
 //////////////////////////////////////
 //
@@ -2047,26 +2200,72 @@ BOOL CALLBACK DlgProc6(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 //
 //////////////////////////////////////
 
-/*
 BOOL CALLBACK DlgProc7(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    long int result;
+    std::string tempSecPassword, tempString;
     switch(msg)
     {
         case WM_INITDIALOG:
-        
+            EnableWindow(GetDlgItem(hwnd,IDOK),false);
             break;
         case WM_COMMAND:
             switch(wParam)
             {
                 case IDOK:
-                    EndDialog(hwnd,IDOK);
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDOK)))
+                    {
+                        break;
+                    }
+                    GetWindowText(GetDlgItem(hwnd,IDC_EDIT12),buffer,65535);
+                    tempSecPassword=buffer;
+                    if(tempSecPassword==auxCredentials->password)
+                    {
+                        result=noter_removeUser(connectionSettings,*auxCredentials,buffer);
+                        if(result>=0)
+                        {
+                            tempString="U¿ytkownik "+auxCredentials->username+" zosta³ usuniêty.";
+                            MessageBox(hwnd,(char*)tempString.c_str(),APPNAME,MB_ICONINFORMATION | MB_OK);
+                            EndDialog(hwnd,IDOK);
+                        }
+                        else
+                        {
+                            MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),APPNAME,MB_ICONEXCLAMATION | MB_OK);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox(hwnd,"Nieprawid³owe has³o!",APPNAME,MB_ICONEXCLAMATION | MB_OK);
+                    }
                     break;
                 case IDCANCEL:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDCANCEL)))
+                    {
+                        break;
+                    }
                     EndDialog(hwnd,IDCANCEL);
+                    break;
+                case IDC_EDIT12:
+                    switch(HIWORD(lParam))
+                    {
+                        case EN_CHANGE:
+                            if(GetWindowTextLength(GetDlgItem(hwnd,wParam))==0)
+                            {
+                                EnableWindow(GetDlgItem(hwnd,IDOK),false);
+                            }
+                            else
+                            {
+                                EnableWindow(GetDlgItem(hwnd,IDOK),true);
+                            }
+                    }
                     break;
             }
             break;
         case WM_CLOSE:
+            if(!IsWindowEnabled(GetDlgItem(hwnd,IDCANCEL)))
+            {
+                break;
+            }
             EndDialog(hwnd,IDCANCEL);
             break;
         default:
@@ -2074,4 +2273,108 @@ BOOL CALLBACK DlgProc7(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
     return TRUE;
 }
-*/
+
+//////////////////////////////////////
+//
+//  DIALOG ZMIANY HAS£A
+//
+//////////////////////////////////////
+
+BOOL CALLBACK DlgProc8(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    std::string tempOldPassword, tempNewPassword, tempSecNewPassword;
+    long int result;
+    switch(msg)
+    {
+        case WM_INITDIALOG:
+            EnableWindow(GetDlgItem(hwnd,IDOK),false);
+            editsChanged2=false;
+            break;
+        case WM_COMMAND:
+            switch(wParam)
+            {
+                case IDOK:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDOK)))
+                    {
+                        break;
+                    }
+                    GetWindowText(GetDlgItem(hwnd,IDC_EDIT9),buffer,65535);
+                    tempOldPassword=buffer;
+                    GetWindowText(GetDlgItem(hwnd,IDC_EDIT10),buffer,65535);
+                    tempNewPassword=buffer;
+                    GetWindowText(GetDlgItem(hwnd,IDC_EDIT11),buffer,65535);
+                    tempSecNewPassword=buffer;
+                    if(tempNewPassword==tempSecNewPassword)
+                    {
+                        if(tempOldPassword==auxCredentials->password)
+                        {
+                            userEdit_LockAllButtons(hwnd);
+                            result=noter_changeUserPassword(connectionSettings,*auxCredentials,(char*)tempNewPassword.c_str(),buffer);
+                            userEdit_UnlockAllButtons(hwnd);
+                            if(result>=0)
+                            {
+                                auxCredentials->password=tempNewPassword;
+                                MessageBox(hwnd,"Has³o zosta³o zmienione.",APPNAME,MB_ICONINFORMATION | MB_OK);
+                                EndDialog(hwnd,IDOK);
+                            }
+                            else
+                            {
+                                MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),APPNAME,MB_ICONEXCLAMATION | MB_OK);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox(hwnd,"Nieprawid³owe has³o!",APPNAME,MB_ICONEXCLAMATION | MB_OK);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox(hwnd,"Has³a nie s¹ takie same!",APPNAME,MB_ICONEXCLAMATION | MB_OK);
+                    }
+                    break;
+                case IDCANCEL:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDCANCEL)))
+                    {
+                        break;
+                    }
+                    editsChanged2=false;
+                    EndDialog(hwnd,IDCANCEL);
+                    break;
+                case IDC_EDIT9:
+                case IDC_EDIT10:
+                case IDC_EDIT11:
+                    switch(HIWORD(lParam))
+                    {
+                        case EN_CHANGE:
+                            editsChanged2=true;
+                            if(GetWindowTextLength(GetDlgItem(hwnd,wParam))==0)
+                            {
+                                EnableWindow(GetDlgItem(hwnd,IDOK),false);
+                            }
+                            else
+                            {
+                                if(GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT9))>0
+                                    && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT10))>0
+                                    && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT11))>0)
+                                {
+                                    EnableWindow(GetDlgItem(hwnd,IDOK),true);
+                                }
+                            }
+                            break;
+                    }
+                    break;
+            }
+            break;
+        case WM_CLOSE:
+            if(!IsWindowEnabled(GetDlgItem(hwnd,IDCANCEL)))
+            {
+                break;
+            }
+            editsChanged2=false;
+            EndDialog(hwnd,IDCANCEL);
+            break;
+        default:
+            return FALSE;
+    }
+    return TRUE;
+}
