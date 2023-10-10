@@ -36,7 +36,7 @@ NOTE_SUMMARY *notes=NULL;
 long int noteCount=0;
 long int mainLastResult=0;
 unsigned int ctlRegs=0;
-bool check3DChanged, editsChanged, editsChanged2, useTestCredentials;
+bool check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false;
 
 //////////////////////////////////////
 //
@@ -488,6 +488,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
     else
     {
+        firstOptions=true;
         lockRefreshButton(hwnd);
         lockOpenButton(hwnd);
         lockDeleteButton(hwnd);
@@ -497,6 +498,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             SendMessage(hwnd, WM_COMMAND, ID_OPTIONS_CREDENTIALS, 0);
         }
     }
+
+    firstOptions=false;
 
     while(GetMessage(&msg, NULL, 0, 0 ))
     {
@@ -643,14 +646,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case ID_OPTIONS_CONNECTION:
                     if((MakeDialogBox(hwnd,IDD_DIALOG4,DlgProc4)==IDOK) && (editsChanged))
                     {
-                        if((noter_credentialsAvailable(credentials)) && (MessageBox(hwnd,"Czy chcesz prze³adowaæ listê notatek?",APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES))
+                        if((!firstOptions) && (noter_credentialsAvailable(credentials)) && (MessageBox(hwnd,"Czy chcesz prze³adowaæ listê notatek?",APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES))
                         {
                             SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
                         }
                     }
                     break;
                 case ID_OPTIONS_CREDENTIALS:
-                    if((MakeDialogBox(hwnd,IDD_DIALOG5,DlgProc5)==IDOK) && (editsChanged))
+                    if((MakeDialogBox(hwnd,IDD_DIALOG5,DlgProc5)==IDOK) && (editsChanged || firstOptions))
                     {
                         if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCOUNT, 0, 0)>0)
                         {
@@ -661,6 +664,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             if(MessageBox(hwnd,"Czy chcesz prze³adowaæ listê notatek?",APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES)
                             {
                                 SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
+                            }
+                            if(firstOptions)
+                            {
+                                firstOptions=false;
                             }
                         }
                     }
