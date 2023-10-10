@@ -4,6 +4,7 @@
 #include <string>
 #include <windows.h>
 
+#include "base64.hpp"
 #include "noterapi.hpp"
 #include "additional.hpp"
 #include "definitions.hpp"
