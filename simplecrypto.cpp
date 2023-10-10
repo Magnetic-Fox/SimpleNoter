@@ -7,6 +7,10 @@ std::string secureString(bool encode, char* input, char* key)
     unsigned int subtract=0;
     char temp=0;
     bool switchChar=false;
+    if((input==NULL) || (strlen(input)==0))
+    {
+        return tempString;
+    }
     if(encode)
     {
         for(unsigned int x=0; x<strlen(input); ++x)
@@ -69,6 +73,10 @@ std::string secureString(bool encode, char* input, char* key)
 
 std::string makeSecureString_B64(bool encode, char* input, char* key)
 {
+    if((input==NULL) || (strlen(input)==0))
+    {
+        return "";
+    }
     if(encode)
     {
         return base64_encode((char*)secureString(encode,input,key).c_str());
