@@ -1046,7 +1046,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case ID_ACC_CTRLS:
                     SendMessage(hwnd, WM_COMMAND, ID_FILE_ADDUP, 0);
                     break;
-                case ID_ACC_CTRLALTN:
+                case ID_ACC_CTRLD:
                     if(winMem[hwnd]->note->id!=0)
                     {
                         SendMessage(hwnd, WM_COMMAND, ID_FILE_TONEWNOTE, 0);
@@ -1264,7 +1264,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                         if(winMem[hwnd]->lastResult>=0)
                         {
-                            SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);
+                            //SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);  // was for automatic list update
                             //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
                             //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),true);
                             SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),"Aktualizuj");
@@ -1285,7 +1285,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                         if(winMem[hwnd]->lastResult>=0)
                         {
-                            SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);
+                            //SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);  // was for automatic list update
                             //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
