@@ -16,7 +16,7 @@
 #define ID_ACC_F5                       207
 #define ID_ACC_CTRLA                    208
 #define ID_ACC_CTRLS                    209
-#define ID_ACC_CTRLALTN                 210
+#define ID_ACC_CTRLD                    210
 
 #define IDR_MENU1                       300
 #define ID_FILE_NEW                     301

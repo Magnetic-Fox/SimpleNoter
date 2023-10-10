@@ -40,7 +40,7 @@ BEGIN
     VK_F8,          ID_ACC_F8,              VIRTKEY, NOINVERT
     "A",            ID_ACC_CTRLA,           VIRTKEY, CONTROL, NOINVERT
     "S",            ID_ACC_CTRLS,           VIRTKEY, CONTROL, NOINVERT
-    "N",            ID_ACC_CTRLALTN,        VIRTKEY, CONTROL, ALT, NOINVERT
+    "D",            ID_ACC_CTRLD,           VIRTKEY, CONTROL, NOINVERT
 END
 
 IDR_MENU1 MENU DISCARDABLE 
@@ -79,7 +79,7 @@ BEGIN
         MENUITEM "&Dodaj / Aktualizuj\tCtrl+S", ID_FILE_ADDUP
         MENUITEM SEPARATOR
         MENUITEM "&W³aœciwoœci...",             ID_FILE_PROPERTIES
-        MENUITEM "Do nowej notatki\tCtrl+Alt+N", ID_FILE_TONEWNOTE
+        MENUITEM "Do nowej notatki\tCtrl+D",    ID_FILE_TONEWNOTE
         MENUITEM SEPARATOR
         MENUITEM "Zamknij\tAlt+F4",             ID_FILE_EXIT
     END
