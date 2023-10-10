@@ -1384,12 +1384,15 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     NOTE tempNote;
     long int result;
+    bool addUpTest=false;
     switch(msg)
     {
         case WM_INITDIALOG:
+            addUpTest=IsWindowEnabled(GetDlgItem(GetParent(hwnd),ID_EDIT_BUTTON1));
             properties_LockAllButtons(hwnd);
             result=noter_getNote(connectionSettings,credentials,winMem[GetParent(hwnd)]->note->id,buffer,tempNote);
             properties_UnlockAllButtons(hwnd);
+            EnableWindow(GetDlgItem(GetParent(hwnd),ID_EDIT_BUTTON1),addUpTest);
             if(result>=0)
             {
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC1),(char*)toCodePage(m_cp1250,(char*)tempNote.subject.c_str()).c_str());
