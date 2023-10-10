@@ -83,7 +83,7 @@ std::string base64_decode(char* input)
     std::string tempString="";
     unsigned long int x=0;
     char temp[4], temp2[4];
-    if(strlen(input)==0)
+    if((input==NULL) || (strlen(input)==0))
     {
         return tempString;
     }
@@ -107,7 +107,7 @@ std::string base64_encode(char* input)
     std::string tempString="";
     unsigned long int x=0;
     char temp[3], temp2[5];
-    if(strlen(input)==0)
+    if((input==NULL) || (strlen(input)==0))
     {
         return tempString;
     }
