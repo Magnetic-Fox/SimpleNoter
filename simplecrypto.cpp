@@ -7,9 +7,13 @@ std::string secureString(bool encode, char* input, char* key)
     unsigned int subtract=0;
     char temp=0;
     bool switchChar=false;
-    if((input==NULL) || (strlen(input)==0))
+    if((input==NULL) || (key==NULL))
     {
-        return tempString;
+        return "";
+    }
+    if((strlen(input)==0) || (strlen(key)==0))
+    {
+        return "";
     }
     if(encode)
     {
@@ -73,7 +77,11 @@ std::string secureString(bool encode, char* input, char* key)
 
 std::string makeSecureString_B64(bool encode, char* input, char* key)
 {
-    if((input==NULL) || (strlen(input)==0))
+    if((input==NULL) || (key==NULL))
+    {
+        return "";
+    }
+    if((strlen(input)==0) || (strlen(key)==0))
     {
         return "";
     }
