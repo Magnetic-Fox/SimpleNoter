@@ -208,6 +208,13 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
     }
     else
     {
+        if(mainSettings.savePosSizes)
+        {
+            if((mainSettings.editWindowX!=CW_USEDEFAULT) && (mainSettings.editWindowY!=CW_USEDEFAULT) && (mainSettings.editWindowSizeX!=CW_USEDEFAULT) && (mainSettings.editWindowSizeY!=CW_USEDEFAULT))
+            {
+                SetWindowPos(editWin->hwnd,NULL,mainSettings.editWindowX,mainSettings.editWindowY,mainSettings.editWindowSizeX,mainSettings.editWindowSizeY,SWP_NOZORDER);
+            }
+        }
         if(note==NULL)
         {
             editWin->note=new NOTE;
@@ -284,14 +291,28 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
         {
             Ctl3dSubclassDlg(editWin->hwnd,ctlRegs);
         }
-        
-        if(mainSettings.editWindowSystem)
+
+        if(mainSettings.savePosSizes)
         {
-            ShowWindow(editWin->hwnd,getState(hwnd));
+            if((mainSettings.editWindowStyle+1)==SW_SHOWMINIMIZED)
+            {
+                ShowWindow(editWin->hwnd,SW_SHOWNORMAL);
+            }
+            else
+            {
+                ShowWindow(editWin->hwnd,(mainSettings.editWindowStyle+1));
+            }
         }
         else
         {
-            ShowWindow(editWin->hwnd,(mainSettings.editWindowStyle+1));
+            if(mainSettings.editWindowSystem)
+            {
+                ShowWindow(editWin->hwnd,getState(hwnd));
+            }
+            else
+            {
+                ShowWindow(editWin->hwnd,(mainSettings.editWindowStyle+1));
+            }
         }
         UpdateWindow(editWin->hwnd);
 
@@ -371,11 +392,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     hwnd = CreateWindow(mainWindowClass, APPNAME, WS_OVERLAPPEDWINDOW,
                         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
                         NULL, NULL, hInstance, NULL);
-                        
+
     if(hwnd == NULL)
     {
         MessageBox(NULL,"Utworzenie okna nie powiod³o siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
         return 1;
+    }
+
+    if(mainSettings.savePosSizes)
+    {
+        if((mainSettings.mainWindowX!=CW_USEDEFAULT) && (mainSettings.mainWindowY!=CW_USEDEFAULT) && (mainSettings.mainWindowSizeX!=CW_USEDEFAULT) && (mainSettings.mainWindowSizeY!=CW_USEDEFAULT))
+        {
+            SetWindowPos(hwnd,NULL,mainSettings.mainWindowX,mainSettings.mainWindowY,mainSettings.mainWindowSizeX,mainSettings.mainWindowSizeY,SWP_NOZORDER);
+        }
     }
 
     g_hwnd=hwnd;
@@ -466,13 +495,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         }
     }
 
-    if(mainSettings.mainWindowSystem)
+    if(mainSettings.savePosSizes)
     {
-        ShowWindow(hwnd,nCmdShow);
+        if((mainSettings.mainWindowStyle+1)==SW_SHOWMINIMIZED)
+        {
+            ShowWindow(hwnd,SW_SHOWNORMAL);
+        }
+        else
+        {
+            ShowWindow(hwnd,(mainSettings.mainWindowStyle+1));
+        }
     }
     else
     {
-        ShowWindow(hwnd,(mainSettings.mainWindowStyle+1));
+        if(mainSettings.mainWindowSystem)
+        {
+            ShowWindow(hwnd,nCmdShow);
+        }
+        else
+        {
+            ShowWindow(hwnd,(mainSettings.mainWindowStyle+1));
+        }
     }
     UpdateWindow(hwnd);
 
@@ -525,6 +568,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return msg.wParam;
 }
 
+void getWindowCoordinates(HWND hwnd, int &x, int &y, int &size_x, int &size_y, unsigned int &state)
+{
+    RECT tempRect;
+    GetWindowRect(hwnd,&tempRect);
+    x=tempRect.left;
+    y=tempRect.top;
+    size_x=(tempRect.right-tempRect.left);
+    size_y=(tempRect.bottom-tempRect.top);
+    state=getState(hwnd);
+    return;
+}
+
 //////////////////////////////////////
 //
 //  MAIN WINDOW PROCEDURE
@@ -538,6 +593,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     long int result;
     unsigned long int width;
     unsigned long int height;
+    int x, y, size_x, size_y;
+    unsigned int state;
     switch(msg)
     {
         case WM_CTLCOLOR:
@@ -897,11 +954,33 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         SendMessage(it->second->hwnd, WM_CLOSE, 0, 0);
                     }
                 }
+                
+                if(mainSettings.savePosSizes)
+                {
+                    getWindowCoordinates(hwnd,x,y,size_x,size_y,state);
+                    if(state==SW_SHOWNORMAL)
+                    {
+                        mainSettings.mainWindowStyle=state-1;
+                        mainSettings.mainWindowX=x;
+                        mainSettings.mainWindowY=y;
+                        mainSettings.mainWindowSizeX=size_x;
+                        mainSettings.mainWindowSizeY=size_y;
+                    }
+                    if(state==SW_SHOWMAXIMIZED)
+                    {
+                        mainSettings.mainWindowStyle=state-1;
+                    }
+
+                    GetModuleFileName(GetWindowWord(hwnd,GWW_HINSTANCE),buffer,32767);
+                    saveWindowCoordinatesSettings(mainSettings,(char*)getDefaultIniFile(buffer).c_str());
+                }
+                
                 if(winMem.size()==0)
                 {
                     DestroyWindow(hwnd);
                 }
             }
+            
             break;
         case WM_DESTROY:
             if(Ctl3dEnabled() && (!Ctl3dUnregister(GetWindowWord(hwnd,GWW_HINSTANCE))))
@@ -935,6 +1014,8 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     unsigned long int height;
     unsigned long int sel;
     unsigned int result;
+    int x, y, size_x, size_y;
+    unsigned int state;
     switch(msg)
     {
         case WM_CTLCOLOR:
@@ -1387,6 +1468,24 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             {
                 winMem[hwnd]->lastResult=0;
             }
+
+            if(mainSettings.savePosSizes)
+            {
+                getWindowCoordinates(hwnd,x,y,size_x,size_y,state);
+                if(state==SW_SHOWNORMAL)
+                {
+                    mainSettings.editWindowStyle=state-1;
+                    mainSettings.editWindowX=x;
+                    mainSettings.editWindowY=y;
+                    mainSettings.editWindowSizeX=size_x;
+                    mainSettings.editWindowSizeY=size_y;
+                }
+                if(state==SW_SHOWMAXIMIZED)
+                {
+                    mainSettings.editWindowStyle=state-1;
+                }
+            }
+            
             if((result!=IDCANCEL) && (winMem[hwnd]->lastResult>=0))
             {
                 DestroyWindow(hwnd);
@@ -1695,6 +1794,17 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     mainSettings.editWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_COMBO2), CB_GETCURSEL, 0, 0);
                     mainSettings.autoReload=IsDlgButtonChecked(hwnd, IDC_CHECK2);
                     mainSettings.autoRefresh=IsDlgButtonChecked(hwnd, IDC_CHECK9);
+                    if((mainSettings.savePosSizes==false) && (IsDlgButtonChecked(hwnd, IDC_CHECK10)))
+                    {
+                        mainSettings.mainWindowX=CW_USEDEFAULT;
+                        mainSettings.mainWindowY=CW_USEDEFAULT;
+                        mainSettings.mainWindowSizeX=CW_USEDEFAULT;
+                        mainSettings.mainWindowSizeY=CW_USEDEFAULT;
+                        mainSettings.editWindowX=CW_USEDEFAULT;
+                        mainSettings.editWindowY=CW_USEDEFAULT;
+                        mainSettings.editWindowSizeX=CW_USEDEFAULT;
+                        mainSettings.editWindowSizeY=CW_USEDEFAULT;
+                    }
                     mainSettings.savePosSizes=IsDlgButtonChecked(hwnd, IDC_CHECK10);
                     mainSettings.use3DControls=IsDlgButtonChecked(hwnd, IDC_CHECK3);
                     mainSettings.use3DButtons=IsDlgButtonChecked(hwnd, IDC_CHECK4);
