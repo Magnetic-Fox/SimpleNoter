@@ -1285,7 +1285,10 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                         if(winMem[hwnd]->lastResult>=0)
                         {
-                            //SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);  // was for automatic list update
+                            if(mainSettings.autoRefresh)
+                            {
+                                SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);
+                            }
                             //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
                             //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),true);
                             SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),"Aktualizuj");
@@ -1306,7 +1309,10 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                         if(winMem[hwnd]->lastResult>=0)
                         {
-                            //SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);  // was for automatic list update
+                            if(mainSettings.autoRefresh)
+                            {
+                                SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);
+                            }
                             //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
@@ -1596,6 +1602,22 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             {
                 CheckDlgButton(hwnd, IDC_CHECK2, BST_UNCHECKED);
             }
+            if(mainSettings.autoRefresh)
+            {
+                CheckDlgButton(hwnd, IDC_CHECK9, BST_CHECKED);
+            }
+            else
+            {
+                CheckDlgButton(hwnd, IDC_CHECK9, BST_UNCHECKED);
+            }
+            if(mainSettings.savePosSizes)
+            {
+                CheckDlgButton(hwnd, IDC_CHECK10, BST_CHECKED);
+            }
+            else
+            {
+                CheckDlgButton(hwnd, IDC_CHECK10, BST_UNCHECKED);
+            }
             if(mainSettings.use3DControls)
             {
                 CheckDlgButton(hwnd, IDC_CHECK3, BST_CHECKED);
@@ -1672,6 +1694,8 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     mainSettings.mainWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_COMBO1), CB_GETCURSEL, 0, 0);
                     mainSettings.editWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_COMBO2), CB_GETCURSEL, 0, 0);
                     mainSettings.autoReload=IsDlgButtonChecked(hwnd, IDC_CHECK2);
+                    mainSettings.autoRefresh=IsDlgButtonChecked(hwnd, IDC_CHECK9);
+                    mainSettings.savePosSizes=IsDlgButtonChecked(hwnd, IDC_CHECK10);
                     mainSettings.use3DControls=IsDlgButtonChecked(hwnd, IDC_CHECK3);
                     mainSettings.use3DButtons=IsDlgButtonChecked(hwnd, IDC_CHECK4);
                     mainSettings.use3DLists=IsDlgButtonChecked(hwnd, IDC_CHECK5);
