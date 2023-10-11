@@ -45,7 +45,7 @@ typedef struct mainSettings
 {
     bool mainWindowSystem, editWindowSystem;
     unsigned int mainWindowStyle, editWindowStyle;
-    bool autoReload, use3DControls, use3DButtons, use3DLists, use3DEdits, use3DCombos, use3DDialogs;
+    bool autoReload, autoRefresh, savePosSizes, use3DControls, use3DButtons, use3DLists, use3DEdits, use3DCombos, use3DDialogs;
 } MAINSETTINGS;
 
 #endif

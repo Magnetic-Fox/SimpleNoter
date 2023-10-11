@@ -47,6 +47,8 @@ MAINSETTINGS getMainSettings(char* iniFile)
     mainSettings.mainWindowStyle=GetPrivateProfileInt("Settings","MainWindowStyle",0,iniFile);
     mainSettings.editWindowStyle=GetPrivateProfileInt("Settings","EditWindowStyle",0,iniFile);
     mainSettings.autoReload=(GetPrivateProfileInt("Settings","AutoReload",0,iniFile)==1);
+    mainSettings.autoRefresh=(GetPrivateProfileInt("Settings","AutoRefresh",0,iniFile)==1);
+    mainSettings.savePosSizes=(GetPrivateProfileInt("Settings","SavePosSizes",0,iniFile)==1);
     mainSettings.use3DControls=(GetPrivateProfileInt("Settings","Use3DControls",0,iniFile)==1);
     mainSettings.use3DButtons=(GetPrivateProfileInt("Settings","Use3DButtons",0,iniFile)==1);
     mainSettings.use3DLists=(GetPrivateProfileInt("Settings","Use3DLists",0,iniFile)==1);
@@ -63,6 +65,8 @@ void saveMainSettings(MAINSETTINGS &mainSettings, char* iniFile)
     WritePrivateProfileString("Settings","MainWindowStyle",(char*)IntToStr(mainSettings.mainWindowStyle).c_str(),iniFile);
     WritePrivateProfileString("Settings","EditWindowStyle",(char*)IntToStr(mainSettings.editWindowStyle).c_str(),iniFile);
     WritePrivateProfileString("Settings","AutoReload",(char*)IntToStr(mainSettings.autoReload).c_str(),iniFile);
+    WritePrivateProfileString("Settings","AutoRefresh",(char*)IntToStr(mainSettings.autoRefresh).c_str(),iniFile);
+    WritePrivateProfileString("Settings","SavePosSizes",(char*)IntToStr(mainSettings.savePosSizes).c_str(),iniFile);
     WritePrivateProfileString("Settings","Use3DControls",(char*)IntToStr(mainSettings.use3DControls).c_str(),iniFile);
     WritePrivateProfileString("Settings","Use3DButtons",(char*)IntToStr(mainSettings.use3DButtons).c_str(),iniFile);
     WritePrivateProfileString("Settings","Use3DLists",(char*)IntToStr(mainSettings.use3DLists).c_str(),iniFile);
