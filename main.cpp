@@ -408,8 +408,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     hListBox = CreateWindow("LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER |
                             WS_VSCROLL | WS_TABSTOP | ES_AUTOVSCROLL | LBS_NOTIFY | LBS_NOINTEGRALHEIGHT,
                             0, 21, 600, 300, hwnd, (HMENU)ID_LISTBOX, hInstance, NULL);
-                           
-    SetWindowPos(hListBox,NULL,0,21,600,300,SWP_NOZORDER);
+
+    if(mainSettings.use3DLists)
+    {
+        SetWindowPos(hListBox,NULL,0,22,600,298,SWP_NOZORDER);
+    }
+    else
+    {    
+        SetWindowPos(hListBox,NULL,0,21,600,300,SWP_NOZORDER);
+    }
 
     hStatic  = CreateWindow("STATIC", "ID:", WS_CHILD | WS_VISIBLE | SS_LEFT,
                             8, 329, 128, 16, hwnd, (HMENU)ID_STATIC1, hInstance, NULL);
@@ -500,11 +507,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     firstOptions=false;
-
-    if(mainSettings.use3DLists)
-    {
-        SetWindowPos(hListBox,NULL,0,22,0,0,SWP_NOSIZE | SWP_NOZORDER);
-    }
 
     while(GetMessage(&msg, NULL, 0, 0 ))
     {
