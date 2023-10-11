@@ -503,7 +503,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     if(mainSettings.use3DLists)
     {
-        SetWindowPos(hListBox,NULL,0,22,600,298,SWP_NOSIZE | SWP_NOZORDER);
+        SetWindowPos(hListBox,NULL,0,22,0,0,SWP_NOSIZE | SWP_NOZORDER);
     }
 
     while(GetMessage(&msg, NULL, 0, 0 ))
