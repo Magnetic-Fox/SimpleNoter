@@ -5,8 +5,8 @@ NOTER_CREDENTIALS getCredentials(char* iniFile)
     NOTER_CREDENTIALS credentials;
     char username[256];
     char password[256];
-    GetPrivateProfileString("Credentials","Username","",username,256,iniFile);
-    GetPrivateProfileString("Credentials","Password","",password,256,iniFile);
+    GetPrivateProfileString("Credentials","Username","",username,256,iniFile);  // Yup, for Win3.11 placing "" here is better choice than just NULL (however, under WinXP NULL worked as it should).
+    GetPrivateProfileString("Credentials","Password","",password,256,iniFile);  // Otherwise noter_prepareCredentials procedure produces garbage in credential settings (which is a bit strange).
     credentials=noter_prepareCredentials((char*)base64_decode(username).c_str(),(char*)makeSecureString_B64(false,password,(char*)base64_decode(username).c_str()).c_str());
     return credentials;
 }
