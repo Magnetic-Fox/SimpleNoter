@@ -5,9 +5,9 @@
 #define BST_CHECKED         0x0001
 
 #define MATCH_VERSION   "1.0"
-#define USER_AGENT      "SimpleNoter/0.44"
+#define USER_AGENT      "SimpleNoter/0.5"
 #define INI_FILE        "config.ini"
-#define APPNAME         "Simple Noter v0.44"
-#define HELPFILE        "SNOTER04.HLP"
+#define APPNAME         "Simple Noter v0.5"
+#define HELPFILE        "SNOTER05.HLP"
 
 #endif
