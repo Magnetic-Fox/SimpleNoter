@@ -18,7 +18,7 @@
 
 //////////////////////////////////////
 //
-//  ZMIENNE GLOBALNE
+//  GLOBAL VARIABLES
 //
 //////////////////////////////////////
 
@@ -40,7 +40,7 @@ bool check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptio
 
 //////////////////////////////////////
 //
-//  PROTOTYPY FUNKCJI
+//  PROTOTYPES
 //
 //////////////////////////////////////
 
@@ -61,7 +61,7 @@ BOOL CALLBACK DlgProc8(HWND, UINT, WPARAM, LPARAM);
 
 //////////////////////////////////////
 //
-//  DODATKOWE PROCEDURY
+//  ADDITIONAL PROCEDURES
 //
 //////////////////////////////////////
 
@@ -187,7 +187,7 @@ void inline userEdit_UnlockAllButtons(HWND hwnd)
 
 //////////////////////////////////////
 //
-//  OKNO EDYCJI
+//  EDIT WINDOW
 //
 //////////////////////////////////////
 
@@ -301,7 +301,7 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
 
 //////////////////////////////////////
 //
-//  G£ÓWNA CZÊŒÆ PROGRAMU
+//  MAIN PROGRAM
 //
 //////////////////////////////////////
 
@@ -501,6 +501,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     firstOptions=false;
 
+    if(mainSettings.use3DLists)
+    {
+        SetWindowPos(hListBox,NULL,0,22,600,298,SWP_NOSIZE | SWP_NOZORDER);
+    }
+
     while(GetMessage(&msg, NULL, 0, 0 ))
     {
         temp=GetParent(msg.hwnd);
@@ -520,7 +525,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 //////////////////////////////////////
 //
-//  G£ÓWNE OKNO
+//  MAIN WINDOW PROCEDURE
 //
 //////////////////////////////////////
 
@@ -864,7 +869,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 height=240;
             }
 
-            SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,width,height-86,SWP_NOZORDER | SWP_NOMOVE);
+            if(mainSettings.use3DLists)
+            {
+                SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,width,height-88,SWP_NOZORDER | SWP_NOMOVE);
+            }
+            else
+            {
+                SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,width,height-86,SWP_NOZORDER | SWP_NOMOVE);
+            }
             SetWindowPos(GetDlgItem(hwnd,ID_STATIC6),NULL,0,0,width-400,21,SWP_NOZORDER | SWP_NOMOVE);
             SetWindowPos(GetDlgItem(hwnd,ID_STATIC1),NULL,8,height-57,0,0,SWP_NOZORDER | SWP_NOSIZE);
             SetWindowPos(GetDlgItem(hwnd,ID_STATIC2),NULL,8,height-40,0,0,SWP_NOZORDER | SWP_NOSIZE);
@@ -911,7 +923,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////
 //
-//  OKNO EDYCJI
+//  EDIT WINDOW PROCEDURE
 //
 //////////////////////////////////////
 
@@ -1383,7 +1395,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////
 //
-//  DIALOG W£AŒCIWOŒCI NOTATKI
+//  NOTE PROPERTIES DIALOG PROCEDURE
 //
 //////////////////////////////////////
 
@@ -1485,7 +1497,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////
 //
-//  DIALOG INFORMACJI O PROGRAMIE
+//  PROGRAM INFORMATION DIALOG PROCEDURE
 //
 //////////////////////////////////////
 
@@ -1532,7 +1544,7 @@ BOOL CALLBACK DlgProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////
 //
-//  DIALOG PREFERENCJI
+//  PREFERENCES DIALOG PROCEDURE
 //
 //////////////////////////////////////
 
@@ -1727,7 +1739,7 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////
 //
-//  DIALOG USTAWIEÑ PO£¥CZENIA
+//  CONNECTION SETTINGS DIALOG PROCEDURE
 //
 //////////////////////////////////////
 
@@ -1903,7 +1915,7 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////
 //
-//  DIALOG USTAWIEÑ U¯YTKOWNIKA
+//  CREDENTIALS SETTINGS DIALOG PROCEDURE
 //
 //////////////////////////////////////
 
@@ -2183,7 +2195,7 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////
 //
-//  DIALOG REJESTRACJI U¯YTKOWNIKA
+//  USER REGISTRATION DIALOG PROCEDURE
 //
 //////////////////////////////////////
 
@@ -2287,7 +2299,7 @@ BOOL CALLBACK DlgProc6(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////
 //
-//  DIALOG POWTÓRZENIA HAS£A
+//  PASSWORD CONFIRMATION DIALOG PROCEDURE
 //
 //////////////////////////////////////
 
@@ -2367,7 +2379,7 @@ BOOL CALLBACK DlgProc7(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////
 //
-//  DIALOG ZMIANY HAS£A
+//  PASSWORD CHANGE DIALOG PROCEDURE
 //
 //////////////////////////////////////
 
