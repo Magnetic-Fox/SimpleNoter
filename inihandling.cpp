@@ -55,10 +55,20 @@ MAINSETTINGS getMainSettings(char* iniFile)
     mainSettings.use3DEdits=(GetPrivateProfileInt("Settings","Use3DEdits",0,iniFile)==1);
     mainSettings.use3DCombos=(GetPrivateProfileInt("Settings","Use3DCombos",0,iniFile)==1);
     mainSettings.use3DDialogs=(GetPrivateProfileInt("Settings","Use3DDialogs",0,iniFile)==1);
+
+    mainSettings.mainWindowX=GetPrivateProfileInt("WindowSettings","MainWindowX",CW_USEDEFAULT,iniFile);
+    mainSettings.mainWindowY=GetPrivateProfileInt("WindowSettings","MainWindowY",CW_USEDEFAULT,iniFile);
+    mainSettings.mainWindowSizeX=GetPrivateProfileInt("WindowSettings","MainWindowSizeX",CW_USEDEFAULT,iniFile);
+    mainSettings.mainWindowSizeY=GetPrivateProfileInt("WindowSettings","MainWindowSizeY",CW_USEDEFAULT,iniFile);
+    mainSettings.editWindowX=GetPrivateProfileInt("WindowSettings","EditWindowX",CW_USEDEFAULT,iniFile);
+    mainSettings.editWindowY=GetPrivateProfileInt("WindowSettings","EditWindowY",CW_USEDEFAULT,iniFile);
+    mainSettings.editWindowSizeX=GetPrivateProfileInt("WindowSettings","EditWindowSizeX",CW_USEDEFAULT,iniFile);
+    mainSettings.editWindowSizeY=GetPrivateProfileInt("WindowSettings","EditWindowSizeY",CW_USEDEFAULT,iniFile);
+    
     return mainSettings;
 }
 
-void saveMainSettings(MAINSETTINGS &mainSettings, char* iniFile)
+void saveMainSettings(MAINSETTINGS &mainSettings, char* iniFile)    // really main, without window coordinates
 {
     WritePrivateProfileString("Settings","MainWindowSystem",(char*)IntToStr(mainSettings.mainWindowSystem).c_str(),iniFile);
     WritePrivateProfileString("Settings","EditWindowSystem",(char*)IntToStr(mainSettings.editWindowSystem).c_str(),iniFile);
@@ -73,5 +83,20 @@ void saveMainSettings(MAINSETTINGS &mainSettings, char* iniFile)
     WritePrivateProfileString("Settings","Use3DEdits",(char*)IntToStr(mainSettings.use3DEdits).c_str(),iniFile);
     WritePrivateProfileString("Settings","Use3DCombos",(char*)IntToStr(mainSettings.use3DCombos).c_str(),iniFile);
     WritePrivateProfileString("Settings","Use3DDialogs",(char*)IntToStr(mainSettings.use3DDialogs).c_str(),iniFile);
+    return;
+}
+
+void saveWindowCoordinatesSettings(MAINSETTINGS &mainSettings, char* iniFile)
+{
+    WritePrivateProfileString("WindowSettings","MainWindowX",(char*)IntToStr(mainSettings.mainWindowX).c_str(),iniFile);
+    WritePrivateProfileString("WindowSettings","MainWindowY",(char*)IntToStr(mainSettings.mainWindowY).c_str(),iniFile);
+    WritePrivateProfileString("WindowSettings","MainWindowSizeX",(char*)IntToStr(mainSettings.mainWindowSizeX).c_str(),iniFile);
+    WritePrivateProfileString("WindowSettings","MainWindowSizeY",(char*)IntToStr(mainSettings.mainWindowSizeY).c_str(),iniFile);
+    WritePrivateProfileString("WindowSettings","EditWindowX",(char*)IntToStr(mainSettings.editWindowX).c_str(),iniFile);
+    WritePrivateProfileString("WindowSettings","EditWindowY",(char*)IntToStr(mainSettings.editWindowY).c_str(),iniFile);
+    WritePrivateProfileString("WindowSettings","EditWindowSizeX",(char*)IntToStr(mainSettings.editWindowSizeX).c_str(),iniFile);
+    WritePrivateProfileString("WindowSettings","EditWindowSizeY",(char*)IntToStr(mainSettings.editWindowSizeY).c_str(),iniFile);
+    WritePrivateProfileString("Settings","MainWindowStyle",(char*)IntToStr(mainSettings.mainWindowStyle).c_str(),iniFile);
+    WritePrivateProfileString("Settings","EditWindowStyle",(char*)IntToStr(mainSettings.editWindowStyle).c_str(),iniFile);    
     return;
 }
