@@ -13,7 +13,7 @@ BEGIN
             VALUE "FileVersion", "0.5\0"
             VALUE "FileDescription", "Simple Noter\0"
             VALUE "InternalName", "SNoter05.exe\0"
-            VALUE "LegalCopyright", "©2021-2023 Magnetic-Fox\0"
+            VALUE "LegalCopyright", "©2021-2024 Magnetic-Fox\0"
             VALUE "LegalTrademarks", "Noter™\0"
             VALUE "OriginalFilename", "SimpleNoter.exe\0"
             VALUE "ProductName", "Simple Noter v0.5\0"
@@ -144,7 +144,7 @@ BEGIN
     LTEXT           "utf8_decode.c ©2005 JSON.org",IDC_STATIC,36,95,102,8
     LTEXT           "utf8_encode.cpp © Ondøej Hruška",IDC_STATIC,36,105,110,
                     8
-    LTEXT           "©2021-2023 Bart³omiej ""Magnetic-Fox"" Wêgrzyn",
+    LTEXT           "©2021-2024 Bart³omiej ""Magnetic-Fox"" Wêgrzyn",
                     IDC_STATIC,28,125,160,8
 END
 
