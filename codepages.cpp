@@ -58,7 +58,16 @@ std::string toCodePage(CODEPAGE &codepage, char* input)
             }
             else
             {
-                temp=temp+(char)codepage[one];
+                char test=(char)codepage[one];
+                if(test<0x20)
+                {
+                    if(!((test==0x0D) || (test==0x0A)))
+                    {
+                        test='?';
+                    }
+                }
+                //temp=temp+(char)codepage[one];
+                temp=temp+test;
             }
         }
     }
