@@ -1,10 +1,12 @@
 #include "codepages.hpp"
 
-static long int  the_index = 0;
-static long int  the_length = 0;
-static long int  the_char = 0;
-static long int  the_byte = 0;
+static long int the_index = 0;
+static long int the_length = 0;
+static long int the_char = 0;
+static long int the_byte = 0;
 static char* the_input;
+
+static bool decodeWarning = false;
 
 std::string fromCodePage(RAWCODEPAGE nmCodePage, char* input)
 {
@@ -39,6 +41,7 @@ std::string toCodePage(CODEPAGE &codepage, char* input)
 {
     std::string temp="";
     utf8_decode_init(input,strlen(input));
+    decodeWarning=false;
     while(true)
     {
         long int one=utf8_decode_next();
@@ -64,6 +67,7 @@ std::string toCodePage(CODEPAGE &codepage, char* input)
                     if(!((test==0x0D) || (test==0x0A)))
                     {
                         test='?';
+                        decodeWarning=true;
                     }
                 }
                 //temp=temp+(char)codepage[one];
@@ -81,4 +85,9 @@ void prepareCodePage(CODEPAGE &codepage, RAWCODEPAGE cpdef)
         codepage[cpdef[x]]=0x80+x;
     }
     return;
+}
+
+bool decodeWarningState(void)
+{
+    return decodeWarning;
 }

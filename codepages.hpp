@@ -14,4 +14,6 @@ std::string fromCodePage(RAWCODEPAGE, char*);
 std::string toCodePage(CODEPAGE&, char*);
 void prepareCodePage(CODEPAGE&, RAWCODEPAGE);
 
+bool decodeWarningState(void);
+
 #endif
