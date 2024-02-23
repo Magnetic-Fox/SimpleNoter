@@ -275,10 +275,13 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
         editWin->hStatic4= CreateWindow("STATIC", "Wszystko w porz¹dku.", WS_CHILD | WS_VISIBLE | SS_LEFT,
                                         0, 377, 600, 16, editWin->hwnd, (HMENU)ID_EDIT_STATIC4, hInstance, NULL);
 
+        bool warningState=false;
         if(editWin->note->id>0)
         {
             SetWindowText(editWin->hEditBox, toCodePage(m_cp1250,(char*)editWin->note->subject.c_str()).c_str());
+            warningState=decodeWarningState();
             SetWindowText(editWin->hEditBox2,toCodePage(m_cp1250,(char*)editWin->note->entry.c_str()).c_str());
+            warningState=(warningState || decodeWarningState());
         }
 
         editWin->subjectChanged=false;
@@ -315,6 +318,11 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note)
             }
         }
         UpdateWindow(editWin->hwnd);
+
+        if(warningState)
+        {
+            MessageBox(editWin->hwnd,"Wybrana notatka zawiera nieobs³ugiwane znaki UTF-8.\nDokonywanie zmian t¹ wersj¹ programu spowoduje nieodwracaln¹ utratê tych informacji.",APPNAME,MB_ICONINFORMATION);
+        }
 
         return editWin->hwnd;
     }
