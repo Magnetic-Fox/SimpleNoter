@@ -21,9 +21,9 @@ NOTER_CONNECTION_SETTINGS getConnectionSettings(char* iniFile) {
     char ipAddress[256];
     unsigned int port;
     char share[256];
-    GetPrivateProfileString("Server","IP",NULL,ipAddress,256,iniFile);
+    GetPrivateProfileString("Server","IP","",ipAddress,256,iniFile);    // quick, forgotten change
     port=GetPrivateProfileInt("Server","Port",0,iniFile);
-    GetPrivateProfileString("Server","Share",NULL,share,256,iniFile);
+    GetPrivateProfileString("Server","Share","",share,256,iniFile);     // quick, forgotten change
     connectionSettings=noter_prepareConnectionSettings(ipAddress,port,share,(char*)makeDefaultUserAgent().c_str());
     return connectionSettings;
 }
