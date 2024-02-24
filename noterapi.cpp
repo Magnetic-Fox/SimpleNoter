@@ -11,65 +11,65 @@ bool noter_connectionSettingsAvailable(NOTER_CONNECTION_SETTINGS &connectionSett
 std::string noter_getAnswerString(long int answerCode) {
     switch(answerCode) {
         case ERROR_WRONG_RESPONSE:
-            return "Nie uda³o siê po³¹czyæ z serwerem.";
+            return STRING_WRONG_RESPONSE;
         case ERROR_SERVICE_DISABLED:
-            return "Us³uga tymczasowo niedostêpna.";
+            return STRING_SERVICE_DISABLED;
         case ERROR_INTERNAL_SERVER_ERROR:
-            return "B³¹d wewnêtrzny serwera.";
+            return STRING_INTERNAL_SERVER_ERROR;
         case ERROR_NOTE_ALREADY_UNLOCKED:
-            return "Notatka ju¿ odblokowana.";
+            return STRING_NOTE_ALREADY_UNLOCKED;
         case ERROR_NOTE_ALREADY_LOCKED:
-            return "Notatka ju¿ zablokowana.";
+            return STRING_NOTE_ALREADY_LOCKED;
         case ERROR_NOTE_LOCKED:
-            return "Notatka jest zablokowana.";
+            return STRING_NOTE_LOCKED;
         case ERROR_USER_REMOVAL_FAILURE:
-            return "Usuniêcie u¿ytkownika nie powiod³o siê.";
+            return STRING_USER_REMOVAL_FAILURE;
         case ERROR_USER_NOT_EXISTS:
-            return "Dany u¿ytkownik nie istnieje.";
+            return STRING_USER_NOT_EXISTS;
         case ERROR_NOTE_NOT_EXISTS:
-            return "Dana notatka nie istnieje.";
+            return STRING_NOTE_NOT_EXISTS;
         case ERROR_NO_NECESSARY_INFORMATION:
-            return "Brak wymaganych informacji (temat lub treœæ).";
+            return STRING_NO_NECESSARY_INFORMATION;
         case ERROR_USER_DEACTIVATED:
-            return "U¿ytkownik zablokowany.";
+            return STRING_USER_DEACTIVATED;
         case ERROR_LOGIN_INCORRECT:
-            return "Nieprawid³owe dane logowania.";
+            return STRING_LOGIN_INCORRECT;
         case ERROR_UNKNOWN_ACTION:
-            return "Nieprawid³owe polecenie.";
+            return STRING_UNKNOWN_ACTION;
         case ERROR_NO_CREDENTIALS:
-            return "Brak danych logowania.";
+            return STRING_NO_CREDENTIALS;
         case ERROR_USER_EXISTS:
-            return "Podana nazwa u¿ytkownika jest ju¿ zajêta.";
+            return STRING_USER_EXISTS;
         case ERROR_NO_USABLE_INFORMATION:
-            return "Brak u¿ytecznych informacji w ¿¹daniu.";
+            return STRING_NO_USABLE_INFORMATION;
         case ERROR_INVALID_METHOD:
-            return "Nieobs³ugiwane ¿¹danie.";
+            return STRING_INVALID_METHOD;
         case INFO_OK:
-            return "Wszystko w porz¹dku.";
+            return STRING_INFO_OK;
         case INFO_USER_CREATED:
-            return "U¿ytkownik zosta³ zarejestrowany.";
+            return STRING_INFO_USER_CREATED;
         case INFO_USER_UPDATED:
-            return "Dane u¿ytkownika zosta³y zaktualizowane.";
+            return STRING_INFO_USER_UPDATED;
         case INFO_USER_REMOVED:
-            return "U¿ytkownik zosta³ usuniêty.";
+            return STRING_INFO_USER_REMOVED;
         case INFO_LIST_SUCCESSFUL:
-            return "Lista notatek zosta³a za³adowana.";
+            return STRING_INFO_LIST_SUCCESSFUL;
         case INFO_NOTE_RETRIEVED:
-            return "Notatka zosta³a za³adowana.";
+            return STRING_INFO_NOTE_RETRIEVED;
         case INFO_NOTE_CREATED:
-            return "Notatka zosta³a utworzona.";
+            return STRING_INFO_NOTE_CREATED;
         case INFO_NOTE_UPDATED:
-            return "Notatka zosta³a zaktualizowana.";
+            return STRING_INFO_NOTE_UPDATED;
         case INFO_NOTE_DELETED:
-            return "Notatka zosta³a usuniêta.";
+            return STRING_INFO_NOTE_DELETED;
         case INFO_USER_INFO_RETRIEVED:
-            return "Informacje o u¿ytkowniku zosta³y za³adowane.";
+            return STRING_INFO_USER_INFO_RETRIEVED;
         case INFO_NOTE_LOCKED:
-            return "Notatka zosta³a zablokowana.";
+            return STRING_INFO_NOTE_LOCKED;
         case INFO_NOTE_UNLOCKED:
-            return "Notatka zosta³a odblokowana.";
+            return STRING_INFO_NOTE_UNLOCKED;
         default:
-            return "Nieznany kod odpowiedzi.";
+            return STRING_UNKNOWN_ERROR;
     }
 }
 

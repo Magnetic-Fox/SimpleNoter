@@ -5,7 +5,9 @@
 
 #include "resources.h"
 
-#include "debug.hpp"
+// Uncomment for debug purposes (showing integers)
+// #include "debug.hpp"
+
 #include "cp1250.hpp"
 #include "helpers.hpp"
 #include "wsprocs.hpp"
@@ -208,43 +210,43 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
             editWin->note=note;
         }
         
-        editWin->hStatic = CreateWindow("STATIC", "Tytu³:", WS_CHILD | WS_VISIBLE | SS_LEFT,
+        editWin->hStatic = CreateWindow("STATIC", STRING_EDITWIN_TITLE, WS_CHILD | WS_VISIBLE | SS_LEFT,
                                         0, 0, 600, 16, editWin->hwnd, (HMENU)ID_EDIT_STATIC1, hInstance, NULL);
 
         editWin->hEditBox= CreateWindow("EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL,
                                         0, 16, 600, 24, editWin->hwnd, (HMENU)ID_EDIT_EDITBOX1, hInstance, NULL);
 
-        editWin->hStatic2= CreateWindow("STATIC", "Treœæ:", WS_CHILD | WS_VISIBLE | SS_LEFT,
+        editWin->hStatic2= CreateWindow("STATIC", STRING_EDITWIN_ENTRY, WS_CHILD | WS_VISIBLE | SS_LEFT,
                                         0, 40, 600, 16, editWin->hwnd, (HMENU)ID_EDIT_STATIC2, hInstance, NULL);
 
         editWin->hEditBox2=CreateWindow("EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP | ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN,
                                         0, 56, 600, 300, editWin->hwnd, (HMENU)ID_EDIT_EDITBOX2, hInstance, NULL);
 
         if(editWin->note->id==0) {
-            editWin->hButton = CreateWindow("BUTTON", "Dodaj", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
+            editWin->hButton = CreateWindow("BUTTON", STRING_ADD, WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
                                             0, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON1, hInstance, NULL);
         }
         else {
-            editWin->hButton = CreateWindow("BUTTON", "Aktualizuj", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
+            editWin->hButton = CreateWindow("BUTTON", STRING_UPDATE, WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
                                             0, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON1, hInstance, NULL);
         }
 
         if(editWin->note->id==0) {
-            editWin->hButton2 =CreateWindow("BUTTON", "W³aœciwoœci", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
+            editWin->hButton2 =CreateWindow("BUTTON", STRING_PROPERTIES, WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
                                             96, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON2, hInstance, NULL);
         }
         else {
-            editWin->hButton2 =CreateWindow("BUTTON", "W³aœciwoœci", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+            editWin->hButton2 =CreateWindow("BUTTON", STRING_PROPERTIES, WS_CHILD | WS_VISIBLE | WS_TABSTOP,
                                             96, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON2, hInstance, NULL);
         }
 
-        editWin->hButton3 =CreateWindow("BUTTON", "Zamknij", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+        editWin->hButton3 =CreateWindow("BUTTON", STRING_CLOSE, WS_CHILD | WS_VISIBLE | WS_TABSTOP,
                                         192, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON3, hInstance, NULL);
 
         editWin->hStatic3 =CreateWindow("STATIC", NULL, WS_CHILD | WS_VISIBLE | SS_GRAYRECT,
                                         288, 356, 312, 21, editWin->hwnd, (HMENU)ID_EDIT_STATIC3, hInstance, NULL);
 
-        editWin->hStatic4= CreateWindow("STATIC", "Wszystko w porz¹dku.", WS_CHILD | WS_VISIBLE | SS_LEFT,
+        editWin->hStatic4= CreateWindow("STATIC", STRING_INFO_OK, WS_CHILD | WS_VISIBLE | SS_LEFT,
                                         0, 377, 600, 16, editWin->hwnd, (HMENU)ID_EDIT_STATIC4, hInstance, NULL);
 
         bool warningState=false;
@@ -284,7 +286,7 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
         UpdateWindow(editWin->hwnd);
 
         if(warningState) {
-            MessageBox(editWin->hwnd,"Wybrana notatka zawiera nieobs³ugiwane znaki UTF-8.\nDokonywanie zmian t¹ wersj¹ programu spowoduje nieodwracaln¹ utratê tych informacji.",APPNAME,MB_ICONINFORMATION);
+            MessageBox(editWin->hwnd,STRING_MSG_UNSUPPORTED_CHARS,APPNAME,MB_ICONINFORMATION);
         }
 
         return editWin->hwnd;
@@ -320,7 +322,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     prepareCodePage(m_cp1250,cp1250);
 
     if(wsInit() == SOCKET_ERROR) {
-        MessageBox(NULL,"Inicjalizacja sk³adnika WinSock nie powiod³a siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
+        MessageBox(NULL,STRING_MSG_WINSOCK_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
         return 1;
     }
         
@@ -347,12 +349,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc2.lpszClassName = editWindowClass;
 
     if(!RegisterClass(&wc)) {
-        MessageBox(NULL,"Utworzenie klasy okna nie powiod³o siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
+        MessageBox(NULL,STRING_MSG_WNDCLASS_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
         return 1;
     }
 
     if(!RegisterClass(&wc2)) {
-        MessageBox(NULL,"Utworzenie klasy okna nie powiod³o siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
+        MessageBox(NULL,STRING_MSG_WNDCLASS_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
         return 1;
     }
 
@@ -361,7 +363,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                         NULL, NULL, hInstance, NULL);
 
     if(hwnd == NULL) {
-        MessageBox(NULL,"Utworzenie okna nie powiod³o siê. Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
+        MessageBox(NULL,STRING_MSG_WND_CREATE_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
         return 1;
     }
 
@@ -375,23 +377,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     hAccel=LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATORS));
     if(!hAccel) {
-        MessageBox(NULL,"Nie uda³o siê za³adowaæ akceleratorów! Program zostanie zamkniêty.","B³¹d",MB_ICONSTOP | MB_OK);
+        MessageBox(NULL,STRING_MSG_ACCELERATORS_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
         return 1;
     }
 
-    hButton =  CreateWindow("BUTTON", "Pobierz", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+    hButton =  CreateWindow("BUTTON", STRING_DOWNLOAD, WS_CHILD | WS_VISIBLE | WS_TABSTOP,
                             0, 0, 80, 21, hwnd, (HMENU)ID_BUTTON1, hInstance, NULL);
 
-    hButton2 = CreateWindow("BUTTON", "Utwórz", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+    hButton2 = CreateWindow("BUTTON", STRING_CREATE, WS_CHILD | WS_VISIBLE | WS_TABSTOP,
                             80, 0, 80, 21, hwnd, (HMENU)ID_BUTTON2, hInstance, NULL);
 
-    hButton3 = CreateWindow("BUTTON", "Otwórz", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
+    hButton3 = CreateWindow("BUTTON", STRING_OPEN, WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
                             160, 0, 80, 21, hwnd, (HMENU)ID_BUTTON3, hInstance, NULL);
 
-    hButton5 = CreateWindow("BUTTON", "Usuñ", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
+    hButton5 = CreateWindow("BUTTON", STRING_DELETE, WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
                             240, 0, 80, 21, hwnd, (HMENU)ID_BUTTON5, hInstance, NULL);
 
-    hButton4 = CreateWindow("BUTTON", "Zakoñcz", WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+    hButton4 = CreateWindow("BUTTON", STRING_EXIT, WS_CHILD | WS_VISIBLE | WS_TABSTOP,
                             320, 0, 80, 21, hwnd, (HMENU)ID_BUTTON4, hInstance, NULL);
 
     hStatic6 = CreateWindow("STATIC", NULL, WS_CHILD | WS_VISIBLE | SS_GRAYRECT,
@@ -408,19 +410,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         SetWindowPos(hListBox,NULL,0,21,600,300,SWP_NOZORDER);
     }
 
-    hStatic  = CreateWindow("STATIC", "ID:", WS_CHILD | WS_VISIBLE | SS_LEFT,
+    hStatic  = CreateWindow("STATIC", STRING_ID, WS_CHILD | WS_VISIBLE | SS_LEFT,
                             8, 329, 128, 16, hwnd, (HMENU)ID_STATIC1, hInstance, NULL);
                            
-    hStatic2 = CreateWindow("STATIC", "Ostatnie zmiany:", WS_CHILD | WS_VISIBLE | SS_LEFT,
+    hStatic2 = CreateWindow("STATIC", STRING_LAST_CHANGED, WS_CHILD | WS_VISIBLE | SS_LEFT,
                             8, 346, 128, 16, hwnd, (HMENU)ID_STATIC2, hInstance, NULL);
                            
-    hStatic3 = CreateWindow("STATIC", "-- nie wybrano --", WS_CHILD | WS_VISIBLE | SS_LEFT,
+    hStatic3 = CreateWindow("STATIC", STRING_NOT_CHOSEN, WS_CHILD | WS_VISIBLE | SS_LEFT,
                             137, 329, 454, 16, hwnd, (HMENU)ID_STATIC3, hInstance, NULL);
                            
-    hStatic4 = CreateWindow("STATIC", "-- nie wybrano --", WS_CHILD | WS_VISIBLE | SS_LEFT,
+    hStatic4 = CreateWindow("STATIC", STRING_NOT_CHOSEN, WS_CHILD | WS_VISIBLE | SS_LEFT,
                             137, 346, 454, 16, hwnd, (HMENU)ID_STATIC4, hInstance, NULL);
                            
-    hStatic5 = CreateWindow("STATIC", "Wszystko w porz¹dku.", WS_CHILD | WS_VISIBLE | SS_LEFT,
+    hStatic5 = CreateWindow("STATIC", STRING_INFO_OK, WS_CHILD | WS_VISIBLE | SS_LEFT,
                             0, 370, 600, 16, hwnd, (HMENU)ID_STATIC5, hInstance, NULL);
 
     if(mainSettings.use3DControls) {
@@ -444,7 +446,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             }
         }
         else {
-            MessageBox(hwnd,"Zarejestrowanie CTL3D nie powiod³o siê!","Ostrze¿enie",MB_ICONEXCLAMATION);
+            MessageBox(hwnd,STRING_MSG_CTL3D_ERROR,STRING_WARNING,MB_ICONEXCLAMATION);
         }
     }
 
@@ -629,7 +631,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     break;
                 case ID_OPTIONS_CONNECTION:
                     if((MakeDialogBox(hwnd,IDD_DIALOG4,DlgProc4)==IDOK) && (editsChanged)) {
-                        if((!firstOptions) && (noter_credentialsAvailable(credentials)) && (MessageBox(hwnd,"Czy chcesz prze³adowaæ listê notatek?",APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES)) {
+                        if((!firstOptions) && (noter_credentialsAvailable(credentials)) && (MessageBox(hwnd,STRING_MSG_WANT_RELOAD,APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES)) {
                             SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
                         }
                     }
@@ -640,7 +642,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
                         }
                         else {
-                            if(MessageBox(hwnd,"Czy chcesz prze³adowaæ listê notatek?",APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES) {
+                            if(MessageBox(hwnd,STRING_MSG_WANT_RELOAD,APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES) {
                                 SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
                             }
                             if(firstOptions) {
@@ -663,7 +665,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         break;
                     }
                     main_LockAllButtons(hwnd);
-                    SetWindowText(GetDlgItem(hwnd,ID_STATIC5),"Pobieranie listy notatek...");
+                    SetWindowText(GetDlgItem(hwnd,ID_STATIC5),STRING_LOADING_NOTE_LIST);
                     if(noteCount>0) {
                         freeNoteList(notes);
                     }
@@ -684,7 +686,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     if(noteCount>=0) {
                         mainLastResult=INFO_LIST_SUCCESSFUL;
                         if(lParam!=0) {
-                            tempString=noter_getAnswerString(mainLastResult)+" Iloœæ: "+IntToStr(noteCount)+".";
+                            tempString=noter_getAnswerString(mainLastResult)+STRING_SPACED_COUNT+IntToStr(noteCount)+".";
                             SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)tempString.c_str());
                         }
                     }
@@ -704,9 +706,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         mainLastResult=0;
                         // SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                     }
-                    SetWindowText(GetDlgItem(hwnd,ID_STATIC5),"Tworzenie okna edycji...");
+                    SetWindowText(GetDlgItem(hwnd,ID_STATIC5),STRING_CREATING_EDIT_WINDOW);
                     if(createEditWindow(hwnd,winMem,NULL)==NULL) {
-                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),"Nie uda³o siê utworzyæ okna edycji.");
+                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),STRING_EDITWIN_CREATE_ERROR);
                         mainLastResult=-2048;
                     }
                     else {
@@ -722,7 +724,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         mainLastResult=0;
                         // SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                     }
-                    SetWindowText(GetDlgItem(hwnd,ID_STATIC5),"Pobieranie notatki...");
+                    SetWindowText(GetDlgItem(hwnd,ID_STATIC5),STRING_DOWNLOADING_NOTE);
                     index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
                     if(index>=0) {
                         NOTE *note=new NOTE;
@@ -730,13 +732,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         if(result>=0) {
                             HWND tempHwnd=createEditWindow(hwnd,winMem,note);
                             if(tempHwnd!=NULL) {
-                                tempString=noter_getAnswerString(result)+" Data ostatniej modyfikacji: "+toCodePage(m_cp1250,(char*)note->lastModified.c_str())+".";
+                                tempString=noter_getAnswerString(result)+STRING_SPACED_LAST_MOD_DATE+toCodePage(m_cp1250,(char*)note->lastModified.c_str())+".";
                                 SetWindowText(GetDlgItem(tempHwnd,ID_EDIT_STATIC4),(char*)tempString.c_str());
                                 winMem[tempHwnd]->lastResult=result;
                                 SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(INFO_OK).c_str());
                             }
                             else {
-                                SetWindowText(GetDlgItem(hwnd,ID_STATIC5),"Nie uda³o siê utworzyæ okna edycji.");
+                                SetWindowText(GetDlgItem(hwnd,ID_STATIC5),STRING_EDITWIN_CREATE_ERROR);
                                 mainLastResult=-2048;
                             }
                         }
@@ -766,7 +768,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                     }
                     index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
-                    tempString="Czy na pewno chcesz usun¹æ notatkê";
+                    tempString=STRING_MSG_WANT_NOTE_REMOVAL;
                     tempString=tempString+" \"";
                     tempString=tempString+toCodePage(m_cp1250,(char*)notes[index].subject.c_str());
                     tempString=tempString+"\"?";
@@ -858,7 +860,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             break;
         case WM_DESTROY:
             if(Ctl3dEnabled() && (!Ctl3dUnregister(GetWindowWord(hwnd,GWW_HINSTANCE)))) {
-                MessageBox(0,"Wyrejestrowanie aplikacji z CTL3D nie powiod³o siê!","Ostrze¿enie",MB_ICONEXCLAMATION);
+                MessageBox(0,STRING_MSG_CTL3D_UNREG_ERROR,STRING_WARNING,MB_ICONEXCLAMATION);
             }
             WSACleanup();
             if(noteCount>0) {
@@ -905,7 +907,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             if(winMem[hwnd]->note->id==0) {
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_PROPERTIES,MF_GRAYED);
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_TONEWNOTE,MF_GRAYED);
-                ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,"Dodaj\tCtrl+S");
+                ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,STRING_MENU_ADD);
                 //if((winMem[hwnd]->subjectChanged) && (winMem[hwnd]->entryChanged))
                 if(IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1))) {
                     EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,MF_ENABLED);
@@ -922,7 +924,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     EnableMenuItem(GetMenu(hwnd),ID_FILE_PROPERTIES,MF_GRAYED);
                 }
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_TONEWNOTE,MF_ENABLED);
-                ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,"Aktualizuj\tCtrl+S");
+                ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,STRING_MENU_UPDATE);
                 //if((winMem[hwnd]->subjectChanged) || (winMem[hwnd]->entryChanged))
                 if(IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1))) {
                     EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,MF_ENABLED);
@@ -1025,11 +1027,11 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     winMem[hwnd]->note->id=0;
                     EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),true);
                     EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),false);
-                    SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),"Dodaj");
+                    SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),STRING_ADD);
                     winMem[hwnd]->subjectChanged=true;
                     winMem[hwnd]->entryChanged=true;
                     makeEditWindowTitle(winMem[hwnd],NULL,true,m_cp1250);
-                    SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),"Przekierowano na now¹ notatkê.");
+                    SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),STRING_TO_NEW_NOTE);
                     winMem[hwnd]->lastResult=1024;
                     break;
                 case ID_FILE_EXIT:
@@ -1179,7 +1181,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             }
                             //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
                             //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),true);
-                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),"Aktualizuj");
+                            SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),STRING_UPDATE);
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
                             makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true,m_cp1250);
@@ -1250,7 +1252,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             }
             if((winMem[hwnd]!=NULL) && (winMem[hwnd]->subjectChanged || winMem[hwnd]->entryChanged)) {
                 //GetWindowText(hwnd,buffer,32767);
-                result=MessageBox(hwnd,"Czy chcesz zapisaæ zmiany?",APPNAME,MB_ICONEXCLAMATION | MB_YESNOCANCEL);
+                result=MessageBox(hwnd,STRING_MSG_WANT_CHANGES_SAVED,APPNAME,MB_ICONEXCLAMATION | MB_YESNOCANCEL);
             }
             else {
                 result=IDNO;
@@ -1433,12 +1435,12 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch(msg) {
         case WM_INITDIALOG:
             check3DChanged=false;
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"Normalne okno");
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"Zminimalizowane");
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"Zmaksymalizowane");
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)"Normalne okno");
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)"Zminimalizowane");
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)"Zmaksymalizowane");
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)STRING_NORMAL_WINDOW);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)STRING_MINIMIZED_WINDOW);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)STRING_MAXIMIZED_WINDOW);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)STRING_NORMAL_WINDOW);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)STRING_MINIMIZED_WINDOW);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)STRING_MAXIMIZED_WINDOW);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_SETCURSEL, mainSettings.mainWindowStyle, 0);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_SETCURSEL, mainSettings.editWindowStyle, 0);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), WM_PAINT, 0, 0);
@@ -1559,7 +1561,7 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     mainSettings.use3DDialogs=IsDlgButtonChecked(hwnd, IDC_CHECK8);
                     saveMainSettings(mainSettings,(char*)iniFile.c_str());
                     if(check3DChanged) {
-                        MessageBox(hwnd,"Aby zmiany ustawieñ kontrolek 3D odnios³y skutek, wymagane jest ponowne uruchomienie programu.","Informacja",MB_ICONINFORMATION | MB_OK);
+                        MessageBox(hwnd,STRING_MSG_CTL3D_CHANGE,STRING_INFORMATION,MB_ICONINFORMATION | MB_OK);
                     }
                     EndDialog(hwnd,IDOK);
                     break;
@@ -1672,7 +1674,7 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         EndDialog(hwnd,IDOK);
                     }
                     else {
-                        MessageBox(hwnd,"Nieprawid³owy numer portu.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                        MessageBox(hwnd,STRING_MSG_WRONG_PORT_NUMBER,STRING_ERROR,MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
                 case IDCANCEL:
@@ -1691,7 +1693,7 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         SetWindowText(GetDlgItem(hwnd,IDC_EDIT1),ipAddress);
                     }
                     else {
-                        MessageBox(hwnd,"Nie uda³o siê odnaleŸæ hosta.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                        MessageBox(hwnd,STRING_MSG_HOST_NOT_FOUND,STRING_ERROR,MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
                 case IDC_BUTTON4:
@@ -1714,17 +1716,17 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),(char*)toCodePage(m_cp1250,(char*)serverInfo.name.c_str()).c_str());
                             SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),(char*)toCodePage(m_cp1250,(char*)serverInfo.timezone.c_str()).c_str());
                             SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(m_cp1250,(char*)serverInfo.version.c_str()).c_str());
-                            MessageBox(hwnd,"Uda³o siê prawid³owo zestawiæ po³¹czenie.","Informacja",MB_ICONINFORMATION | MB_OK);
+                            MessageBox(hwnd,STRING_MSG_CONN_ESTABLISHED,STRING_INFORMATION,MB_ICONINFORMATION | MB_OK);
                         }
                         else {
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),"-- nie po³¹czono --");
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),"-- nie po³¹czono --");
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),"-- nie po³¹czono --");
-                            MessageBox(hwnd,"Po³¹czenie nie powiod³o siê.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),STRING_NOT_CONNECTED);
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),STRING_NOT_CONNECTED);
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),STRING_NOT_CONNECTED);
+                            MessageBox(hwnd,STRING_MSG_CONNECTION_ERROR,STRING_ERROR,MB_ICONEXCLAMATION | MB_OK);
                         }
                     }
                     else {
-                        MessageBox(hwnd,"Nieprawid³owy numer portu.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                        MessageBox(hwnd,STRING_MSG_WRONG_PORT_NUMBER,STRING_ERROR,MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
                 case IDC_EDIT1:
@@ -1841,7 +1843,7 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     if(!IsWindowEnabled(GetDlgItem(hwnd,IDCANCEL))) {
                         break;
                     }
-                    if((editsChanged2) && (MessageBox(hwnd,"Dane logowania uleg³y zmianie na serwerze.\nCzy na pewno chcesz porzuciæ zmiany?",APPNAME,MB_ICONQUESTION | MB_YESNO)==IDNO)) {
+                    if((editsChanged2) && (MessageBox(hwnd,STRING_MSG_CREDENTIALS_CHANGED,APPNAME,MB_ICONQUESTION | MB_YESNO)==IDNO)) {
                         break;
                     }
                     EndDialog(hwnd,IDCANCEL);
@@ -1885,26 +1887,26 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                                 EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),true);
                                 EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),true);
                                 if(lParam!=IDC_BUTTON5) {
-                                    MessageBox(hwnd,"Uda³o siê prawid³owo zalogowaæ.","Informacja",MB_ICONINFORMATION | MB_OK);
+                                    MessageBox(hwnd,STRING_MSG_LOGIN_SUCCESSFUL,STRING_INFORMATION,MB_ICONINFORMATION | MB_OK);
                                 }
                             }
                             else {
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC11),"-- nie zalogowano --");
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC12),"-- nie zalogowano --");
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),"-- nie zalogowano --");
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),"-- nie zalogowano --");
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),"-- nie zalogowano --");
+                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC11),STRING_NOT_LOGGED_IN);
+                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC12),STRING_NOT_LOGGED_IN);
+                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),STRING_NOT_LOGGED_IN);
+                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),STRING_NOT_LOGGED_IN);
+                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),STRING_NOT_LOGGED_IN);
                                 EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
                                 EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
-                                MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),"B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                                MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),STRING_ERROR,MB_ICONEXCLAMATION | MB_OK);
                             }
                         }
                         else {
-                            MessageBox(hwnd,"Brak danych logowania.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                            MessageBox(hwnd,STRING_NO_CREDENTIALS,STRING_ERROR,MB_ICONEXCLAMATION | MB_OK);
                         }
                     }
                     else {
-                        MessageBox(hwnd,"Brak ustawieñ po³¹czenia z serwerem.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                        MessageBox(hwnd,STRING_MSG_NO_CONN_SETTINGS,STRING_ERROR,MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
                 case IDC_BUTTON7:
@@ -1918,19 +1920,19 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         auxCredentials=&credentials;
                     }
                     if(noter_credentialsAvailable(*auxCredentials)) {
-                        tempString="Czy na pewno chcesz usun¹æ konto "
+                        tempString=STRING_MSG_ACC_DELETE_PART1
                                     +auxCredentials->username
-                                    +"?\nKontynuacja usunie wszystkie notatki oraz informacje o u¿ytkowniku przechowywane na serwerze.\nOperacja ta jest nieodwracalna!!!\n\nCzy na pewno chcesz usun¹æ swoje konto?";
+                                    +STRING_MSG_ACC_DELETE_PART2;
                         if(MessageBox(hwnd,(char*)tempString.c_str(),APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES) {
                             if(MakeDialogBox(hwnd,IDD_DIALOG7,DlgProc7)==IDOK) {
                                 if(useTestCredentials) {
                                     SetWindowText(GetDlgItem(hwnd,IDC_EDIT4),"");
                                     SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),"");
-                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC11),"-- nie zalogowano --");
-                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC12),"-- nie zalogowano --");
-                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),"-- nie zalogowano --");
-                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),"-- nie zalogowano --");
-                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),"-- nie zalogowano --");
+                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC11),STRING_NOT_LOGGED_IN);
+                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC12),STRING_NOT_LOGGED_IN);
+                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),STRING_NOT_LOGGED_IN);
+                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),STRING_NOT_LOGGED_IN);
+                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),STRING_NOT_LOGGED_IN);
                                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
                                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
                                 }
@@ -1949,7 +1951,7 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         }
                     }
                     else {
-                        MessageBox(hwnd,"Brak danych logowania.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                        MessageBox(hwnd,STRING_NO_CREDENTIALS,STRING_ERROR,MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
                 case IDC_BUTTON8:
@@ -1971,7 +1973,7 @@ BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         }
                     }
                     else {
-                        MessageBox(hwnd,"Brak danych logowania.","B³¹d",MB_ICONEXCLAMATION | MB_OK);
+                        MessageBox(hwnd,STRING_NO_CREDENTIALS,STRING_ERROR,MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
                 case IDC_EDIT4:
@@ -2041,16 +2043,16 @@ BOOL CALLBACK DlgProc6(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         if(result>=0) {
                             auxCredentials->username=tempCredentials.username;
                             auxCredentials->password=tempCredentials.password;
-                            MessageBox(hwnd,"Uda³o siê prawid³owo zarejestrowaæ nowego u¿ytkownika.",APPNAME,MB_ICONINFORMATION | MB_OK);
+                            MessageBox(hwnd,STRING_MSG_REGISTRATION_SUCC,APPNAME,MB_ICONINFORMATION | MB_OK);
                             EndDialog(hwnd,IDOK);
                         }
                         else {
-                            tempString="Nie uda³o siê zarejestrowaæ nowego u¿ytkownika.\n"+noter_getAnswerString(result);
+                            tempString=STRING_MSG_REGISTRATION_ERROR+noter_getAnswerString(result);
                             MessageBox(hwnd,(char*)tempString.c_str(),APPNAME,MB_ICONEXCLAMATION | MB_OK);
                         }
                     }
                     else {
-                        MessageBox(hwnd,"Has³a nie s¹ takie same!",APPNAME,MB_ICONEXCLAMATION | MB_OK);
+                        MessageBox(hwnd,STRING_MSG_PASSWORDS_NO_MATCH,APPNAME,MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
                 case IDCANCEL:
@@ -2120,7 +2122,7 @@ BOOL CALLBACK DlgProc7(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     if(tempSecPassword==auxCredentials->password) {
                         result=noter_removeUser(connectionSettings,*auxCredentials,buffer);
                         if(result>=0) {
-                            tempString="U¿ytkownik "+auxCredentials->username+" zosta³ usuniêty.";
+                            tempString=STRING_MSG_USER_SPACED+auxCredentials->username+STRING_MSG_USER_DELETED_SPACED;
                             MessageBox(hwnd,(char*)tempString.c_str(),APPNAME,MB_ICONINFORMATION | MB_OK);
                             EndDialog(hwnd,IDOK);
                         }
@@ -2129,7 +2131,7 @@ BOOL CALLBACK DlgProc7(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         }
                     }
                     else {
-                        MessageBox(hwnd,"Nieprawid³owe has³o!",APPNAME,MB_ICONEXCLAMATION | MB_OK);
+                        MessageBox(hwnd,STRING_MSG_WRONG_PASSWORD,APPNAME,MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
                 case IDCANCEL:
@@ -2196,7 +2198,7 @@ BOOL CALLBACK DlgProc8(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             userEdit_UnlockAllButtons(hwnd);
                             if(result>=0) {
                                 auxCredentials->password=tempNewPassword;
-                                MessageBox(hwnd,"Has³o zosta³o zmienione.",APPNAME,MB_ICONINFORMATION | MB_OK);
+                                MessageBox(hwnd,STRING_MSG_PASSWORD_CHANGED,APPNAME,MB_ICONINFORMATION | MB_OK);
                                 EndDialog(hwnd,IDOK);
                             }
                             else {
@@ -2204,11 +2206,11 @@ BOOL CALLBACK DlgProc8(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             }
                         }
                         else {
-                            MessageBox(hwnd,"Nieprawid³owe has³o!",APPNAME,MB_ICONEXCLAMATION | MB_OK);
+                            MessageBox(hwnd,STRING_MSG_WRONG_PASSWORD,APPNAME,MB_ICONEXCLAMATION | MB_OK);
                         }
                     }
                     else {
-                        MessageBox(hwnd,"Has³a nie s¹ takie same!",APPNAME,MB_ICONEXCLAMATION | MB_OK);
+                        MessageBox(hwnd,STRING_MSG_PASSWORDS_NO_MATCH,APPNAME,MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
                 case IDCANCEL:

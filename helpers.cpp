@@ -31,7 +31,7 @@ void deleteWindow(WINDOWMEMORY &winMem, HWND hwnd) {
 
 void makeEditWindowTitle(EDITWINDOW *editWin, NOTE *note, bool set, CODEPAGE &codePage) {
     if(note==NULL) {
-        editWin->windowTitle = "~ Nowa notatka ~ - ";
+        editWin->windowTitle = STRING_NEW_NOTE;
     }
     else {
         editWin->windowTitle = toCodePage(codePage,(char*)note->subject.c_str())+" - ";
