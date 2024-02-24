@@ -1,7 +1,6 @@
 #include "inihandling.hpp"
 
-NOTER_CREDENTIALS getCredentials(char* iniFile)
-{
+NOTER_CREDENTIALS getCredentials(char* iniFile) {
     NOTER_CREDENTIALS credentials;
     char username[256];
     char password[256];
@@ -11,15 +10,13 @@ NOTER_CREDENTIALS getCredentials(char* iniFile)
     return credentials;
 }
 
-void saveCredentials(NOTER_CREDENTIALS &credentials, char* iniFile)
-{
+void saveCredentials(NOTER_CREDENTIALS &credentials, char* iniFile) {
     WritePrivateProfileString("Credentials","Username",(char*)base64_encode((char*)credentials.username.c_str()).c_str(),iniFile);
     WritePrivateProfileString("Credentials","Password",(char*)makeSecureString_B64(true,(char*)credentials.password.c_str(),(char*)credentials.username.c_str()).c_str(),iniFile);
     return;
 }
 
-NOTER_CONNECTION_SETTINGS getConnectionSettings(char* iniFile)
-{
+NOTER_CONNECTION_SETTINGS getConnectionSettings(char* iniFile) {
     NOTER_CONNECTION_SETTINGS connectionSettings;
     char ipAddress[256];
     unsigned int port;
@@ -31,16 +28,14 @@ NOTER_CONNECTION_SETTINGS getConnectionSettings(char* iniFile)
     return connectionSettings;
 }
 
-void saveConnectionSettings(NOTER_CONNECTION_SETTINGS &connectionSettings, char* iniFile)
-{
+void saveConnectionSettings(NOTER_CONNECTION_SETTINGS &connectionSettings, char* iniFile) {
     WritePrivateProfileString("Server","IP",(char*)connectionSettings.ipAddress.c_str(),iniFile);
     WritePrivateProfileString("Server","Port",(char*)IntToStr(connectionSettings.port).c_str(),iniFile);
     WritePrivateProfileString("Server","Share",(char*)connectionSettings.share.c_str(),iniFile);
     return;
 }
 
-MAINSETTINGS getMainSettings(char* iniFile)
-{
+MAINSETTINGS getMainSettings(char* iniFile) {
     MAINSETTINGS mainSettings;
     mainSettings.mainWindowSystem=(GetPrivateProfileInt("Settings","MainWindowSystem",1,iniFile)==1);
     mainSettings.editWindowSystem=(GetPrivateProfileInt("Settings","EditWindowSystem",1,iniFile)==1);
@@ -68,8 +63,7 @@ MAINSETTINGS getMainSettings(char* iniFile)
     return mainSettings;
 }
 
-void saveMainSettings(MAINSETTINGS &mainSettings, char* iniFile)    // really main, without window coordinates
-{
+void saveMainSettings(MAINSETTINGS &mainSettings, char* iniFile) {  // really main, without window coordinates
     WritePrivateProfileString("Settings","MainWindowSystem",(char*)IntToStr(mainSettings.mainWindowSystem).c_str(),iniFile);
     WritePrivateProfileString("Settings","EditWindowSystem",(char*)IntToStr(mainSettings.editWindowSystem).c_str(),iniFile);
     WritePrivateProfileString("Settings","MainWindowStyle",(char*)IntToStr(mainSettings.mainWindowStyle).c_str(),iniFile);
@@ -86,8 +80,7 @@ void saveMainSettings(MAINSETTINGS &mainSettings, char* iniFile)    // really ma
     return;
 }
 
-void saveWindowCoordinatesSettings(MAINSETTINGS &mainSettings, char* iniFile)
-{
+void saveWindowCoordinatesSettings(MAINSETTINGS &mainSettings, char* iniFile) {
     WritePrivateProfileString("WindowSettings","MainWindowX",(char*)IntToStr(mainSettings.mainWindowX).c_str(),iniFile);
     WritePrivateProfileString("WindowSettings","MainWindowY",(char*)IntToStr(mainSettings.mainWindowY).c_str(),iniFile);
     WritePrivateProfileString("WindowSettings","MainWindowSizeX",(char*)IntToStr(mainSettings.mainWindowSizeX).c_str(),iniFile);

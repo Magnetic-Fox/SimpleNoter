@@ -4,15 +4,13 @@
 #include <map>
 #include "jsonhelper.hpp"
 
-typedef struct USER_INFO
-{
+typedef struct USER_INFO {
     long int ID;
     std::string username;
     std::string dateRegistered;
     std::string userAgent;
     std::string lastChanged;
     std::string lastUserAgent;
-    
 } USERINFO;
 
 bool indexUser(NAMEDESCRIPTOR&);

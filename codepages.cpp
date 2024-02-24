@@ -8,27 +8,20 @@ static char* the_input;
 
 static bool decodeWarning = false;
 
-std::string fromCodePage(RAWCODEPAGE nmCodePage, char* input)
-{
+std::string fromCodePage(RAWCODEPAGE nmCodePage, char* input) {
     std::string temp="";
-    for(unsigned long int x=0; x<strlen(input); ++x)
-    {
-        if(input[x]<0x80)
-        {
+    for(unsigned long int x=0; x<strlen(input); ++x) {
+        if(input[x]<0x80) {
             temp=temp+input[x];
         }
-        else
-        {
+        else {
             char xtest[8];
             int xout=utf8_encode(xtest,nmCodePage[input[x]-0x80]);
-            if(xout==0)
-            {
+            if(xout==0) {
                 temp=temp+'.';
             }
-            else
-            {
-                for(unsigned int y=0; y<xout; ++y)
-                {
+            else {
+                for(unsigned int y=0; y<xout; ++y) {
                     temp=temp+xtest[y];
                 }
             }
@@ -37,35 +30,26 @@ std::string fromCodePage(RAWCODEPAGE nmCodePage, char* input)
     return temp;
 }
 
-std::string toCodePage(CODEPAGE &codepage, char* input)
-{
+std::string toCodePage(CODEPAGE &codepage, char* input) {
     std::string temp="";
     utf8_decode_init(input,strlen(input));
     decodeWarning=false;
-    while(true)
-    {
+    while(true) {
         long int one=utf8_decode_next();
-        if(one<0)
-        {
-            if(one==UTF8_ERROR)
-            {
+        if(one<0) {
+            if(one==UTF8_ERROR) {
                 temp=temp+'~';
             }
             break;
         }
-        else
-        {
-            if(one<0x80)
-            {
+        else {
+            if(one<0x80) {
                 temp=temp+(char)one;
             }
-            else
-            {
+            else {
                 char test=(char)codepage[one];
-                if(test<0x20)
-                {
-                    if(!((test==0x0D) || (test==0x0A)))
-                    {
+                if(test<0x20) {
+                    if(!((test==0x0D) || (test==0x0A))) {
                         test='?';
                         decodeWarning=true;
                     }
@@ -78,16 +62,13 @@ std::string toCodePage(CODEPAGE &codepage, char* input)
     return temp;
 }
 
-void prepareCodePage(CODEPAGE &codepage, RAWCODEPAGE cpdef)
-{
-    for(unsigned int x=0; x<128; ++x)
-    {
+void prepareCodePage(CODEPAGE &codepage, RAWCODEPAGE cpdef) {
+    for(unsigned int x=0; x<128; ++x) {
         codepage[cpdef[x]]=0x80+x;
     }
     return;
 }
 
-bool decodeWarningState(void)
-{
+bool decodeWarningState(void) {
     return decodeWarning;
 }

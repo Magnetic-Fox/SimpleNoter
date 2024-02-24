@@ -21,8 +21,7 @@ void saveMainSettings(MAINSETTINGS&, char*);
 void saveWindowCoordinatesSettings(MAINSETTINGS&, char*);
 std::string inline getDefaultIniFile(char*);
 
-std::string inline getDefaultIniFile(char* input)
-{
+std::string inline getDefaultIniFile(char* input) {
     return getCurrentDirectory(input)+INI_FILE;
 }
 

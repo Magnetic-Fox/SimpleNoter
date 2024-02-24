@@ -7,8 +7,7 @@
 
 #define ERROR_WRONG_RESPONSE            -1024
 
-typedef struct NOTE
-{
+typedef struct NOTE {
     long int    id;
     std::string subject;
     std::string entry;
@@ -19,8 +18,7 @@ typedef struct NOTE
     std::string lastUserAgent;
 } NOTE;
 
-typedef struct NOTE_SUMMARY
-{
+typedef struct NOTE_SUMMARY {
     long int    id;
     std::string subject;
     std::string lastModified;

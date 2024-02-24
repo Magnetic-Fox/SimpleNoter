@@ -12,8 +12,7 @@ std::string makeUserAgent(char*);
 std::string getCurrentDirectory(char*);
 std::string inline makeDefaultUserAgent(void);
 
-std::string inline makeDefaultUserAgent(void)
-{
+std::string inline makeDefaultUserAgent(void) {
     return makeUserAgent(USER_AGENT);
 }
 

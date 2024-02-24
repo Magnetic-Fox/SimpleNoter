@@ -1,19 +1,15 @@
 #include "noterapi.hpp"
 
-bool noter_credentialsAvailable(NOTER_CREDENTIALS &credentials)
-{
+bool noter_credentialsAvailable(NOTER_CREDENTIALS &credentials) {
     return ((credentials.username.length()>0) && (credentials.password.length()>0));
 }
 
-bool noter_connectionSettingsAvailable(NOTER_CONNECTION_SETTINGS &connectionSettings)
-{
+bool noter_connectionSettingsAvailable(NOTER_CONNECTION_SETTINGS &connectionSettings) {
     return ((connectionSettings.ipAddress.length()>0) && (connectionSettings.port>0) && (connectionSettings.share.length()>0));
 }
 
-std::string noter_getAnswerString(long int answerCode)
-{
-    switch(answerCode)
-    {
+std::string noter_getAnswerString(long int answerCode) {
+    switch(answerCode) {
         case ERROR_WRONG_RESPONSE:
             return "Nie uda³o siê po³¹czyæ z serwerem.";
         case ERROR_SERVICE_DISABLED:
@@ -77,16 +73,14 @@ std::string noter_getAnswerString(long int answerCode)
     }
 }
 
-NOTER_CREDENTIALS noter_prepareCredentials(char* username, char* password)
-{
+NOTER_CREDENTIALS noter_prepareCredentials(char* username, char* password) {
     NOTER_CREDENTIALS credentials;
     credentials.username=username;
     credentials.password=password;
     return credentials;
 }
 
-NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char* ipAddress, unsigned int port, char* share, char* userAgent)
-{
+NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char* ipAddress, unsigned int port, char* share, char* userAgent) {
     NOTER_CONNECTION_SETTINGS connectionSettings;
     connectionSettings.ipAddress=ipAddress;
     connectionSettings.port=port;
@@ -95,28 +89,22 @@ NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char* ipAddress, unsig
     return connectionSettings;
 }
 
-bool noter_checkAndPrepareResponse(HEADERS &heads, char *&buffer, unsigned int &bufDataSize, json_value *&jsonData, NAMEDESCRIPTOR &desc)
-{
-    if(noter_correctResponse(heads))
-    {
+bool noter_checkAndPrepareResponse(HEADERS &heads, char *&buffer, unsigned int &bufDataSize, json_value *&jsonData, NAMEDESCRIPTOR &desc) {
+    if(noter_correctResponse(heads)) {
         jsonData=json_parse(buffer,bufDataSize);
-        if(jsonData==NULL)
-        {
+        if(jsonData==NULL) {
             return false;            
         }
-        else
-        {
+        else {
             return indexMainResponse(jsonData, desc);
         }
     }
-    else
-    {
+    else {
         return false;
     }
 }
 
-NOTER_SERVER_INFO noter_getServerInfo(NOTER_CONNECTION_SETTINGS &connectionSettings, char *buffer)
-{
+NOTER_SERVER_INFO noter_getServerInfo(NOTER_CONNECTION_SETTINGS &connectionSettings, char *buffer) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -134,10 +122,8 @@ NOTER_SERVER_INFO noter_getServerInfo(NOTER_CONNECTION_SETTINGS &connectionSetti
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
-        if(noter_getAnswerCode(desc)==INFO_OK)
-        {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
+        if(noter_getAnswerCode(desc)==INFO_OK) {
             serverInfo.name=    getSingleString(desc["server_name"]);
             serverInfo.timezone=getSingleString(desc["server_timezone"]);
             serverInfo.version= getSingleString(desc["server_version"]);
@@ -148,8 +134,7 @@ NOTER_SERVER_INFO noter_getServerInfo(NOTER_CONNECTION_SETTINGS &connectionSetti
     return serverInfo;
 }
 
-long int noter_getNoteList(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, char* buffer, NOTE_SUMMARY *&notes)
-{
+long int noter_getNoteList(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, char* buffer, NOTE_SUMMARY *&notes) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -168,25 +153,21 @@ long int noter_getNoteList(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
         noteCount=noter_getAnswerCode(desc);
-        if(noteCount==INFO_LIST_SUCCESSFUL)
-        {
+        if(noteCount==INFO_LIST_SUCCESSFUL) {
             noteCount=getNoteList(desc,desc2,notes);
         }
         json_value_free(data);
     }
-    else
-    {
+    else {
         noteCount=ERROR_WRONG_RESPONSE;
     }
 
     return noteCount;
 }
 
-long int noter_getNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, unsigned long int noteID, char* buffer, NOTE &note)
-{
+long int noter_getNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, unsigned long int noteID, char* buffer, NOTE &note) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -205,25 +186,21 @@ long int noter_getNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CRED
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
         answerCode=noter_getAnswerCode(desc);
-        if(answerCode==INFO_NOTE_RETRIEVED)
-        {
+        if(answerCode==INFO_NOTE_RETRIEVED) {
             note=getNote(desc);
         }
         json_value_free(data);
     }
-    else
-    {
+    else {
         answerCode=ERROR_WRONG_RESPONSE;
     }
 
     return answerCode;
 }
 
-long int noter_getUserInfo(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, char* buffer, USER_INFO &userInfo)
-{
+long int noter_getUserInfo(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, char* buffer, USER_INFO &userInfo) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -241,25 +218,21 @@ long int noter_getUserInfo(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
         answerCode=noter_getAnswerCode(desc);
-        if(answerCode==INFO_USER_INFO_RETRIEVED)
-        {
+        if(answerCode==INFO_USER_INFO_RETRIEVED) {
             userInfo=getUserInfo(desc);
         }
         json_value_free(data);
     }
-    else
-    {
+    else {
         answerCode=ERROR_WRONG_RESPONSE;
     }
 
     return answerCode;
 }
 
-long int noter_lockNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, unsigned long int noteID, char* buffer)
-{
+long int noter_lockNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, unsigned long int noteID, char* buffer) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -277,21 +250,18 @@ long int noter_lockNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CRE
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
         answerCode=noter_getAnswerCode(desc);
         json_value_free(data);
     }
-    else
-    {
+    else {
         answerCode=ERROR_WRONG_RESPONSE;
     }
 
     return answerCode;
 }
 
-long int noter_unlockNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, unsigned long int noteID, char* buffer)
-{
+long int noter_unlockNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, unsigned long int noteID, char* buffer) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -309,21 +279,18 @@ long int noter_unlockNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_C
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
         answerCode=noter_getAnswerCode(desc);
         json_value_free(data);
     }
-    else
-    {
+    else {
         answerCode=ERROR_WRONG_RESPONSE;
     }
 
     return answerCode;
 }
 
-long int noter_deleteNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, unsigned long int noteID, char* buffer)
-{
+long int noter_deleteNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, unsigned long int noteID, char* buffer) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -341,21 +308,18 @@ long int noter_deleteNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_C
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
         answerCode=noter_getAnswerCode(desc);
         json_value_free(data);
     }
-    else
-    {
+    else {
         answerCode=ERROR_WRONG_RESPONSE;
     }
 
     return answerCode;
 }
 
-long int noter_addNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, NOTE &note, char* buffer)
-{
+long int noter_addNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, NOTE &note, char* buffer) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -374,33 +338,27 @@ long int noter_addNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CRED
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
         answerCode=noter_getAnswerCode(desc);
-        if(answerCode==INFO_NOTE_CREATED)
-        {
+        if(answerCode==INFO_NOTE_CREATED) {
             newID=getNewID(desc);
-            if(newID>0)
-            {
+            if(newID>0) {
                 note.id=newID;
             }
-            else
-            {
+            else {
                 note.id=0;
                 answerCode=ERROR_WRONG_RESPONSE;
             }
         }
         json_value_free(data);
     }
-    else
-    {
+    else {
         answerCode=ERROR_WRONG_RESPONSE;
     }
     return answerCode;
 }
 
-long int noter_updateNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, NOTE &note, char* buffer)
-{
+long int noter_updateNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, NOTE &note, char* buffer) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -418,21 +376,18 @@ long int noter_updateNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_C
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
         answerCode=noter_getAnswerCode(desc);
         json_value_free(data);
     }
-    else
-    {
+    else {
         answerCode=ERROR_WRONG_RESPONSE;
     }
 
     return answerCode;
 }
 
-long int noter_registerUser(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, char* buffer)
-{
+long int noter_registerUser(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, char* buffer) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -450,21 +405,18 @@ long int noter_registerUser(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
         answerCode=noter_getAnswerCode(desc);
         json_value_free(data);
     }
-    else
-    {
+    else {
         answerCode=ERROR_WRONG_RESPONSE;
     }
 
     return answerCode;
 }
 
-long int noter_changeUserPassword(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, char* newPassword, char* buffer)
-{
+long int noter_changeUserPassword(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, char* newPassword, char* buffer) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -482,21 +434,18 @@ long int noter_changeUserPassword(NOTER_CONNECTION_SETTINGS &connectionSettings,
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
         answerCode=noter_getAnswerCode(desc);
         json_value_free(data);
     }
-    else
-    {
+    else {
         answerCode=ERROR_WRONG_RESPONSE;
     }
 
     return answerCode;
 }
 
-long int noter_removeUser(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, char* buffer)
-{
+long int noter_removeUser(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CREDENTIALS &credentials, char* buffer) {
     unsigned int recSize;
     HEADERS heads;
     NAMEDESCRIPTOR desc;
@@ -514,13 +463,11 @@ long int noter_removeUser(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_C
                                     heads,
                                     buffer);
 
-    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc))
-    {
+    if(noter_checkAndPrepareResponse(heads, buffer, recSize, data, desc)) {
         answerCode=noter_getAnswerCode(desc);
         json_value_free(data);
     }
-    else
-    {
+    else {
         answerCode=ERROR_WRONG_RESPONSE;
     }
 

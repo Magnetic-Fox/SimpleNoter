@@ -27,8 +27,7 @@
 #define ID_EDIT_STATIC3                 2602
 #define ID_EDIT_STATIC4                 2603
 
-typedef struct editWindow
-{
+typedef struct editWindow {
     HWND hwnd;
     HWND hStatic, hStatic2, hStatic3, hStatic4;
     HWND hEditBox, hEditBox2;
@@ -41,8 +40,7 @@ typedef struct editWindow
 
 typedef std::map<HWND,EDITWINDOW*> WINDOWMEMORY;
 
-typedef struct mainSettings
-{
+typedef struct mainSettings {
     bool mainWindowSystem, editWindowSystem;
     unsigned int mainWindowStyle, editWindowStyle;
     int mainWindowX, mainWindowY, mainWindowSizeX, mainWindowSizeY, editWindowX, editWindowY, editWindowSizeX, editWindowSizeY;

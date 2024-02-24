@@ -1,11 +1,9 @@
 #include "noteprocs.hpp"
 
-bool indexMainResponse(json_value* value, NAMEDESCRIPTOR &descriptor)
-{
+bool indexMainResponse(json_value* value, NAMEDESCRIPTOR &descriptor) {
     descriptor.clear();
     indexNames(value,"",descriptor);
-    if((descriptor["server"]==NULL) || (descriptor["answer_info"]==NULL))
-    {
+    if((descriptor["server"]==NULL) || (descriptor["answer_info"]==NULL)) {
         return false;
     }
     indexNames(descriptor["server"],"server_",descriptor);
@@ -18,15 +16,12 @@ bool indexMainResponse(json_value* value, NAMEDESCRIPTOR &descriptor)
     return true;
 }
 
-bool indexNote(NAMEDESCRIPTOR &descriptor)
-{
-    if(descriptor["answer"]==NULL)
-    {
+bool indexNote(NAMEDESCRIPTOR &descriptor) {
+    if(descriptor["answer"]==NULL) {
         return false;
     }
     indexNames(descriptor["answer"],"answer_",descriptor);
-    if(descriptor["answer_note"]==NULL)
-    {
+    if(descriptor["answer_note"]==NULL) {
         return false;
     }
     indexNames(descriptor["answer_note"],"answer_note_",descriptor);
@@ -40,69 +35,55 @@ bool indexNote(NAMEDESCRIPTOR &descriptor)
     return true;
 }
 
-bool indexNoteList(NAMEDESCRIPTOR &descriptor, NUMBERDESCRIPTOR &descriptor2)
-{
-    if(descriptor["answer"]==NULL)
-    {
+bool indexNoteList(NAMEDESCRIPTOR &descriptor, NUMBERDESCRIPTOR &descriptor2) {
+    if(descriptor["answer"]==NULL) {
         return false;
     }
     descriptor2.clear();
     indexNames(descriptor["answer"],"answer_",descriptor);
-    if((descriptor["answer_count"]==NULL) || (descriptor["answer_notes_summary"]==NULL))
-    {
+    if((descriptor["answer_count"]==NULL) || (descriptor["answer_notes_summary"]==NULL)) {
         return false;
     }
-    if(getSingleInteger(descriptor["answer_count"])>0)
-    {
+    if(getSingleInteger(descriptor["answer_count"])>0) {
         indexNumbers(getArrayElement(descriptor["answer_notes_summary"],0),"",descriptor2);
     }
     return true;
 }
 
-bool indexNewID(NAMEDESCRIPTOR &descriptor)
-{
-    if(descriptor["answer"]==NULL)
-    {
+bool indexNewID(NAMEDESCRIPTOR &descriptor) {
+    if(descriptor["answer"]==NULL) {
         return false;
     }
     indexNames(descriptor["answer"],"answer_",descriptor);
     return descriptor["answer_new_id"]!=NULL;
 }
 
-long int getNoteList(NAMEDESCRIPTOR &descriptor, NUMBERDESCRIPTOR &descriptor2, NOTE_SUMMARY *&notes)
-{
+long int getNoteList(NAMEDESCRIPTOR &descriptor, NUMBERDESCRIPTOR &descriptor2, NOTE_SUMMARY *&notes) {
     long int notesCount;
-    if(indexNoteList(descriptor,descriptor2))
-    {
+    if(indexNoteList(descriptor,descriptor2)) {
         notesCount=getSingleInteger(descriptor["answer_count"]);
-        if(notesCount>0)
-        {
+        if(notesCount>0) {
             notes = new NOTE_SUMMARY[notesCount];
 
-            for(long int x=0; x<notesCount; ++x)
-            {
+            for(long int x=0; x<notesCount; ++x) {
                 notes[x].id=            getInteger(getArrayElement(descriptor["answer_notes_summary"],x),descriptor2["id"]);
                 notes[x].subject=       getString(getArrayElement(descriptor["answer_notes_summary"],x),descriptor2["subject"]);
                 notes[x].lastModified=  getString(getArrayElement(descriptor["answer_notes_summary"],x),descriptor2["last_modified"]);
             }
         }
-        else
-        {
+        else {
             notes=NULL;
         }
         return notesCount;
     }
-    else
-    {
+    else {
         return ERROR_WRONG_RESPONSE;
     }
 }
 
-NOTE getNote(NAMEDESCRIPTOR &descriptor)
-{
+NOTE getNote(NAMEDESCRIPTOR &descriptor) {
     NOTE note;
-    if(indexNote(descriptor))
-    {
+    if(indexNote(descriptor)) {
         note.id=            getSingleInteger(descriptor["answer_note_id"]);
         note.subject=       getSingleString(descriptor["answer_note_subject"]);
         note.entry=         getSingleString(descriptor["answer_note_entry"]);
@@ -115,20 +96,16 @@ NOTE getNote(NAMEDESCRIPTOR &descriptor)
     return note;
 }
 
-long int getNewID(NAMEDESCRIPTOR &descriptor)
-{
-    if(indexNewID(descriptor))
-    {
+long int getNewID(NAMEDESCRIPTOR &descriptor) {
+    if(indexNewID(descriptor)) {
         return getSingleInteger(descriptor["answer_new_id"]);
     }
-    else
-    {
+    else {
         return ERROR_WRONG_RESPONSE;
     }
 }
 
-void freeNoteList(NOTE_SUMMARY *&notes)
-{
+void freeNoteList(NOTE_SUMMARY *&notes) {
     delete[] notes;
     return;
 }

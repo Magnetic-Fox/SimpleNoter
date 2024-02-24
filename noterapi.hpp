@@ -41,24 +41,20 @@
 #define INFO_NOTE_LOCKED                10
 #define INFO_NOTE_UNLOCKED              11
 
-typedef struct NOTER_CREDENTIALS
-{
+typedef struct NOTER_CREDENTIALS {
     std::string username, password;
 } NOTER_CREDENTIALS;
 
-typedef struct NOTER_CONNECTION_SETTINGS
-{
+typedef struct NOTER_CONNECTION_SETTINGS {
     std::string ipAddress, share, userAgent;
     unsigned int port;
 } NOTER_CONNECTION_SETTINGS;
 
-typedef struct NOTER_SERVER_INFO
-{
+typedef struct NOTER_SERVER_INFO {
     std::string name, timezone, version;
 } NOTER_SERVER_INFO;
 
-typedef struct NOTER_NOTES
-{
+typedef struct NOTER_NOTES {
     NOTE_SUMMARY *notes;
     long int noteCount;
 } NOTER_NOTES;
@@ -86,13 +82,11 @@ long int noter_registerUser(NOTER_CONNECTION_SETTINGS&, NOTER_CREDENTIALS&, char
 long int noter_changeUserPassword(NOTER_CONNECTION_SETTINGS&, NOTER_CREDENTIALS&, char*, char*);
 long int noter_removeUser(NOTER_CONNECTION_SETTINGS&, NOTER_CREDENTIALS&, char*);
 
-long int inline noter_getAnswerCode(NAMEDESCRIPTOR &descriptor)
-{
+long int inline noter_getAnswerCode(NAMEDESCRIPTOR &descriptor) {
     return getSingleInteger(descriptor["answer_info_code"]);
 }
 
-bool inline noter_correctResponse(HEADERS &headers)
-{
+bool inline noter_correctResponse(HEADERS &headers) {
     return ((getResponseCode(headers)==200) && (headers["Content-Type"]=="application/json"));
 }
 
@@ -117,8 +111,7 @@ unsigned int inline noter_simplyMakeRequest(char* method, NOTER_CONNECTION_SETTI
                         buffer);
 }
 
-bool inline noter_checkServerVersion(NOTER_SERVER_INFO &serverInfo)
-{
+bool inline noter_checkServerVersion(NOTER_SERVER_INFO &serverInfo) {
     return serverInfo.version==MATCH_VERSION;
 }
 

@@ -1,14 +1,11 @@
 #include "userprocs.hpp"
 
-bool indexUser(NAMEDESCRIPTOR &descriptor)
-{
-    if(descriptor["answer"]==NULL)
-    {
+bool indexUser(NAMEDESCRIPTOR &descriptor) {
+    if(descriptor["answer"]==NULL) {
         return false;
     }
     indexNames(descriptor["answer"],"answer_",descriptor);
-    if(descriptor["answer_user"]==NULL)
-    {
+    if(descriptor["answer_user"]==NULL) {
         return false;
     }
     indexNames(descriptor["answer_user"],"answer_user_",descriptor);
@@ -21,11 +18,9 @@ bool indexUser(NAMEDESCRIPTOR &descriptor)
     return true;
 }
 
-USER_INFO getUserInfo(NAMEDESCRIPTOR &descriptor)
-{
+USER_INFO getUserInfo(NAMEDESCRIPTOR &descriptor) {
     USER_INFO userInfo;
-    if(indexUser(descriptor))
-    {
+    if(indexUser(descriptor)) {
         userInfo.ID=            getSingleInteger(descriptor["answer_user_id"]);
         userInfo.username=      getSingleString(descriptor["answer_user_username"]);
         userInfo.dateRegistered=getSingleString(descriptor["answer_user_date_registered"]);
