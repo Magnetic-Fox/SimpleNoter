@@ -14,6 +14,7 @@
 #include "noterapi.hpp"
 #include "codepages.hpp"
 #include "constants.hpp"
+#include "responses.hpp"
 #include "conversion.hpp"
 #include "definitions.hpp"
 #include "inihandling.hpp"

@@ -4,8 +4,7 @@
 #include <map>
 #include "json.h"
 #include "jsonhelper.hpp"
-
-#define ERROR_WRONG_RESPONSE            -1024
+#include "responses.hpp"
 
 typedef struct NOTE {
     long int    id;
