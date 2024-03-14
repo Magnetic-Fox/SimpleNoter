@@ -92,12 +92,17 @@ NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char* ipAddress, unsig
 bool noter_checkAndPrepareResponse(HEADERS &heads, char *&buffer, unsigned int &bufDataSize, json_value *&jsonData, NAMEDESCRIPTOR &desc) {
     if(noter_correctResponse(heads)) {
         if(bufDataSize>0) {
-            jsonData=json_parse(buffer,bufDataSize);
-            if(jsonData==NULL) {
-                return false;            
+            if(jsonLooksValid(buffer,bufDataSize)) {
+                jsonData=json_parse(buffer,bufDataSize);
+                if(jsonData==NULL) {
+                    return false;            
+                }
+                else {
+                    return indexMainResponse(jsonData, desc);
+                }
             }
             else {
-                return indexMainResponse(jsonData, desc);
+                return false;
             }
         }
         else {
