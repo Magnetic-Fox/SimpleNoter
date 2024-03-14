@@ -43,3 +43,7 @@ long int getSingleInteger(json_value *value) {
 char* getSingleString(json_value *value) {
     return value->u.string.ptr;
 }
+
+bool jsonLooksValid(char *&buffer, unsigned int &bufDataSize) {
+    return (((buffer[0]=='[') || (buffer[0]=='{')) && ((buffer[bufDataSize-1]==']') || (buffer[bufDataSize-1]=='}')));
+}

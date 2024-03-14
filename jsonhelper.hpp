@@ -17,5 +17,6 @@ long int getInteger(json_value*, unsigned long int);
 char* getString(json_value*, unsigned long int);
 long int getSingleInteger(json_value*);
 char* getSingleString(json_value*);
+bool jsonLooksValid(char*&, unsigned int&);
 
 #endif
