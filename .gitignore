@@ -2,6 +2,7 @@
 *.ini
 
 # Other Watcom files
+*.mk
 *.mk1
 *.lk1
 *.map
