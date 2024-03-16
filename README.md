@@ -8,7 +8,7 @@ It utilizes lot of experiments with WinAPI, networking and resource files.
 
 Quite big WinAPI project providing whole client API for first (1.0) version of Noter backend adding quite classic GUI.
 The whole program is in Polish with hardcoded labels (yes, I know it's a bit non professional), because I couldn't find how to make string table on 16-bit Windows without need to allocate additional memory for it while loading (I wanted to move it to resource section to make it translatable). Will try to find a solution for that problem someday.
-Portions of this software contain work done by other people (UTF-8 encode and decode procedures and JSON parser). Check out **Codes created by others** section of this README file.
+Portions of this software contain work done by other people (UTF-8 encode and decode procedures, JSON parser and BZip2 decompression algorithm). Check out **Codes created by others** section of this README file.
 
 ## What to use to compile this code?
 
@@ -24,6 +24,7 @@ I've used:
 * `utf8_decode.c` and `utf8_decode.h` &copy; 2005 JSON.org
 * `utf8_encode.cpp` &copy; Ondřej Hruška
 * `json.c` and `json.h` &copy; 2012-2021 json-parser authors
+* `bzip2.c` (patched by me to file: `unbzip2.c`) &copy; 1996, 1997 Julian Seward
 
 Thank You for creating really useful procedures! Without 'em my program would never work the way it does!
 
@@ -50,4 +51,4 @@ If you like to use any part of these codes in your software, just please give me
 In case you would like to make paid software and use parts of these codes - please, contact me before.
 
 *Bartłomiej "Magnetic-Fox" Węgrzyn,
-4th November, 2023*
+4th November, 2023 - 16th March, 2024*
