@@ -6,7 +6,7 @@
 #include "resources.h"
 
 // Uncomment for debug purposes (showing integers)
-// #include "debug.hpp"
+#include "debug.hpp"
 
 #include "cp1250.hpp"
 #include "helpers.hpp"
@@ -1637,6 +1637,12 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 SetWindowText(GetDlgItem(hwnd,IDC_EDIT1),(char*)connectionSettings.ipAddress.c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_EDIT2),(char*)IntToStr(connectionSettings.port).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_EDIT3),(char*)connectionSettings.share.c_str());
+                if(connectionSettings.requestCompression) {
+                    CheckDlgButton(hwnd, IDC_CHECK11, BST_CHECKED);
+                }
+                else {
+                    CheckDlgButton(hwnd, IDC_CHECK11, BST_UNCHECKED);
+                }
                 connection_LockAllButtons(hwnd);
                 serverInfo=noter_getServerInfo(connectionSettings,buffer);
                 connection_UnlockAllButtons(hwnd);
@@ -1668,6 +1674,7 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             connectionSettings.port=StrToInt(buffer);
                             GetWindowText(GetDlgItem(hwnd,IDC_EDIT3),buffer,65535);
                             connectionSettings.share=buffer;
+                            connectionSettings.requestCompression=IsDlgButtonChecked(hwnd, IDC_CHECK11);
                             GetModuleFileName(GetWindowWord(g_hwnd,GWW_HINSTANCE),buffer,32767);
                             iniFile=getDefaultIniFile(buffer);
                             saveConnectionSettings(connectionSettings,(char*)iniFile.c_str());
@@ -1683,6 +1690,9 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         break;
                     }
                     EndDialog(hwnd,IDCANCEL);
+                    break;
+                case IDC_CHECK11:
+                    editsChanged=true;  // yeah, a bit ugly...
                     break;
                 case IDC_BUTTON3:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON3))) {
