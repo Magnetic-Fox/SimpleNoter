@@ -80,25 +80,34 @@ NOTER_CREDENTIALS noter_prepareCredentials(char* username, char* password) {
     return credentials;
 }
 
-NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char* ipAddress, unsigned int port, char* share, char* userAgent) {
+NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char* ipAddress, unsigned int port, char* share, char* userAgent, bool requestCompression) {
     NOTER_CONNECTION_SETTINGS connectionSettings;
     connectionSettings.ipAddress=ipAddress;
     connectionSettings.port=port;
     connectionSettings.share=share;
     connectionSettings.userAgent=userAgent;
+    connectionSettings.requestCompression=requestCompression;
     return connectionSettings;
 }
 
 bool noter_checkAndPrepareResponse(HEADERS &heads, char *&buffer, unsigned int &bufDataSize, json_value *&jsonData, NAMEDESCRIPTOR &desc) {
     if(noter_correctResponse(heads)) {
         if(bufDataSize>0) {
-            if(jsonLooksValid(buffer,bufDataSize)) {
-                jsonData=json_parse(buffer,bufDataSize);
-                if(jsonData==NULL) {
-                    return false;            
+            if(heads["X-BZ-Compressed"]=="yes") {
+                bufDataSize=uncompressDataInPlace((unsigned char*)buffer,bufDataSize,65535);
+            }
+            if(bufDataSize>0) {   
+                if(jsonLooksValid(buffer,bufDataSize)) {
+                    jsonData=json_parse(buffer,bufDataSize);
+                    if(jsonData==NULL) {
+                        return false;            
+                    }
+                    else {
+                        return indexMainResponse(jsonData, desc);
+                    }
                 }
                 else {
-                    return indexMainResponse(jsonData, desc);
+                    return false;
                 }
             }
             else {

@@ -9,6 +9,8 @@
 #include "userprocs.hpp"
 #include "constants.hpp"
 
+#include "unbzip2.h"
+
 typedef struct NOTER_CREDENTIALS {
     std::string username, password;
 } NOTER_CREDENTIALS;
@@ -16,6 +18,7 @@ typedef struct NOTER_CREDENTIALS {
 typedef struct NOTER_CONNECTION_SETTINGS {
     std::string ipAddress, share, userAgent;
     unsigned int port;
+    bool requestCompression;
 } NOTER_CONNECTION_SETTINGS;
 
 typedef struct NOTER_SERVER_INFO {
@@ -31,7 +34,7 @@ bool noter_credentialsAvailable(NOTER_CREDENTIALS&);
 bool noter_connectionSettingsAvailable(NOTER_CONNECTION_SETTINGS&);
 std::string noter_getAnswerString(long int);
 NOTER_CREDENTIALS noter_prepareCredentials(char*, char*);
-NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char*, unsigned int, char*, char*);
+NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char*, unsigned int, char*, char*, bool);
 bool noter_checkAndPrepareResponse(HEADERS&, char*&, unsigned int&, json_value*&, NAMEDESCRIPTOR&);
 NOTER_SERVER_INFO noter_getServerInfo(NOTER_CONNECTION_SETTINGS&, char*);
 long int noter_getNoteList(NOTER_CONNECTION_SETTINGS&, NOTER_CREDENTIALS&, char*, NOTE_SUMMARY*&);
@@ -74,7 +77,8 @@ unsigned int inline noter_simplyMakeRequest(char* method, NOTER_CONNECTION_SETTI
                                               subject,
                                               entry,
                                               noteID,
-                                              newPassword).c_str(),
+                                              newPassword,
+                                              connectionSettings.requestCompression).c_str(),
                         heads,
                         buffer);
 }
