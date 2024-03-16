@@ -37,7 +37,7 @@ As JSON and Noter backend itself utilizes UTF-8, there is need to convert text t
 
 ## Tests information
 
-The program was tested on Windows XP (32-bit version running on 64-bit Intel Pentium) and on Windows for Workgroups 3.11 (running on Intel 386).
+The program was tested under Windows XP (32-bit version running at 64-bit Intel Pentium), under Windows for Workgroups 3.11 (running on Intel 386) and under Linux Mint (using Wine).
 
 ## Disclaimer
 
