@@ -24,7 +24,7 @@ I've used:
 * `utf8_decode.c` and `utf8_decode.h` &copy; 2005 JSON.org
 * `utf8_encode.cpp` &copy; Ondřej Hruška
 * `json.c` and `json.h` &copy; 2012-2021 json-parser authors
-* `bzip2.c` (patched by me to file: `unbzip2.c`) &copy; 1996, 1997 Julian Seward
+* `bzip2.c` (patched by me to files `unbzip2.c` and `unbzip2.h`) &copy; 1996, 1997 Julian Seward
 
 Thank You for creating really useful procedures! Without 'em my program would never work the way it does!
 
