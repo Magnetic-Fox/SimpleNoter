@@ -107,7 +107,7 @@ std::string URLencode(char* input) {
     return temp;
 }
 
-std::string prepareContent(char* action, char* username, char* password, char* subject, char* entry, unsigned long int noteID, char* newPassword) {
+std::string prepareContent(char* action, char* username, char* password, char* subject, char* entry, unsigned long int noteID, char* newPassword, bool requestCompression) {
     std::string temp="action=";
     temp=temp+URLencode(action);
     temp=temp+"&username=";
@@ -126,6 +126,13 @@ std::string prepareContent(char* action, char* username, char* password, char* s
     }
     temp=temp+"&newPassword=";
     temp=temp+URLencode(newPassword);
+    temp=temp+"&compress=";
+    if(requestCompression) {
+        temp=temp+"yes";
+    }
+    else {
+        temp=temp+"no";
+    }
     return temp;
 }
 
