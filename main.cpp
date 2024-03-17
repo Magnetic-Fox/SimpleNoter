@@ -689,6 +689,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         if(lParam!=0) {
                             tempString=noter_getAnswerString(mainLastResult)+STRING_SPACED_COUNT+IntToStr(noteCount)+".";
                             SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)tempString.c_str());
+                        } else {
+                            SetWindowText(GetDlgItem(hwnd,ID_STATIC5),STRING_INFO_OK);
                         }
                     }
                     else {
