@@ -2,6 +2,7 @@
 #define NOTERAPI_H
 
 #include <string>
+#include "maths.hpp"
 #include "requests.hpp"
 #include "responses.hpp"
 #include "jsonhelper.hpp"
@@ -52,6 +53,7 @@ long int noter_updateNote(NOTER_CONNECTION_SETTINGS&, NOTER_CREDENTIALS&, NOTE&,
 long int noter_registerUser(NOTER_CONNECTION_SETTINGS&, NOTER_CREDENTIALS&, char*);
 long int noter_changeUserPassword(NOTER_CONNECTION_SETTINGS&, NOTER_CREDENTIALS&, char*, char*);
 long int noter_removeUser(NOTER_CONNECTION_SETTINGS&, NOTER_CREDENTIALS&, char*);
+unsigned int getCompressionRatio(void);
 
 long int inline noter_getAnswerCode(NAMEDESCRIPTOR &descriptor) {
     return getSingleInteger(descriptor["answer_info_code"]);

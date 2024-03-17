@@ -1,5 +1,7 @@
 #include "noterapi.hpp"
 
+static unsigned int compressionRatio=0;
+
 bool noter_credentialsAvailable(NOTER_CREDENTIALS &credentials) {
     return ((credentials.username.length()>0) && (credentials.password.length()>0));
 }
@@ -91,12 +93,15 @@ NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char* ipAddress, unsig
 }
 
 bool noter_checkAndPrepareResponse(HEADERS &heads, char *&buffer, unsigned int &bufDataSize, json_value *&jsonData, NAMEDESCRIPTOR &desc) {
+    unsigned int tempBufDataSize;
     if(noter_correctResponse(heads)) {
         if(bufDataSize>0) {
+            tempBufDataSize=bufDataSize;
             if(heads["X-BZ-Compressed"]=="yes") {
                 bufDataSize=uncompressDataInPlace((unsigned char*)buffer,bufDataSize,65535);
             }
-            if(bufDataSize>0) {   
+            compressionRatio=calculateCompressionRatio(tempBufDataSize,bufDataSize);
+            if(bufDataSize>0) {
                 if(jsonLooksValid(buffer,bufDataSize)) {
                     jsonData=json_parse(buffer,bufDataSize);
                     if(jsonData==NULL) {
@@ -491,4 +496,8 @@ long int noter_removeUser(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_C
     }
 
     return answerCode;
+}
+
+unsigned int getCompressionRatio(void) {
+    return compressionRatio;
 }
