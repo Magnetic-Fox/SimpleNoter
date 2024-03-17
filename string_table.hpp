@@ -63,6 +63,7 @@
 #define STRING_NOT_LOGGED_IN            "-- nie zalogowano --"
 #define STRING_SPACED_COUNT             " Iloœæ: "
 #define STRING_SPACED_LAST_MOD_DATE     " Data ostatniej modyfikacji: "
+#define STRING_SPACED_COMPRESSION       " Kompresja: "
 
 #define STRING_LOADING_NOTE_LIST        "Pobieranie listy notatek..."
 #define STRING_CREATING_EDIT_WINDOW     "Tworzenie okna edycji..."
