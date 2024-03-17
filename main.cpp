@@ -6,7 +6,7 @@
 #include "resources.h"
 
 // Uncomment for debug purposes (showing integers)
-#include "debug.hpp"
+// #include "debug.hpp"
 
 #include "cp1250.hpp"
 #include "helpers.hpp"
@@ -533,7 +533,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     unsigned long int width;
     unsigned long int height;
     int x, y, size_x, size_y;
-    unsigned int state;
+    unsigned int state, compressionRatio;
     switch(msg) {
         case WM_CTLCOLOR:
             switch(HIWORD(lParam)) {
@@ -688,6 +688,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         mainLastResult=INFO_LIST_SUCCESSFUL;
                         if(lParam!=0) {
                             tempString=noter_getAnswerString(mainLastResult)+STRING_SPACED_COUNT+IntToStr(noteCount)+".";
+                            compressionRatio=getCompressionRatio();
+                            if(compressionRatio!=100) {
+                                tempString=tempString+STRING_SPACED_COMPRESSION+IntToStr(getCompressionRatio())+"%.";
+                            }
                             SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)tempString.c_str());
                         } else {
                             SetWindowText(GetDlgItem(hwnd,ID_STATIC5),STRING_INFO_OK);
@@ -736,6 +740,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             HWND tempHwnd=createEditWindow(hwnd,winMem,note);
                             if(tempHwnd!=NULL) {
                                 tempString=noter_getAnswerString(result)+STRING_SPACED_LAST_MOD_DATE+toCodePage(m_cp1250,(char*)note->lastModified.c_str())+".";
+                                compressionRatio=getCompressionRatio();
+                                if(compressionRatio!=100) {
+                                    tempString=tempString+STRING_SPACED_COMPRESSION+IntToStr(getCompressionRatio())+"%.";
+                                }
                                 SetWindowText(GetDlgItem(tempHwnd,ID_EDIT_STATIC4),(char*)tempString.c_str());
                                 winMem[tempHwnd]->lastResult=result;
                                 SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(INFO_OK).c_str());
