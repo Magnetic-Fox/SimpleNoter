@@ -1,8 +1,8 @@
 #include "resources.h"
 
 VS_VERSION VERSIONINFO
-FILEVERSION 0, 6, 2, 0
-PRODUCTVERSION 0, 6, 2, 0
+FILEVERSION 0, 6, 4, 0
+PRODUCTVERSION 0, 6, 4, 0
 FILETYPE 0x1L
 BEGIN
     BLOCK "StringFileInfo"
@@ -10,14 +10,14 @@ BEGIN
         BLOCK "041504e2"
         BEGIN
             VALUE "CompanyName", "Magnetic-Fox\0"
-            VALUE "FileVersion", "0.62\0"
+            VALUE "FileVersion", "0.64\0"
             VALUE "FileDescription", "Simple Noter\0"
-            VALUE "InternalName", "SNotr062.exe\0"
+            VALUE "InternalName", "SNotr064.exe\0"
             VALUE "LegalCopyright", "©2021-2024 Magnetic-Fox\0"
             VALUE "LegalTrademarks", "Noter™\0"
             VALUE "OriginalFilename", "SimpleNoter.exe\0"
-            VALUE "ProductName", "Simple Noter v0.62\0"
-            VALUE "ProductVersion", "0.62\0"
+            VALUE "ProductName", "Simple Noter v0.64\0"
+            VALUE "ProductVersion", "0.64\0"
         END
     END
     BLOCK "VarFileInfo"
