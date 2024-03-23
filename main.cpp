@@ -1704,21 +1704,6 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 case IDC_CHECK11:
                     editsChanged=true;  // yeah, a bit ugly...
                     break;
-                /*
-                case IDC_BUTTON3:
-                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON3))) {
-                        break;
-                    }
-                    GetWindowText(GetDlgItem(hwnd,IDC_EDIT1),buffer,65535);
-                    ipAddress=getHostIP(buffer);
-                    if(ipAddress!=NULL) {
-                        SetWindowText(GetDlgItem(hwnd,IDC_EDIT1),ipAddress);
-                    }
-                    else {
-                        MessageBox(hwnd,STRING_MSG_HOST_NOT_FOUND,STRING_ERROR,MB_ICONEXCLAMATION | MB_OK);
-                    }
-                    break;
-                */
                 case IDC_BUTTON4:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON4))) {
                         break;
