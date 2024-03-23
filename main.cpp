@@ -1704,6 +1704,7 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 case IDC_CHECK11:
                     editsChanged=true;  // yeah, a bit ugly...
                     break;
+                /*
                 case IDC_BUTTON3:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON3))) {
                         break;
@@ -1717,6 +1718,7 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         MessageBox(hwnd,STRING_MSG_HOST_NOT_FOUND,STRING_ERROR,MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
+                */
                 case IDC_BUTTON4:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON4))) {
                         break;
