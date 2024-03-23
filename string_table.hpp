@@ -89,7 +89,7 @@
 #define STRING_MSG_CTL3D_UNREG_ERROR    "Wyrejestrowanie aplikacji z CTL3D nie powiod³o siê!"
 #define STRING_MSG_CTL3D_CHANGE         "Aby zmiany ustawieñ kontrolek 3D odnios³y skutek, wymagane jest ponowne uruchomienie programu."
 #define STRING_MSG_WRONG_PORT_NUMBER    "Nieprawid³owy numer portu."
-#define STRING_MSG_HOST_NOT_FOUND       "Nie uda³o siê odnaleŸæ hosta."
+//#define STRING_MSG_HOST_NOT_FOUND       "Nie uda³o siê odnaleŸæ hosta."
 #define STRING_MSG_CONN_ESTABLISHED     "Uda³o siê prawid³owo zestawiæ po³¹czenie."
 #define STRING_MSG_CONNECTION_ERROR     "Po³¹czenie nie powiod³o siê."
 #define STRING_MSG_CREDENTIALS_CHANGED  "Dane logowania uleg³y zmianie na serwerze.\nCzy na pewno chcesz porzuciæ zmiany?"
