@@ -4,12 +4,12 @@ int getResponseCode(HEADERS &headers) {
     return atoi(headers["HTTP_Response_Code"].c_str());
 }
 
-std::string prepareRequest(char* requestType, char* place, char* userAgent, char* ipAddress, unsigned int port, char* contentType, char* content) {
+std::string prepareRequest(char* requestType, char* place, char* userAgent, char* serverAddress, unsigned int port, char* contentType, char* content) {
     std::string temp="";
     temp=temp+requestType+" ";
     temp=temp+"/"+place+" HTTP/1.0\r\n";
     temp=temp+"User-Agent: "+userAgent+"\r\n";
-    temp=temp+"Host: "+ipAddress;
+    temp=temp+"Host: "+serverAddress;
     if(port!=80) {
         char portS[6];
         ltoa(port,portS,10);
@@ -136,7 +136,7 @@ std::string prepareContent(char* action, char* username, char* password, char* s
     return temp;
 }
 
-unsigned int makeRequest(char* ipAddress, unsigned int port, char* method, char* place, char* userAgent, char* contentType, char* content, HEADERS &headers, char* output) {
+unsigned int makeRequest(char* serverAddress, unsigned int port, char* method, char* place, char* userAgent, char* contentType, char* content, HEADERS &headers, char* output) {
     unsigned int pos=0;
     SOCKET mainSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     
@@ -147,7 +147,7 @@ unsigned int makeRequest(char* ipAddress, unsigned int port, char* method, char*
         sockaddr_in service;
         memset(&service, 0, sizeof(service));
         service.sin_family = AF_INET;
-        service.sin_addr.s_addr = inet_addr(ipAddress);
+        service.sin_addr.s_addr = inet_addr(getHostIP(serverAddress));
         service.sin_port = htons(port);
 
         if(connect(mainSocket, (SOCKADDR *) &service, sizeof(service)) == SOCKET_ERROR) {
@@ -158,7 +158,7 @@ unsigned int makeRequest(char* ipAddress, unsigned int port, char* method, char*
             int bytesRecv;
             char recvbuf[2048];
 
-            std::string req=prepareRequest(method,place,userAgent,ipAddress,port,contentType,content);
+            std::string req=prepareRequest(method,place,userAgent,serverAddress,port,contentType,content);
 
             bytesSent = send(mainSocket, req.c_str(), strlen(req.c_str()), 0);
 

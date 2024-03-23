@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include <winsock.h>
 #include <stdlib.h>
+#include "wsprocs.hpp"
 
 typedef std::map<std::string,std::string> HEADERS;
 
