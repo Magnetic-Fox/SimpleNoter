@@ -18,20 +18,20 @@ void saveCredentials(NOTER_CREDENTIALS &credentials, char* iniFile) {
 
 NOTER_CONNECTION_SETTINGS getConnectionSettings(char* iniFile) {
     NOTER_CONNECTION_SETTINGS connectionSettings;
-    char ipAddress[256];
+    char serverAddress[256];
     unsigned int port;
     char share[256];
     bool requestCompression;
-    GetPrivateProfileString("Server","IP","",ipAddress,256,iniFile);    // quick, forgotten change
+    GetPrivateProfileString("Server","Address","",serverAddress,256,iniFile);   // quick, forgotten change
     port=GetPrivateProfileInt("Server","Port",0,iniFile);
-    GetPrivateProfileString("Server","Share","",share,256,iniFile);     // quick, forgotten change
+    GetPrivateProfileString("Server","Share","",share,256,iniFile);             // quick, forgotten change
     requestCompression=(GetPrivateProfileInt("Server","RequestCompression",0,iniFile)==1);
-    connectionSettings=noter_prepareConnectionSettings(ipAddress,port,share,(char*)makeDefaultUserAgent().c_str(),requestCompression);
+    connectionSettings=noter_prepareConnectionSettings(serverAddress,port,share,(char*)makeDefaultUserAgent().c_str(),requestCompression);
     return connectionSettings;
 }
 
 void saveConnectionSettings(NOTER_CONNECTION_SETTINGS &connectionSettings, char* iniFile) {
-    WritePrivateProfileString("Server","IP",(char*)connectionSettings.ipAddress.c_str(),iniFile);
+    WritePrivateProfileString("Server","Address",(char*)connectionSettings.serverAddress.c_str(),iniFile);
     WritePrivateProfileString("Server","Port",(char*)IntToStr(connectionSettings.port).c_str(),iniFile);
     WritePrivateProfileString("Server","Share",(char*)connectionSettings.share.c_str(),iniFile);
     WritePrivateProfileString("Server","RequestCompression",(char*)IntToStr(connectionSettings.requestCompression).c_str(),iniFile);

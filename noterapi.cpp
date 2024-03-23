@@ -7,7 +7,7 @@ bool noter_credentialsAvailable(NOTER_CREDENTIALS &credentials) {
 }
 
 bool noter_connectionSettingsAvailable(NOTER_CONNECTION_SETTINGS &connectionSettings) {
-    return ((connectionSettings.ipAddress.length()>0) && (connectionSettings.port>0) && (connectionSettings.share.length()>0));
+    return ((connectionSettings.serverAddress.length()>0) && (connectionSettings.port>0) && (connectionSettings.share.length()>0));
 }
 
 std::string noter_getAnswerString(long int answerCode) {
@@ -82,9 +82,9 @@ NOTER_CREDENTIALS noter_prepareCredentials(char* username, char* password) {
     return credentials;
 }
 
-NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char* ipAddress, unsigned int port, char* share, char* userAgent, bool requestCompression) {
+NOTER_CONNECTION_SETTINGS noter_prepareConnectionSettings(char* serverAddress, unsigned int port, char* share, char* userAgent, bool requestCompression) {
     NOTER_CONNECTION_SETTINGS connectionSettings;
-    connectionSettings.ipAddress=ipAddress;
+    connectionSettings.serverAddress=serverAddress;
     connectionSettings.port=port;
     connectionSettings.share=share;
     connectionSettings.userAgent=userAgent;

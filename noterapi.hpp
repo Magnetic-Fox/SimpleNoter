@@ -17,7 +17,7 @@ typedef struct NOTER_CREDENTIALS {
 } NOTER_CREDENTIALS;
 
 typedef struct NOTER_CONNECTION_SETTINGS {
-    std::string ipAddress, share, userAgent;
+    std::string serverAddress, share, userAgent;
     unsigned int port;
     bool requestCompression;
 } NOTER_CONNECTION_SETTINGS;
@@ -67,7 +67,7 @@ unsigned int inline noter_simplyMakeRequest(char* method, NOTER_CONNECTION_SETTI
                                             char* action, char* subject, char* entry, unsigned long int noteID, char* newPassword, HEADERS &heads,
                                             char* buffer)
 {
-    return  makeRequest((char*)connectionSettings.ipAddress.c_str(),
+    return  makeRequest((char*)connectionSettings.serverAddress.c_str(),
                         connectionSettings.port,
                         method,
                         (char*)connectionSettings.share.c_str(),

@@ -1644,7 +1644,7 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch(msg) {
         case WM_INITDIALOG:
             if(noter_connectionSettingsAvailable(connectionSettings)) {
-                SetWindowText(GetDlgItem(hwnd,IDC_EDIT1),(char*)connectionSettings.ipAddress.c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_EDIT1),(char*)connectionSettings.serverAddress.c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_EDIT2),(char*)IntToStr(connectionSettings.port).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_EDIT3),(char*)connectionSettings.share.c_str());
                 if(connectionSettings.requestCompression) {
@@ -1679,7 +1679,7 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     if(checkIfInt(buffer)) {
                         if(editsChanged) {
                             GetWindowText(GetDlgItem(hwnd,IDC_EDIT1),buffer,65535);
-                            connectionSettings.ipAddress=buffer;
+                            connectionSettings.serverAddress=buffer;
                             GetWindowText(GetDlgItem(hwnd,IDC_EDIT2),buffer,65535);
                             connectionSettings.port=StrToInt(buffer);
                             GetWindowText(GetDlgItem(hwnd,IDC_EDIT3),buffer,65535);
@@ -1727,7 +1727,7 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     GetWindowText(GetDlgItem(hwnd,IDC_EDIT2),buffer,65535);
                     if(checkIfInt(buffer)) {
                         GetWindowText(GetDlgItem(hwnd,IDC_EDIT1),buffer,65535);
-                        tempConnectionSettings.ipAddress=buffer;
+                        tempConnectionSettings.serverAddress=buffer;
                         GetWindowText(GetDlgItem(hwnd,IDC_EDIT2),buffer,65535);
                         tempConnectionSettings.port=StrToInt(buffer);
                         GetWindowText(GetDlgItem(hwnd,IDC_EDIT3),buffer,65535);
