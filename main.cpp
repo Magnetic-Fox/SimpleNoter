@@ -1451,10 +1451,18 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)STRING_NORMAL_WINDOW);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)STRING_MINIMIZED_WINDOW);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)STRING_MAXIMIZED_WINDOW);
+            // temporary part
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO3), CB_ADDSTRING, 0, (LPARAM)"Polski");
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_ADDSTRING, 0, (LPARAM)"1250");
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO3), CB_SETCURSEL, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_SETCURSEL, 0, 0);
+            // end of temporary part
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_SETCURSEL, mainSettings.mainWindowStyle, 0);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_SETCURSEL, mainSettings.editWindowStyle, 0);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), WM_PAINT, 0, 0);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), WM_PAINT, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO3), WM_PAINT, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO4), WM_PAINT, 0, 0);
             if(mainSettings.mainWindowSystem) {
                 CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO1);
                 EnableWindow(GetDlgItem(hwnd,IDC_COMBO1),false);
