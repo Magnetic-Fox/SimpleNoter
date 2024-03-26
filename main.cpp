@@ -838,6 +838,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             SetWindowPos(GetDlgItem(hwnd,ID_STATIC5),NULL,0,height-16,width,16,SWP_NOZORDER);
 
             break;
+        case WM_GETMINMAXINFO:
+            MINMAXINFO *lpMMI=(MINMAXINFO*)lParam;
+            lpMMI->ptMinTrackSize.x=480;
+            lpMMI->ptMinTrackSize.y=320;
+            break;
         case WM_CLOSE:
             if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
                 if(winMem.size()>0) {
@@ -1256,6 +1261,11 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC3),NULL,288,height-37,width-288,21,SWP_NOZORDER);
             SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC4),NULL,0,height-16,width,16,SWP_NOZORDER);
             
+            break;
+        case WM_GETMINMAXINFO:
+            MINMAXINFO *lpMMI=(MINMAXINFO*)lParam;
+            lpMMI->ptMinTrackSize.x=480;
+            lpMMI->ptMinTrackSize.y=320;
             break;
         case WM_CLOSE:
             if((!IsWindowEnabled(GetDlgItem(g_hwnd,ID_BUTTON4))) || (!IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON3)))) {
