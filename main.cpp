@@ -32,7 +32,7 @@ WINDOWMEMORY winMem;
 HWND g_hwnd;
 char buffer[65536];
 CODEPAGE m_cp1250;
-NOTER_CONNECTION_SETTINGS connectionSettings ;
+NOTER_CONNECTION_SETTINGS connectionSettings;
 NOTER_CREDENTIALS credentials, tempCredentials, *auxCredentials;
 MAINSETTINGS mainSettings;
 NOTE_SUMMARY *notes=NULL;
