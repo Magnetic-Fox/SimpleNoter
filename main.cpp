@@ -509,17 +509,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return msg.wParam;
 }
 
-void getWindowCoordinates(HWND hwnd, int &x, int &y, int &size_x, int &size_y, unsigned int &state) {
-    RECT tempRect;
-    GetWindowRect(hwnd,&tempRect);
-    x=tempRect.left;
-    y=tempRect.top;
-    size_x=(tempRect.right-tempRect.left);
-    size_y=(tempRect.bottom-tempRect.top);
-    state=getState(hwnd);
-    return;
-}
-
 //////////////////////////////////////
 //
 //  MAIN WINDOW PROCEDURE
