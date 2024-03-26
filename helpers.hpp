@@ -11,6 +11,7 @@ bool checkIfInt(char*);
 unsigned int getState(HWND);
 void deleteWindow(WINDOWMEMORY&, HWND);
 void makeEditWindowTitle(EDITWINDOW*, NOTE*, bool, CODEPAGE&);
+void getWindowCoordinates(HWND, int&, int&, int&, int&, unsigned int&);
 void inline lockExitButton(HWND);
 void inline unlockExitButton(HWND);
 void inline lockRefreshButton(HWND);
