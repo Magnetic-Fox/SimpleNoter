@@ -48,3 +48,14 @@ std::string getCurrentDirectory(char* input) {
     }
     return currentDirectory;
 }
+
+std::string getCodePage(void) {
+    char langInfo[16];
+    GetLocaleInfoA(LOCALE_USER_DEFAULT,LOCALE_IDEFAULTANSICODEPAGE,langInfo,16);
+    return (std::string)langInfo;
+}
+std::string getLangName(void) {
+    char langInfo[16];
+    GetLocaleInfoA(LOCALE_USER_DEFAULT,LOCALE_SABBREVLANGNAME,langInfo,16);
+    return (std::string)langInfo;
+}
