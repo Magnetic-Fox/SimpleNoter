@@ -4,6 +4,8 @@
 #include <string>
 #include <map>
 #include <string.h>
+#include <windows.h>
+#include "definitions.hpp"
 #include "utf8_encode.hpp"
 #include "utf8_decode.hpp"
 
@@ -14,5 +16,6 @@ std::string fromCodePage(RAWCODEPAGE, char*);
 std::string toCodePage(CODEPAGE&, char*);
 void prepareCodePage(CODEPAGE&, RAWCODEPAGE);
 bool decodeWarningState(void);
+bool loadCodePage(char*, HINSTANCE&, HGLOBAL&, RAWCODEPAGE&);
 
 #endif

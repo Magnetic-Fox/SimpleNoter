@@ -72,3 +72,41 @@ void prepareCodePage(CODEPAGE &codepage, RAWCODEPAGE cpdef) {
 bool decodeWarningState(void) {
     return decodeWarning;
 }
+
+bool loadCodePage(char *libName, HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefinition, RAWCODEPAGE &rawCodePage) {
+    char testString[9];
+    hCodePageLib=LoadLibrary(libName);
+    if(hCodePageLib < 32) {
+        return false;
+    }
+    else {
+        if(LoadString(hCodePageLib,IDS_LIBTYPE,testString,9)) {
+            if(((std::string)testString)=="CODEPAGE") {
+                if(LoadString(hCodePageLib,IDS_USEDWORD,testString,9)) {
+                    if(((std::string)testString)=="0") {    // non-DWORD code page definition is the only allowed in this version (might be changed in the future)
+                        hCodePageDefinition=LoadResource(hCodePageLib,FindResource(hCodePageLib,MAKEINTRESOURCE(IDR_CODEPAGE),RT_RCDATA));
+                        if(hCodePageDefinition==NULL) {
+                            return false;
+                        }
+                        else {
+                            rawCodePage=(int*)LockResource(hCodePageDefinition);
+                            return true;
+                        }
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+}
