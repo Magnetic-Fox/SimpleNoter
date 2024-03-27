@@ -6,9 +6,8 @@
 #include "resources.h"
 
 // Uncomment for debug purposes (showing integers)
-// #include "debug.hpp"
+#include "debug.hpp"
 
-#include "cp1250.hpp"
 #include "helpers.hpp"
 #include "wsprocs.hpp"
 #include "noterapi.hpp"
@@ -41,6 +40,8 @@ long int noteCount=0;
 long int mainLastResult=0;
 unsigned int ctlRegs=0;
 bool check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false;
+HINSTANCE hCodePageLib=NULL;
+HGLOBAL hCodePageDefinition=NULL;
 
 //////////////////////////////////////
 //
@@ -323,7 +324,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     mainSettings=getMainSettings((char*)iniFile.c_str());
 
     // temporary setting
-    rawCodePage=cp1250;
+    if(!loadCodePage("cp1250.dll",hCodePageLib,hCodePageDefinition,rawCodePage)) {
+        MessageBox(NULL,STRING_MSG_CODEPAGE_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
+        return 1;
+    }
     
     prepareCodePage(mappedCodePage,rawCodePage);
 
@@ -878,6 +882,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             }
             DeleteObject(g_hBrush);
             WinHelp(g_hwnd,"",HELP_QUIT,0);
+            UnlockResource(hCodePageDefinition);
+            FreeResource(hCodePageDefinition);
+            FreeLibrary(hCodePageLib);
             PostQuitMessage(0);
             break;
         default:
