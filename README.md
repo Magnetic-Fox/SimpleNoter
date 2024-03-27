@@ -2,7 +2,7 @@
 # Simple Noter for Windows 3.11 (16-bit)
 
 This repository contains my first big project using clean, 16-bit WinAPI. It's client for my (too) simple PHP backend for notetaking.
-It utilizes lot of experiments with WinAPI, networking and resource files. 
+It utilizes lot of experiments with WinAPI, networking and resource files.
 
 ## What is included in this repo?
 
@@ -14,7 +14,12 @@ Portions of this software contain work done by other people (UTF-8 encode and de
 
 The code provided here was made to compile using Open Watcom IDE, which is quite good for modern MS-DOS/WfW3.11 development.
 It's possible that it would compile using old Microsoft compilers, but I haven't tested it. It's best to use Watcom for it.
-In fact, this project is heavily tied to Watcom coding style, so I think there might be serious problems with compiling it outside such environment. 
+In fact, this project is heavily tied to Watcom coding style, so I think there might be serious problems with compiling it outside such environment.
+
+## Components needed to run the program
+
+As I'm doing my best to make this program more customizable, more and more components are moved to DLLs that are now necessary to run this program.
+For now, the codepage definition is needed, for which code can be found in my `CP1250-DLL` repository.
 
 ## Codes created by others
 
@@ -51,4 +56,4 @@ If you like to use any part of these codes in your software, just please give me
 In case you would like to make paid software and use parts of these codes - please, contact me before.
 
 *Bartłomiej "Magnetic-Fox" Węgrzyn,
-4th November, 2023 - 16th March, 2024*
+4th November, 2023 - 27th March, 2024*
