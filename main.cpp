@@ -6,7 +6,7 @@
 #include "resources.h"
 
 // Uncomment for debug purposes (showing integers)
-#include "debug.hpp"
+// #include "debug.hpp"
 
 #include "helpers.hpp"
 #include "wsprocs.hpp"
