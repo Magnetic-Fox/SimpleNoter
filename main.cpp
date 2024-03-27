@@ -31,7 +31,8 @@ HBRUSH g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
 WINDOWMEMORY winMem;
 HWND g_hwnd;
 char buffer[65536];
-CODEPAGE m_cp1250;
+RAWCODEPAGE rawCodePage;
+CODEPAGE mappedCodePage;
 NOTER_CONNECTION_SETTINGS connectionSettings;
 NOTER_CREDENTIALS credentials, tempCredentials, *auxCredentials;
 MAINSETTINGS mainSettings;
@@ -181,7 +182,7 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
     EDITWINDOW *editWin = new EDITWINDOW;
     HINSTANCE hInstance=(HINSTANCE)GetWindowWord(hwnd,GWW_HINSTANCE);
 
-    makeEditWindowTitle(editWin,note,false,m_cp1250);
+    makeEditWindowTitle(editWin,note,false,mappedCodePage);
     
     editWin->hwnd =CreateWindow(editWindowClass, editWin->windowTitle.c_str(), WS_OVERLAPPEDWINDOW,
                                 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
@@ -252,9 +253,9 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
 
         bool warningState=false;
         if(editWin->note->id>0) {
-            SetWindowText(editWin->hEditBox, toCodePage(m_cp1250,(char*)editWin->note->subject.c_str()).c_str());
+            SetWindowText(editWin->hEditBox, toCodePage(mappedCodePage,(char*)editWin->note->subject.c_str()).c_str());
             warningState=decodeWarningState();
-            SetWindowText(editWin->hEditBox2,toCodePage(m_cp1250,(char*)editWin->note->entry.c_str()).c_str());
+            SetWindowText(editWin->hEditBox2,toCodePage(mappedCodePage,(char*)editWin->note->entry.c_str()).c_str());
             warningState=(warningState || decodeWarningState());
         }
 
@@ -320,7 +321,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     connectionSettings=getConnectionSettings((char*)iniFile.c_str());
     credentials=getCredentials((char*)iniFile.c_str());
     mainSettings=getMainSettings((char*)iniFile.c_str());
-    prepareCodePage(m_cp1250,cp1250);
+
+    // temporary setting
+    rawCodePage=cp1250;
+    
+    prepareCodePage(mappedCodePage,rawCodePage);
 
     if(wsInit() == SOCKET_ERROR) {
         MessageBox(NULL,STRING_MSG_WINSOCK_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
@@ -663,7 +668,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
                     SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_RESETCONTENT, 0, 0);
                     for(long int x=0; x<noteCount; ++x) {
-                        SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_ADDSTRING, 0, (LPARAM)toCodePage(m_cp1250,(char*)notes[x].subject.c_str()).c_str());
+                        SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_ADDSTRING, 0, (LPARAM)toCodePage(mappedCodePage,(char*)notes[x].subject.c_str()).c_str());
                     }
                     if(index>=0) {
                         if(lParam==0) {
@@ -728,7 +733,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         if(result>=0) {
                             HWND tempHwnd=createEditWindow(hwnd,winMem,note);
                             if(tempHwnd!=NULL) {
-                                tempString=noter_getAnswerString(result)+STRING_SPACED_LAST_MOD_DATE+toCodePage(m_cp1250,(char*)note->lastModified.c_str())+".";
+                                tempString=noter_getAnswerString(result)+STRING_SPACED_LAST_MOD_DATE+toCodePage(mappedCodePage,(char*)note->lastModified.c_str())+".";
                                 compressionRatio=getCompressionRatio();
                                 if(compressionRatio!=100) {
                                     tempString=tempString+STRING_SPACED_COMPRESSION+IntToStr(getCompressionRatio())+"%.";
@@ -770,7 +775,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
                     tempString=STRING_MSG_WANT_NOTE_REMOVAL;
                     tempString=tempString+" \"";
-                    tempString=tempString+toCodePage(m_cp1250,(char*)notes[index].subject.c_str());
+                    tempString=tempString+toCodePage(mappedCodePage,(char*)notes[index].subject.c_str());
                     tempString=tempString+"\"?";
                     if(MessageBox(hwnd,(char*)tempString.c_str(),APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES) {
                         main_LockAllButtons(hwnd);
@@ -1035,7 +1040,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),STRING_ADD);
                     winMem[hwnd]->subjectChanged=true;
                     winMem[hwnd]->entryChanged=true;
-                    makeEditWindowTitle(winMem[hwnd],NULL,true,m_cp1250);
+                    makeEditWindowTitle(winMem[hwnd],NULL,true,mappedCodePage);
                     SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),STRING_TO_NEW_NOTE);
                     winMem[hwnd]->lastResult=1024;
                     break;
@@ -1172,9 +1177,9 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
                     GetWindowText(GetDlgItem(hwnd,ID_EDIT_EDITBOX1),buffer,65535);
-                    winMem[hwnd]->note->subject=fromCodePage(cp1250,buffer);
+                    winMem[hwnd]->note->subject=fromCodePage(rawCodePage,buffer);
                     GetWindowText(GetDlgItem(hwnd,ID_EDIT_EDITBOX2),buffer,65535);
-                    winMem[hwnd]->note->entry=fromCodePage(cp1250,buffer);
+                    winMem[hwnd]->note->entry=fromCodePage(rawCodePage,buffer);
                     if(winMem[hwnd]->note->id==0) {
                         edit_LockAllButtons(hwnd);
                         winMem[hwnd]->lastResult=noter_addNote(connectionSettings,credentials,*winMem[hwnd]->note,buffer);
@@ -1189,7 +1194,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),STRING_UPDATE);
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
-                            makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true,m_cp1250);
+                            makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true,mappedCodePage);
                         }
                         else {
                             EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),true);
@@ -1207,7 +1212,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
-                            makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true,m_cp1250);
+                            makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true,mappedCodePage);
                         }
                         else {
                             EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),true);
@@ -1319,12 +1324,12 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             properties_UnlockAllButtons(hwnd);
             EnableWindow(GetDlgItem(GetParent(hwnd),ID_EDIT_BUTTON1),addUpTest);
             if(result>=0) {
-                SetWindowText(GetDlgItem(hwnd,IDC_STATIC1),(char*)toCodePage(m_cp1250,(char*)tempNote.subject.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_STATIC1),(char*)toCodePage(mappedCodePage,(char*)tempNote.subject.c_str()).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC2),(char*)IntToStr(tempNote.id).c_str());
-                SetWindowText(GetDlgItem(hwnd,IDC_STATIC3),(char*)toCodePage(m_cp1250,(char*)tempNote.dateAdded.c_str()).c_str());
-                SetWindowText(GetDlgItem(hwnd,IDC_STATIC4),(char*)toCodePage(m_cp1250,(char*)tempNote.userAgent.c_str()).c_str());
-                SetWindowText(GetDlgItem(hwnd,IDC_STATIC5),(char*)toCodePage(m_cp1250,(char*)tempNote.lastModified.c_str()).c_str());
-                SetWindowText(GetDlgItem(hwnd,IDC_STATIC6),(char*)toCodePage(m_cp1250,(char*)tempNote.lastUserAgent.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_STATIC3),(char*)toCodePage(mappedCodePage,(char*)tempNote.dateAdded.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_STATIC4),(char*)toCodePage(mappedCodePage,(char*)tempNote.userAgent.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_STATIC5),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastModified.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_STATIC6),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastUserAgent.c_str()).c_str());
                 if(tempNote.locked) {
                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),true);
@@ -1664,9 +1669,9 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 serverInfo=noter_getServerInfo(connectionSettings,buffer);
                 connection_UnlockAllButtons(hwnd);
                 if(serverInfo.version==MATCH_VERSION) {
-                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),(char*)toCodePage(m_cp1250,(char*)serverInfo.name.c_str()).c_str());
-                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),(char*)toCodePage(m_cp1250,(char*)serverInfo.timezone.c_str()).c_str());
-                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(m_cp1250,(char*)serverInfo.version.c_str()).c_str());
+                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),(char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
+                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),(char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
+                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(mappedCodePage,(char*)serverInfo.version.c_str()).c_str());
                 }
             }
             else {
@@ -1728,9 +1733,9 @@ BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         serverInfo=noter_getServerInfo(tempConnectionSettings,buffer);
                         connection_UnlockAllButtons(hwnd);
                         if(noter_checkServerVersion(serverInfo)) {
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),(char*)toCodePage(m_cp1250,(char*)serverInfo.name.c_str()).c_str());
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),(char*)toCodePage(m_cp1250,(char*)serverInfo.timezone.c_str()).c_str());
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(m_cp1250,(char*)serverInfo.version.c_str()).c_str());
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),(char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),(char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(mappedCodePage,(char*)serverInfo.version.c_str()).c_str());
                             MessageBox(hwnd,STRING_MSG_CONN_ESTABLISHED,STRING_INFORMATION,MB_ICONINFORMATION | MB_OK);
                         }
                         else {
