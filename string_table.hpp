@@ -104,6 +104,7 @@
 #define STRING_MSG_USER_DELETED_SPACED  " zosta³ usuniêty."
 #define STRING_MSG_WRONG_PASSWORD       "Nieprawid³owe has³o!"
 #define STRING_MSG_PASSWORD_CHANGED     "Has³o zosta³o zmienione."
+#define STRING_MSG_CODEPAGE_ERROR       "Odnalezienie definicji strony kodowej by³o nie mo¿liwe. Program zostanie zamkniêty."
 
 // End of Polish string table
 
