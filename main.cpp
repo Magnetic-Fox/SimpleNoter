@@ -6,9 +6,10 @@
 #include "resources.h"
 
 // Uncomment for debug purposes (showing integers)
-// #include "debug.hpp"
+#include "debug.hpp"
 
 #include "helpers.hpp"
+#include "libutil.hpp"
 #include "wsprocs.hpp"
 #include "noterapi.hpp"
 #include "codepages.hpp"
@@ -42,6 +43,7 @@ unsigned int ctlRegs=0;
 bool check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false;
 HINSTANCE hCodePageLib=NULL;
 HGLOBAL hCodePageDefinition=NULL;
+LIBRARIES libraries;
 
 //////////////////////////////////////
 //
@@ -318,6 +320,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     MSG msg;
     
     GetModuleFileName(hInstance,buffer,32767);
+
+    listAvailableLibs(buffer,libraries);
+    
     std::string iniFile=getDefaultIniFile(buffer);
     connectionSettings=getConnectionSettings((char*)iniFile.c_str());
     credentials=getCredentials((char*)iniFile.c_str());
@@ -325,8 +330,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     // temporary setting
     if(!loadCodePage("cp1250.dll",hCodePageLib,hCodePageDefinition,rawCodePage)) {
-        MessageBox(NULL,STRING_MSG_CODEPAGE_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
-        return 1;
+        if(!loadCodePage((char*)findAnyCodePage(libraries).c_str(),hCodePageLib,hCodePageDefinition,rawCodePage)) {
+            MessageBox(NULL,STRING_MSG_CODEPAGE_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
+            return 1;
+        }
     }
     
     prepareCodePage(mappedCodePage,rawCodePage);
