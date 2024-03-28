@@ -3,14 +3,7 @@
 
 #include <string>
 #include "noteprocs.hpp"
-
-#define IDS_LIBTYPE                     1
-#define IDS_CPNAME                      2
-#define IDS_USEDWORD                    3
-#define IDS_REVDATE                     4
-#define IDS_AUTHOR                      5
-
-#define IDR_CODEPAGE                    100
+#include "libdefs.hpp"
 
 #define ID_BUTTON1                      1400
 #define ID_BUTTON2                      1401
