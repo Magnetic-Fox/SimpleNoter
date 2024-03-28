@@ -5,7 +5,7 @@
 #include <map>
 #include <string.h>
 #include <windows.h>
-#include "definitions.hpp"
+#include "libdefs.hpp"
 #include "utf8_encode.hpp"
 #include "utf8_decode.hpp"
 
