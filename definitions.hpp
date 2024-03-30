@@ -46,6 +46,7 @@ typedef struct mainSettings {
     unsigned int mainWindowStyle, editWindowStyle;
     int mainWindowX, mainWindowY, mainWindowSizeX, mainWindowSizeY, editWindowX, editWindowY, editWindowSizeX, editWindowSizeY;
     bool autoReload, autoRefresh, savePosSizes, use3DControls, use3DButtons, use3DLists, use3DEdits, use3DCombos, use3DDialogs;
+    std::string selectedCodePage;
 } MAINSETTINGS;
 
 #endif
