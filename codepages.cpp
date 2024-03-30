@@ -111,3 +111,25 @@ bool loadCodePage(char *libName, HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefi
         }
     }
 }
+
+void unloadCodePage(HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefinition) {
+    UnlockResource(hCodePageDefinition);
+    FreeResource(hCodePageDefinition);
+    FreeLibrary(hCodePageLib);
+    return;
+}
+
+bool loadAndPrepareCodePage(MAINSETTINGS &mainSettings, LIBRARIES &libraries, HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefinition, RAWCODEPAGE &rawCodePage, CODEPAGE &mappedCodePage) {
+    std::string foundCodePage="";
+    if(!loadCodePage((char*)mainSettings.selectedCodePage.c_str(),hCodePageLib,hCodePageDefinition,rawCodePage)) {
+        foundCodePage=findAnyCodePage(libraries);
+        if(loadCodePage((char*)foundCodePage.c_str(),hCodePageLib,hCodePageDefinition,rawCodePage)) {
+            mainSettings.selectedCodePage=foundCodePage;
+        }
+        else {
+            return false;
+        }
+    }
+    prepareCodePage(mappedCodePage,rawCodePage);
+    return true;
+}

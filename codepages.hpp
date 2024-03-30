@@ -5,7 +5,8 @@
 #include <map>
 #include <string.h>
 #include <windows.h>
-#include "libdefs.hpp"
+#include "libutil.hpp"
+#include "definitions.hpp"
 #include "utf8_encode.hpp"
 #include "utf8_decode.hpp"
 
@@ -17,5 +18,7 @@ std::string toCodePage(CODEPAGE&, char*);
 void prepareCodePage(CODEPAGE&, RAWCODEPAGE);
 bool decodeWarningState(void);
 bool loadCodePage(char*, HINSTANCE&, HGLOBAL&, RAWCODEPAGE&);
+void unloadCodePage(HINSTANCE&, HGLOBAL&);
+bool loadAndPrepareCodePage(MAINSETTINGS&, LIBRARIES&, HINSTANCE&, HGLOBAL&, RAWCODEPAGE&, CODEPAGE&);
 
 #endif
