@@ -38,8 +38,10 @@ void saveConnectionSettings(NOTER_CONNECTION_SETTINGS &connectionSettings, char*
     return;
 }
 
-MAINSETTINGS getMainSettings(char* iniFile) {
+MAINSETTINGS getMainSettings(char* iniFile, LIBRARIES *libraries) {
     MAINSETTINGS mainSettings;
+    char temp[256];
+
     mainSettings.mainWindowSystem=(GetPrivateProfileInt("Settings","MainWindowSystem",1,iniFile)==1);
     mainSettings.editWindowSystem=(GetPrivateProfileInt("Settings","EditWindowSystem",1,iniFile)==1);
     mainSettings.mainWindowStyle=GetPrivateProfileInt("Settings","MainWindowStyle",0,iniFile);
@@ -62,6 +64,15 @@ MAINSETTINGS getMainSettings(char* iniFile) {
     mainSettings.editWindowY=GetPrivateProfileInt("WindowSettings","EditWindowY",CW_USEDEFAULT,iniFile);
     mainSettings.editWindowSizeX=GetPrivateProfileInt("WindowSettings","EditWindowSizeX",CW_USEDEFAULT,iniFile);
     mainSettings.editWindowSizeY=GetPrivateProfileInt("WindowSettings","EditWindowSizeY",CW_USEDEFAULT,iniFile);
+
+    if(libraries==NULL) {
+        GetPrivateProfileString("Regional","CodePage","",temp,256,iniFile);
+    }
+    else {
+        GetPrivateProfileString("Regional","CodePage",(char*)findAnyCodePage(*libraries).c_str(),temp,256,iniFile);
+    }
+
+    mainSettings.selectedCodePage=(std::string)temp;
     
     return mainSettings;
 }
@@ -80,6 +91,7 @@ void saveMainSettings(MAINSETTINGS &mainSettings, char* iniFile) {  // really ma
     WritePrivateProfileString("Settings","Use3DEdits",(char*)IntToStr(mainSettings.use3DEdits).c_str(),iniFile);
     WritePrivateProfileString("Settings","Use3DCombos",(char*)IntToStr(mainSettings.use3DCombos).c_str(),iniFile);
     WritePrivateProfileString("Settings","Use3DDialogs",(char*)IntToStr(mainSettings.use3DDialogs).c_str(),iniFile);
+    WritePrivateProfileString("Regional","CodePage",(char*)mainSettings.selectedCodePage.c_str(),iniFile);
     return;
 }
 
