@@ -40,7 +40,7 @@ NOTE_SUMMARY *notes=NULL;
 long int noteCount=0;
 long int mainLastResult=0;
 unsigned int ctlRegs=0;
-bool check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false;
+bool check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged;
 HINSTANCE hCodePageLib=NULL;
 HGLOBAL hCodePageDefinition=NULL;
 LIBRARIES libraries;
@@ -298,6 +298,28 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
     }
 }
 
+bool loadAndPrepareCodePage(MAINSETTINGS &mainSettings, LIBRARIES &libraries, HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefinition, RAWCODEPAGE &rawCodePage) {
+    std::string foundCodePage="";
+    if(!loadCodePage((char*)mainSettings.selectedCodePage.c_str(),hCodePageLib,hCodePageDefinition,rawCodePage)) {
+        foundCodePage=findAnyCodePage(libraries);
+        if(loadCodePage((char*)foundCodePage.c_str(),hCodePageLib,hCodePageDefinition,rawCodePage)) {
+            mainSettings.selectedCodePage=foundCodePage;
+        }
+        else {
+            return false;
+        }
+    }
+    prepareCodePage(mappedCodePage,rawCodePage);
+    return true;
+}
+
+void unloadCodePage(HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefinition) {
+    UnlockResource(hCodePageDefinition);
+    FreeResource(hCodePageDefinition);
+    FreeLibrary(hCodePageLib);
+    return;
+}
+
 //////////////////////////////////////
 //
 //  MAIN PROGRAM
@@ -326,10 +348,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     std::string iniFile=getDefaultIniFile(buffer);
     connectionSettings=getConnectionSettings((char*)iniFile.c_str());
     credentials=getCredentials((char*)iniFile.c_str());
-    mainSettings=getMainSettings((char*)iniFile.c_str());
+    mainSettings=getMainSettings((char*)iniFile.c_str(),&libraries);
 
-    // temporary setting
-    if(!loadCodePage("cp1250.dll",hCodePageLib,hCodePageDefinition,rawCodePage)) {
+    /*
+    if(!loadCodePage((char*)mainSettings.selectedCodePage.c_str(),hCodePageLib,hCodePageDefinition,rawCodePage)) {
         if(!loadCodePage((char*)findAnyCodePage(libraries).c_str(),hCodePageLib,hCodePageDefinition,rawCodePage)) {
             MessageBox(NULL,STRING_MSG_CODEPAGE_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
             return 1;
@@ -337,6 +359,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
     
     prepareCodePage(mappedCodePage,rawCodePage);
+    */
+
+    if(!loadAndPrepareCodePage(mainSettings,libraries,hCodePageLib,hCodePageDefinition,rawCodePage)) {
+        MessageBox(NULL,STRING_MSG_CODEPAGE_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
+        return 1;
+    }
 
     if(wsInit() == SOCKET_ERROR) {
         MessageBox(NULL,STRING_MSG_WINSOCK_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
@@ -463,7 +491,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             }
         }
         else {
-            MessageBox(hwnd,STRING_MSG_CTL3D_ERROR,STRING_WARNING,MB_ICONEXCLAMATION);
+            MessageBox(hwnd,STRING_MSG_CTL3D_ERROR,STRING_WARNING,MB_ICONEXCLAMATION | MB_OK);
         }
     }
 
@@ -633,7 +661,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON4, 0);
                     break;
                 case ID_OPTIONS_PREFERENCES:
-                    MakeDialogBox(hwnd,IDD_DIALOG3,DlgProc3);
+                    if((MakeDialogBox(hwnd,IDD_DIALOG3,DlgProc3)==IDOK) && (codePageChanged)) {
+                        if(MessageBox(hwnd,STRING_MSG_WANT_RELOAD,APPNAME,MB_ICONQUESTION | MB_YESNO)==IDYES) {
+                            SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
+                        }
+                    }
                     break;
                 case ID_OPTIONS_CONNECTION:
                     if((MakeDialogBox(hwnd,IDD_DIALOG4,DlgProc4)==IDOK) && (editsChanged)) {
@@ -889,9 +921,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             }
             DeleteObject(g_hBrush);
             WinHelp(g_hwnd,"",HELP_QUIT,0);
+            /*
             UnlockResource(hCodePageDefinition);
             FreeResource(hCodePageDefinition);
             FreeLibrary(hCodePageLib);
+            */
+            unloadCodePage(hCodePageLib,hCodePageDefinition);
             PostQuitMessage(0);
             break;
         default:
@@ -1461,6 +1496,8 @@ BOOL CALLBACK DlgProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     bool enabled;
     std::string iniFile;
+    LIB_ITER lIt;
+    unsigned int counter, counter2, selectedIndex, selectedIndex2;
     switch(msg) {
         case WM_INITDIALOG:
             check3DChanged=false;
@@ -1472,10 +1509,29 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)STRING_MAXIMIZED_WINDOW);
             // temporary part
             SendMessage(GetDlgItem(hwnd, IDC_COMBO3), CB_ADDSTRING, 0, (LPARAM)"Polski");
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_ADDSTRING, 0, (LPARAM)"1250");
+            //SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_ADDSTRING, 0, (LPARAM)"1250");
             SendMessage(GetDlgItem(hwnd, IDC_COMBO3), CB_SETCURSEL, 0, 0);
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_SETCURSEL, 0, 0);
+            //SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_SETCURSEL, 0, 0);
             // end of temporary part
+            counter=0;
+            counter2=0;
+            selectedIndex=0;
+            selectedIndex2=0;
+            for(lIt=libraries.begin(); lIt!=libraries.end(); ++lIt) {
+                if(lIt->type==LIB_CODEPAGE) {
+                    SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_ADDSTRING, 0, (LPARAM)(char*)((lIt->relatedInfo)+" ["+(lIt->filename)+"]").c_str());
+                    if(lIt->filename==mainSettings.selectedCodePage) {
+                        selectedIndex=counter;
+                    }
+                    ++counter;
+                }
+                else if(lIt->type==LIB_STRINGTABLE) {
+                    SendMessage(GetDlgItem(hwnd, IDC_COMBO3), CB_ADDSTRING, 0, (LPARAM)(char*)((lIt->relatedInfo)+" ["+(lIt->filename)+"]").c_str());
+                    // part to do
+                    ++counter2;
+                }
+            }
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_SETCURSEL, selectedIndex, 0);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_SETCURSEL, mainSettings.mainWindowStyle, 0);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_SETCURSEL, mainSettings.editWindowStyle, 0);
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), WM_PAINT, 0, 0);
@@ -1596,7 +1652,35 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     mainSettings.use3DEdits=IsDlgButtonChecked(hwnd, IDC_CHECK6);
                     mainSettings.use3DCombos=IsDlgButtonChecked(hwnd, IDC_CHECK7);
                     mainSettings.use3DDialogs=IsDlgButtonChecked(hwnd, IDC_CHECK8);
+                    counter=0;
+                    counter2=0;
+                    selectedIndex2=SendMessage(GetDlgItem(hwnd,IDC_COMBO3), CB_GETCURSEL, 0, 0);
+                    selectedIndex=SendMessage(GetDlgItem(hwnd,IDC_COMBO4), CB_GETCURSEL, 0, 0);
+                    codePageChanged=false;
+                    for(lIt=libraries.begin(); lIt!=libraries.end(); ++lIt) {
+                        if(lIt->type==LIB_CODEPAGE) {
+                            if(selectedIndex==counter) {
+                                if(lIt->filename!=mainSettings.selectedCodePage) {
+                                    codePageChanged=true;
+                                }
+                                mainSettings.selectedCodePage=lIt->filename;
+                            }
+                            ++counter;
+                        }
+                        else if(lIt->type==LIB_STRINGTABLE) {
+                            if(selectedIndex2==counter2) {
+                                // part to do
+                            }
+                            ++counter2;
+                        }
+                    }
                     saveMainSettings(mainSettings,(char*)iniFile.c_str());
+                    if(codePageChanged) {
+                        unloadCodePage(hCodePageLib,hCodePageDefinition);
+                        if(!loadAndPrepareCodePage(mainSettings,libraries,hCodePageLib,hCodePageDefinition,rawCodePage)) {
+                            MessageBox(hwnd,STRING_MSG_CODEPAGE_ERROR_2,STRING_ERROR,MB_ICONSTOP | MB_OK);
+                        }
+                    }
                     if(check3DChanged) {
                         MessageBox(hwnd,STRING_MSG_CTL3D_CHANGE,STRING_INFORMATION,MB_ICONINFORMATION | MB_OK);
                     }
