@@ -105,6 +105,7 @@
 #define STRING_MSG_WRONG_PASSWORD       "Nieprawid³owe has³o!"
 #define STRING_MSG_PASSWORD_CHANGED     "Has³o zosta³o zmienione."
 #define STRING_MSG_CODEPAGE_ERROR       "Odnalezienie definicji strony kodowej by³o nie mo¿liwe. Program zostanie zamkniêty."
+#define STRING_MSG_CODEPAGE_ERROR_2     "Prze³adowanie definicji strony kodowej nie powiod³o siê. Zakoñcz program jak najszybciej!"
 
 // End of Polish string table
 
