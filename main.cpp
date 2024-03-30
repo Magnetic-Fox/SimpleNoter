@@ -6,7 +6,7 @@
 #include "resources.h"
 
 // Uncomment for debug purposes (showing integers)
-#include "debug.hpp"
+// #include "debug.hpp"
 
 #include "helpers.hpp"
 #include "libutil.hpp"
@@ -298,28 +298,6 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
     }
 }
 
-bool loadAndPrepareCodePage(MAINSETTINGS &mainSettings, LIBRARIES &libraries, HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefinition, RAWCODEPAGE &rawCodePage) {
-    std::string foundCodePage="";
-    if(!loadCodePage((char*)mainSettings.selectedCodePage.c_str(),hCodePageLib,hCodePageDefinition,rawCodePage)) {
-        foundCodePage=findAnyCodePage(libraries);
-        if(loadCodePage((char*)foundCodePage.c_str(),hCodePageLib,hCodePageDefinition,rawCodePage)) {
-            mainSettings.selectedCodePage=foundCodePage;
-        }
-        else {
-            return false;
-        }
-    }
-    prepareCodePage(mappedCodePage,rawCodePage);
-    return true;
-}
-
-void unloadCodePage(HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefinition) {
-    UnlockResource(hCodePageDefinition);
-    FreeResource(hCodePageDefinition);
-    FreeLibrary(hCodePageLib);
-    return;
-}
-
 //////////////////////////////////////
 //
 //  MAIN PROGRAM
@@ -361,7 +339,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     prepareCodePage(mappedCodePage,rawCodePage);
     */
 
-    if(!loadAndPrepareCodePage(mainSettings,libraries,hCodePageLib,hCodePageDefinition,rawCodePage)) {
+    if(!loadAndPrepareCodePage(mainSettings,libraries,hCodePageLib,hCodePageDefinition,rawCodePage,mappedCodePage)) {
         MessageBox(NULL,STRING_MSG_CODEPAGE_ERROR,STRING_ERROR,MB_ICONSTOP | MB_OK);
         return 1;
     }
@@ -1677,7 +1655,7 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     saveMainSettings(mainSettings,(char*)iniFile.c_str());
                     if(codePageChanged) {
                         unloadCodePage(hCodePageLib,hCodePageDefinition);
-                        if(!loadAndPrepareCodePage(mainSettings,libraries,hCodePageLib,hCodePageDefinition,rawCodePage)) {
+                        if(!loadAndPrepareCodePage(mainSettings,libraries,hCodePageLib,hCodePageDefinition,rawCodePage,mappedCodePage)) {
                             MessageBox(hwnd,STRING_MSG_CODEPAGE_ERROR_2,STRING_ERROR,MB_ICONSTOP | MB_OK);
                         }
                     }
