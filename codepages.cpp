@@ -63,6 +63,7 @@ std::string toCodePage(CODEPAGE &codepage, char* input) {
 }
 
 void prepareCodePage(CODEPAGE &codepage, RAWCODEPAGE cpdef) {
+    codepage.clear();
     for(unsigned int x=0; x<128; ++x) {
         codepage[cpdef[x]]=0x80+x;
     }
