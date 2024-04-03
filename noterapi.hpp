@@ -9,8 +9,11 @@
 #include "noteprocs.hpp"
 #include "userprocs.hpp"
 #include "constants.hpp"
+#include "additional.hpp"
 
 #include "unbzip2.h"
+
+#include "resources.h"
 
 typedef struct NOTER_CREDENTIALS {
     std::string username, password;

@@ -13,65 +13,65 @@ bool noter_connectionSettingsAvailable(NOTER_CONNECTION_SETTINGS &connectionSett
 std::string noter_getAnswerString(long int answerCode) {
     switch(answerCode) {
         case ERROR_WRONG_RESPONSE:
-            return STRING_WRONG_RESPONSE;
+            return getString((HINSTANCE)NULL, IDS_STRING_WRONG_RESPONSE);
         case ERROR_SERVICE_DISABLED:
-            return STRING_SERVICE_DISABLED;
+            return getString((HINSTANCE)NULL, IDS_STRING_SERVICE_DISABLED);
         case ERROR_INTERNAL_SERVER_ERROR:
-            return STRING_INTERNAL_SERVER_ERROR;
+            return getString((HINSTANCE)NULL, IDS_STRING_INTERNAL_SERVER_ERROR);
         case ERROR_NOTE_ALREADY_UNLOCKED:
-            return STRING_NOTE_ALREADY_UNLOCKED;
+            return getString((HINSTANCE)NULL, IDS_STRING_NOTE_ALREADY_UNLOCKED);
         case ERROR_NOTE_ALREADY_LOCKED:
-            return STRING_NOTE_ALREADY_LOCKED;
+            return getString((HINSTANCE)NULL, IDS_STRING_NOTE_ALREADY_LOCKED);
         case ERROR_NOTE_LOCKED:
-            return STRING_NOTE_LOCKED;
+            return getString((HINSTANCE)NULL, IDS_STRING_NOTE_LOCKED);
         case ERROR_USER_REMOVAL_FAILURE:
-            return STRING_USER_REMOVAL_FAILURE;
+            return getString((HINSTANCE)NULL, IDS_STRING_USER_REMOVAL_FAILURE);
         case ERROR_USER_NOT_EXISTS:
-            return STRING_USER_NOT_EXISTS;
+            return getString((HINSTANCE)NULL, IDS_STRING_USER_NOT_EXISTS);
         case ERROR_NOTE_NOT_EXISTS:
-            return STRING_NOTE_NOT_EXISTS;
+            return getString((HINSTANCE)NULL, IDS_STRING_NOTE_NOT_EXISTS);
         case ERROR_NO_NECESSARY_INFORMATION:
-            return STRING_NO_NECESSARY_INFORMATION;
+            return getString((HINSTANCE)NULL, IDS_STRING_NO_NECESSARY_INFORMATION);
         case ERROR_USER_DEACTIVATED:
-            return STRING_USER_DEACTIVATED;
+            return getString((HINSTANCE)NULL, IDS_STRING_USER_DEACTIVATED);
         case ERROR_LOGIN_INCORRECT:
-            return STRING_LOGIN_INCORRECT;
+            return getString((HINSTANCE)NULL, IDS_STRING_LOGIN_INCORRECT);
         case ERROR_UNKNOWN_ACTION:
-            return STRING_UNKNOWN_ACTION;
+            return getString((HINSTANCE)NULL, IDS_STRING_UNKNOWN_ACTION);
         case ERROR_NO_CREDENTIALS:
-            return STRING_NO_CREDENTIALS;
+            return getString((HINSTANCE)NULL, IDS_STRING_NO_CREDENTIALS);
         case ERROR_USER_EXISTS:
-            return STRING_USER_EXISTS;
+            return getString((HINSTANCE)NULL, IDS_STRING_USER_EXISTS);
         case ERROR_NO_USABLE_INFORMATION:
-            return STRING_NO_USABLE_INFORMATION;
+            return getString((HINSTANCE)NULL, IDS_STRING_NO_USABLE_INFORMATION);
         case ERROR_INVALID_METHOD:
-            return STRING_INVALID_METHOD;
+            return getString((HINSTANCE)NULL, IDS_STRING_INVALID_METHOD);
         case INFO_OK:
-            return STRING_INFO_OK;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_OK);
         case INFO_USER_CREATED:
-            return STRING_INFO_USER_CREATED;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_USER_CREATED);
         case INFO_USER_UPDATED:
-            return STRING_INFO_USER_UPDATED;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_USER_UPDATED);
         case INFO_USER_REMOVED:
-            return STRING_INFO_USER_REMOVED;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_USER_REMOVED);
         case INFO_LIST_SUCCESSFUL:
-            return STRING_INFO_LIST_SUCCESSFUL;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_LIST_SUCCESSFUL);
         case INFO_NOTE_RETRIEVED:
-            return STRING_INFO_NOTE_RETRIEVED;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_NOTE_RETRIEVED);
         case INFO_NOTE_CREATED:
-            return STRING_INFO_NOTE_CREATED;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_NOTE_CREATED);
         case INFO_NOTE_UPDATED:
-            return STRING_INFO_NOTE_UPDATED;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_NOTE_UPDATED);
         case INFO_NOTE_DELETED:
-            return STRING_INFO_NOTE_DELETED;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_NOTE_DELETED);
         case INFO_USER_INFO_RETRIEVED:
-            return STRING_INFO_USER_INFO_RETRIEVED;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_USER_INFO_RETRIEVED);
         case INFO_NOTE_LOCKED:
-            return STRING_INFO_NOTE_LOCKED;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_NOTE_LOCKED);
         case INFO_NOTE_UNLOCKED:
-            return STRING_INFO_NOTE_UNLOCKED;
+            return getString((HINSTANCE)NULL, IDS_STRING_INFO_NOTE_UNLOCKED);
         default:
-            return STRING_UNKNOWN_ERROR;
+            return getString((HINSTANCE)NULL, IDS_STRING_UNKNOWN_ERROR);
     }
 }
 
