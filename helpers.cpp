@@ -31,12 +31,12 @@ void deleteWindow(WINDOWMEMORY &winMem, HWND hwnd) {
 
 void makeEditWindowTitle(EDITWINDOW *editWin, NOTE *note, bool set, CODEPAGE &codePage) {
     if(note==NULL) {
-        editWin->windowTitle = STRING_NEW_NOTE;
+        editWin->windowTitle = getString((HINSTANCE)NULL, IDS_STRING_NEW_NOTE);
     }
     else {
         editWin->windowTitle = toCodePage(codePage,(char*)note->subject.c_str())+" - ";
     }
-    editWin->windowTitle = editWin->windowTitle + APPNAME;
+    editWin->windowTitle = editWin->windowTitle + getString((HINSTANCE)NULL, IDS_APPNAME);
     if(set) {
         SetWindowText(editWin->hwnd,(char*)editWin->windowTitle.c_str());
     }

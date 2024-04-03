@@ -6,6 +6,7 @@
 #include "resources.h"
 #include "codepages.hpp"
 #include "constants.hpp"
+#include "additional.hpp"
 
 bool checkIfInt(char*);
 unsigned int getState(HWND);
