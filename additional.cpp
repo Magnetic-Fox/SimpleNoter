@@ -1,5 +1,7 @@
 #include "additional.hpp"
 
+static HINSTANCE g_hInstance=NULL;
+
 std::string winVersionString(void) {
     std::string temp="Windows ";
     char conv[8];
@@ -54,8 +56,41 @@ std::string getCodePage(void) {
     GetLocaleInfoA(LOCALE_USER_DEFAULT,LOCALE_IDEFAULTANSICODEPAGE,langInfo,16);
     return (std::string)langInfo;
 }
+
 std::string getLangName(void) {
     char langInfo[16];
     GetLocaleInfoA(LOCALE_USER_DEFAULT,LOCALE_SABBREVLANGNAME,langInfo,16);
     return (std::string)langInfo;
+}
+
+std::string getString(HINSTANCE hInstance, UINT stringID) {
+    // temporary placeholder
+    if(hInstance==NULL) {
+        hInstance=g_hInstance;
+    }
+    char tempString[MAX_TEMP_SIZE];
+    if(LoadString(hInstance,stringID,tempString,MAX_TEMP_SIZE)) {
+        return (std::string)tempString;
+    }
+    else {
+        return "";
+    }
+}
+
+char* getStringChar(HINSTANCE hInstance, UINT stringID, char* buffer, unsigned int bufferSize) {
+    // temporary placeholder
+    if(hInstance==NULL) {
+        hInstance=g_hInstance;
+    }
+    if(LoadString(hInstance,stringID,buffer,bufferSize)) {
+        return buffer;
+    }
+    else {
+        return NULL;
+    }
+}
+
+void storeProgramInstance(HINSTANCE hInstance) {
+    g_hInstance=hInstance;
+    return;
 }
