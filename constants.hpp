@@ -6,6 +6,5 @@
 
 #define MATCH_VERSION                   "1.0"
 #define INI_FILE                        "config.ini"
-#define HELPFILE                        "SNOTER07.HLP"
 
 #endif
