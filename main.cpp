@@ -1478,18 +1478,17 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch(msg) {
         case WM_INITDIALOG:
             check3DChanged=false;
+            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),((std::string)(getStringFromTable(IDS_STRING_BUILD_INFO))+__DATE__+", "+__TIME__).c_str());
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_NORMAL_WINDOW));
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MINIMIZED_WINDOW));
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MAXIMIZED_WINDOW));
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_NORMAL_WINDOW));
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MINIMIZED_WINDOW));
             SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MAXIMIZED_WINDOW));
-            // temporary part
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO3), CB_ADDSTRING, 0, (LPARAM)"Polski");
-            //SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_ADDSTRING, 0, (LPARAM)"1250");
+            SendMessage(GetDlgItem(hwnd, IDC_COMBO3), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_BUILTIN_LANGUAGE));
+            // begin temporary part
             SendMessage(GetDlgItem(hwnd, IDC_COMBO3), CB_SETCURSEL, 0, 0);
-            //SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_SETCURSEL, 0, 0);
-            // end of temporary part
+            // end temporary part
             counter=0;
             counter2=0;
             selectedIndex=0;
