@@ -1,8 +1,8 @@
 #include "resources.h"
 
 VS_VERSION VERSIONINFO
-FILEVERSION 0, 7, 2, 0
-PRODUCTVERSION 0, 7, 2, 0
+FILEVERSION 0, 7, 3, 0
+PRODUCTVERSION 0, 7, 3, 0
 FILETYPE 0x1L
 BEGIN
     BLOCK "StringFileInfo"
@@ -10,14 +10,14 @@ BEGIN
         BLOCK "041504e2"
         BEGIN
             VALUE "CompanyName", "Magnetic-Fox\0"
-            VALUE "FileVersion", "0.72\0"
+            VALUE "FileVersion", "0.73\0"
             VALUE "FileDescription", "Simple Noter\0"
-            VALUE "InternalName", "SNotr072.exe\0"
+            VALUE "InternalName", "SNotr073.exe\0"
             VALUE "LegalCopyright", "©2021-2024 Magnetic-Fox\0"
             VALUE "LegalTrademarks", "Noter™\0"
             VALUE "OriginalFilename", "SimpleNoter.exe\0"
-            VALUE "ProductName", "Simple Noter v0.72\0"
-            VALUE "ProductVersion", "0.72\0"
+            VALUE "ProductName", "Simple Noter v0.73\0"
+            VALUE "ProductVersion", "0.73\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -150,13 +150,13 @@ BEGIN
                     IDC_STATIC,28,143,175,8
 END
 
-IDD_DIALOG3 DIALOG DISCARDABLE  0, 0, 215, 258
+IDD_DIALOG3 DIALOG DISCARDABLE  0, 0, 416, 153
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Preferencje"
 FONT 10, "System"
 BEGIN
-    DEFPUSHBUTTON   "&OK",IDOK,108,237,50,14
-    PUSHBUTTON      "&Anuluj",IDCANCEL,158,237,50,14
+    DEFPUSHBUTTON   "&OK",IDOK,309,132,50,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,359,132,50,14
     GROUPBOX        "G³ówne okno",IDC_STATIC,7,7,201,40
     RADIOBUTTON     "Wyœwietl zgodnie z ustawieniami systemowymi",IDC_RADIO1,
                     11,17,189,10,WS_TABSTOP
@@ -170,32 +170,35 @@ BEGIN
     COMBOBOX        IDC_COMBO2,78,67,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     GROUPBOX        "Ustawienia regionalne",IDC_STATIC,7,87,201,42
-    LTEXT           "Jêzyk:",IDC_STATIC,11,99,22,8
+    LTEXT           "Jêzyk:",IDC_STATIC,11,99,64,8
     COMBOBOX        IDC_COMBO3,78,97,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    LTEXT           "Strona kodowa:",IDC_STATIC,11,112,51,8
+    LTEXT           "Strona kodowa:",IDC_STATIC,11,112,64,8
     COMBOBOX        IDC_COMBO4,78,110,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
+    GROUPBOX        "Opcje startowe i pozosta³e",IDC_STATIC,208,7,201,122
     CONTROL         "Pobierz listê notatek przy starcie programu",
                     IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
-                    11,133,189,10
+                    212,17,189,10
     CONTROL         "Odœwie¿ listê notatek po dodaniu lub aktualizacji",
                     IDC_CHECK9,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
-                    11,144,189,10
+                    212,28,189,10
     CONTROL         "Zapamiêtaj pozycjê i rozmiary okienek",IDC_CHECK10,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,155,189,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,212,39,189,10
     CONTROL         "U¿yj kontrolek 3D",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,11,166,189,10
+                    WS_TABSTOP,212,50,189,10
     CONTROL         "Przyciski",IDC_CHECK4,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,19,177,181,10
+                    WS_TABSTOP,220,61,181,10
     CONTROL         "Listy",IDC_CHECK5,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
-                    19,188,181,10
+                    220,72,181,10
     CONTROL         "Pola edycji",IDC_CHECK6,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,19,199,181,10
+                    WS_TABSTOP,220,83,181,10
     CONTROL         "Listy rozsuwane",IDC_CHECK7,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,19,210,181,10
+                    WS_TABSTOP,220,94,181,10
     CONTROL         "Dialogi",IDC_CHECK8,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,19,221,181,10
+                    WS_TABSTOP,220,105,181,10
+    CONTROL         "Build info:",IDC_STATIC8,"Static",SS_LEFTNOWORDWRAP | 
+                    WS_DISABLED | WS_GROUP,7,138,290,8
 END
 
 IDD_DIALOG4 DIALOG DISCARDABLE  0, 0, 200, 170
@@ -299,8 +302,9 @@ END
 STRINGTABLE DISCARDABLE
 BEGIN
     IDS_HELPFILE                        "SNOTER07.HLP"
-    IDS_APPNAME                         "Simple Noter v0.72"
-    IDS_USER_AGENT                      "SimpleNoter/0.72"
+    IDS_APPNAME                         "Simple Noter v0.73"
+    IDS_USER_AGENT                      "SimpleNoter/0.73"
+    IDS_STRING_BUILTIN_LANGUAGE         "Polski (wbudowany)"
     IDS_STRING_NEW_NOTE                 "~ Nowa notatka ~ - "
     IDS_STRING_WRONG_RESPONSE           "Nie uda³o siê po³¹czyæ z serwerem."
     IDS_STRING_SERVICE_DISABLED         "Us³uga tymczasowo niedostêpna."
@@ -393,4 +397,5 @@ BEGIN
     IDS_STRING_MSG_PASSWORD_CHANGED     "Has³o zosta³o zmienione."
     IDS_STRING_MSG_CODEPAGE_ERROR       "Odnalezienie definicji strony kodowej by³o nie mo¿liwe. Program zostanie zamkniêty."
     IDS_STRING_MSG_CODEPAGE_ERROR_2     "Prze³adowanie definicji strony kodowej nie powiod³o siê. Zakoñcz program jak najszybciej!"
+    IDS_STRING_BUILD_INFO               "Build info: "
 END
