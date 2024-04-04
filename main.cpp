@@ -660,7 +660,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     }
                     break;
                 case ID_HELP_HELP:
-                    WinHelp(g_hwnd,HELPFILE,HELP_CONTENTS,0);
+                    WinHelp(g_hwnd,getStringFromTable(IDS_HELPFILE),HELP_CONTENTS,0);
                     break;
                 case ID_HELP_HOWTO:
                     WinHelp(g_hwnd,"",HELP_HELPONHELP,0);
@@ -1125,7 +1125,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         winMem[hwnd]->lastResult=0;
                         SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
-                    WinHelp(g_hwnd,HELPFILE,HELP_CONTENTS,0);
+                    WinHelp(g_hwnd,getStringFromTable(IDS_HELPFILE),HELP_CONTENTS,0);
                     break;
                 case ID_HELP_HOWTO:
                     if(winMem[hwnd]->lastResult!=0) {
