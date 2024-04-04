@@ -1,6 +1,7 @@
 #include "additional.hpp"
 
 static HINSTANCE g_hInstance=NULL;
+static char temporaryBuffer[MAX_BUFFER_COUNT][MAX_TEMP_SIZE];
 
 std::string winVersionString(void) {
     std::string temp="Windows ";
@@ -63,34 +64,16 @@ std::string getLangName(void) {
     return (std::string)langInfo;
 }
 
-std::string getString(HINSTANCE hInstance, UINT stringID) {
-    // temporary placeholder
-    if(hInstance==NULL) {
-        hInstance=g_hInstance;
-    }
-    char tempString[MAX_TEMP_SIZE];
-    if(LoadString(hInstance,stringID,tempString,MAX_TEMP_SIZE)) {
-        return (std::string)tempString;
-    }
-    else {
-        return "";
-    }
+void storeStringTableInstance(HINSTANCE hInstance) {
+    g_hInstance=hInstance;
+    return;
 }
 
-char* getStringChar(HINSTANCE hInstance, UINT stringID, char* buffer, unsigned int bufferSize) {
-    // temporary placeholder
-    if(hInstance==NULL) {
-        hInstance=g_hInstance;
-    }
-    if(LoadString(hInstance,stringID,buffer,bufferSize)) {
-        return buffer;
+char* getStringFromTable(UINT stringID, unsigned short int whichBuffer) {
+    if(LoadString(g_hInstance,stringID,temporaryBuffer[whichBuffer],MAX_TEMP_SIZE)) {
+        return temporaryBuffer[whichBuffer];
     }
     else {
         return NULL;
     }
-}
-
-void storeProgramInstance(HINSTANCE hInstance) {
-    g_hInstance=hInstance;
-    return;
 }
