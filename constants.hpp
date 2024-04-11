@@ -30,4 +30,7 @@
 #define MATCH_VERSION                   "1.0"
 #define INI_FILE                        "config.ini"
 
+#define NOTER_MAINWINDOW                "SimpleNoterMain"
+#define NOTER_EDITWINDOW                "SimpleNoterEdit"
+
 #endif
