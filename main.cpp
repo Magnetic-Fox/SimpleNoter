@@ -305,6 +305,8 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
 //
 //////////////////////////////////////
 
+MSG message;
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     g_hInstance=hInstance;
     storeStringTableInstance(hInstance);
@@ -320,7 +322,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     HWND temp;
 
     HACCEL hAccel;
-    MSG msg;
+    
     
     GetModuleFileName(hInstance,buffer,32767);
 
@@ -509,18 +511,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     firstOptions=false;
 
-    while(GetMessage(&msg, NULL, 0, 0 )) {
-        temp=GetParent(msg.hwnd);
+    while(GetMessage(&message, NULL, 0, 0 )) {
+        temp=GetParent(message.hwnd);
         if(temp==NULL) {
-            temp=msg.hwnd;
+            temp=message.hwnd;
         }
-        if(!TranslateAccelerator(temp, hAccel, &msg)) {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+        if(!TranslateAccelerator(temp, hAccel, &message)) {
+            TranslateMessage(&message);
+            DispatchMessage(&message);
         }
     }
 
-    return msg.wParam;
+    return message.wParam;
 }
 
 //////////////////////////////////////
@@ -606,7 +608,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 case ID_ACC_F5:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_ACC_F5);
                     break;
-                case ID_ACC_F8:
+                case ID_ACC_DEL:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON5, 0);
                     break;
                 case ID_ACC_ALTF4:
@@ -1010,6 +1012,12 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             break;
         case WM_COMMAND:
             switch(wParam) {
+                case ID_ACC_DEL:
+                    // yeah... some ugly cheat, doesn't it...?
+                    // this cheat makes delete key usable in the edit boxes after declaring it as an accelerator in the resources
+                    TranslateMessage(&message);
+                    DispatchMessage(&message);
+                    break;
                 case ID_ACC_ENTER:
                     SendMessage(GetFocus(), WM_CHAR, VK_RETURN, 0);
                     break;

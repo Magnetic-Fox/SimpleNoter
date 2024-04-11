@@ -1,8 +1,8 @@
 #include "resources.h"
 
 VS_VERSION VERSIONINFO
-FILEVERSION 0, 7, 3, 0
-PRODUCTVERSION 0, 7, 3, 0
+FILEVERSION 0, 7, 4, 0
+PRODUCTVERSION 0, 7, 4, 0
 FILETYPE 0x1L
 BEGIN
     BLOCK "StringFileInfo"
@@ -10,14 +10,14 @@ BEGIN
         BLOCK "041504e2"
         BEGIN
             VALUE "CompanyName", "Magnetic-Fox\0"
-            VALUE "FileVersion", "0.73\0"
+            VALUE "FileVersion", "0.74\0"
             VALUE "FileDescription", "Simple Noter\0"
-            VALUE "InternalName", "SNotr073.exe\0"
+            VALUE "InternalName", "SNotr074.exe\0"
             VALUE "LegalCopyright", "©2021-2024 Magnetic-Fox\0"
             VALUE "LegalTrademarks", "Noter™\0"
             VALUE "OriginalFilename", "SimpleNoter.exe\0"
-            VALUE "ProductName", "Simple Noter v0.73\0"
-            VALUE "ProductVersion", "0.73\0"
+            VALUE "ProductName", "Simple Noter v0.74\0"
+            VALUE "ProductVersion", "0.74\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -37,7 +37,7 @@ BEGIN
     "N",            ID_ACC_CTRLN,           VIRTKEY, CONTROL, NOINVERT
     VK_RETURN,      ID_ACC_ENTER,           VIRTKEY, NOINVERT
     VK_F5,          ID_ACC_F5,              VIRTKEY, NOINVERT
-    VK_F8,          ID_ACC_F8,              VIRTKEY, NOINVERT
+    VK_DELETE,      ID_ACC_DEL,             VIRTKEY, NOINVERT
     "A",            ID_ACC_CTRLA,           VIRTKEY, CONTROL, NOINVERT
     "S",            ID_ACC_CTRLS,           VIRTKEY, CONTROL, NOINVERT
     "D",            ID_ACC_CTRLD,           VIRTKEY, CONTROL, NOINVERT
@@ -51,7 +51,7 @@ BEGIN
         MENUITEM "&Otwórz\tEnter",              ID_FILE_OPEN
         MENUITEM SEPARATOR
         MENUITEM "Pobierz listê\tF5",           ID_FILE_RELOAD
-        MENUITEM "Usuñ\tF8",                    ID_FILE_DELETE
+        MENUITEM "Usuñ\tDel",                   ID_FILE_DELETE
         MENUITEM SEPARATOR
         MENUITEM "Za&koñcz\tAlt+F4",            ID_FILE_EXIT
     END
@@ -302,8 +302,8 @@ END
 STRINGTABLE DISCARDABLE
 BEGIN
     IDS_HELPFILE                        "SNOTER07.HLP"
-    IDS_APPNAME                         "Simple Noter v0.73"
-    IDS_USER_AGENT                      "SimpleNoter/0.73"
+    IDS_APPNAME                         "Simple Noter v0.74"
+    IDS_USER_AGENT                      "SimpleNoter/0.74"
     IDS_STRING_BUILTIN_LANGUAGE         "Polski (wbudowany)"
     IDS_STRING_NEW_NOTE                 "~ Nowa notatka ~ - "
     IDS_STRING_WRONG_RESPONSE           "Nie uda³o siê po³¹czyæ z serwerem."

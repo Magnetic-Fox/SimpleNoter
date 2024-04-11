@@ -12,7 +12,7 @@
 #define ID_ACC_F1                           203
 #define ID_ACC_CTRLN                        204
 #define ID_ACC_ENTER                        205
-#define ID_ACC_F8                           206
+#define ID_ACC_DEL                          206
 #define ID_ACC_F5                           207
 #define ID_ACC_CTRLA                        208
 #define ID_ACC_CTRLS                        209
