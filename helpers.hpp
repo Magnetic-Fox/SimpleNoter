@@ -22,6 +22,8 @@ void inline unlockOpenButton(HWND);
 void inline lockDeleteButton(HWND);
 void inline unlockDeleteButton(HWND);
 void inline main_LockAllButtons(HWND);
+void inline edit_LockAllButtons(HWND, HWND);
+void inline properties_LockAllButtons(HWND, HWND);
 void inline connection_LockAllButtons(HWND);
 void inline credentials_LockAllButtons(HWND);
 void inline userEdit_LockAllButtons(HWND);
@@ -75,6 +77,20 @@ void inline main_LockAllButtons(HWND hwnd) {
         lockOpenButton(hwnd);
         lockDeleteButton(hwnd);
     }
+    return;
+}
+
+void inline edit_LockAllButtons(HWND g_hwnd, HWND hwnd) {
+    main_LockAllButtons(g_hwnd);
+    EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
+    EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),false);
+    return;
+}
+
+void inline properties_LockAllButtons(HWND g_hwnd, HWND hwnd) {
+    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),false);
+    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),false);
+    edit_LockAllButtons(g_hwnd, GetParent(hwnd));
     return;
 }
 

@@ -53,9 +53,7 @@ MSG *g_Msg;
 //////////////////////////////////////
 
 void inline main_UnlockAllButtons(HWND);
-void inline edit_LockAllButtons(HWND);
 void inline edit_UnlockAllButtons(HWND);
-void inline properties_LockAllButtons(HWND);
 void inline properties_UnlockAllButtons(HWND);
 void inline connection_UnlockAllButtons(HWND);
 void inline credentials_UnlockAllButtons(HWND);
@@ -90,25 +88,11 @@ void inline main_UnlockAllButtons(HWND hwnd) {
     return;
 }
 
-void inline edit_LockAllButtons(HWND hwnd) {
-    main_LockAllButtons(g_hwnd);
-    EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
-    EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),false);
-    return;
-}
-
 void inline edit_UnlockAllButtons(HWND hwnd) {
     main_UnlockAllButtons(g_hwnd);
     if(winMem[hwnd]->note->id!=0) {
         EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),true);
     }
-    return;
-}
-
-void inline properties_LockAllButtons(HWND hwnd) {
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),false);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),false);
-    edit_LockAllButtons(GetParent(hwnd));
     return;
 }
 
@@ -1177,7 +1161,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     GetWindowText(GetDlgItem(hwnd,ID_EDIT_EDITBOX2),buffer,65535);
                     winMem[hwnd]->note->entry=fromCodePage(rawCodePage,buffer);
                     if(winMem[hwnd]->note->id==0) {
-                        edit_LockAllButtons(hwnd);
+                        edit_LockAllButtons(g_hwnd,hwnd);
                         winMem[hwnd]->lastResult=noter_addNote(connectionSettings,credentials,*winMem[hwnd]->note,buffer);
                         edit_UnlockAllButtons(hwnd);
                         SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
@@ -1197,7 +1181,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         }
                     }
                     else {
-                        edit_LockAllButtons(hwnd);
+                        edit_LockAllButtons(g_hwnd,hwnd);
                         winMem[hwnd]->lastResult=noter_updateNote(connectionSettings,credentials,*winMem[hwnd]->note,buffer);
                         edit_UnlockAllButtons(hwnd);
                         SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
@@ -1322,7 +1306,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch(msg) {
         case WM_INITDIALOG:
             addUpTest=IsWindowEnabled(GetDlgItem(GetParent(hwnd),ID_EDIT_BUTTON1));
-            properties_LockAllButtons(hwnd);
+            properties_LockAllButtons(g_hwnd,hwnd);
             result=noter_getNote(connectionSettings,credentials,winMem[GetParent(hwnd)]->note->id,buffer,tempNote);
             properties_UnlockAllButtons(hwnd);
             EnableWindow(GetDlgItem(GetParent(hwnd),ID_EDIT_BUTTON1),addUpTest);
