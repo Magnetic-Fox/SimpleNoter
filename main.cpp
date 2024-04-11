@@ -52,19 +52,14 @@ MSG *g_Msg;
 //
 //////////////////////////////////////
 
-void inline main_LockAllButtons(HWND);
 void inline main_UnlockAllButtons(HWND);
 void inline edit_LockAllButtons(HWND);
 void inline edit_UnlockAllButtons(HWND);
 void inline properties_LockAllButtons(HWND);
 void inline properties_UnlockAllButtons(HWND);
-void inline connection_LockAllButtons(HWND);
 void inline connection_UnlockAllButtons(HWND);
-void inline credentials_LockAllButtons(HWND);
 void inline credentials_UnlockAllButtons(HWND);
-void inline userEdit_LockAllButtons(HWND);
 void inline userEdit_UnlockAllButtons(HWND);
-void inline processMessages(void);
 HWND createEditWindow(HWND, WINDOWMEMORY&, NOTE*);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
@@ -82,16 +77,6 @@ BOOL CALLBACK DlgProc8(HWND, UINT, WPARAM, LPARAM);
 //  ADDITIONAL PROCEDURES
 //
 //////////////////////////////////////
-
-void inline main_LockAllButtons(HWND hwnd) {
-    lockExitButton(hwnd);
-    lockRefreshButton(hwnd);
-    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0) {
-        lockOpenButton(hwnd);
-        lockDeleteButton(hwnd);
-    }
-    return;
-}
 
 void inline main_UnlockAllButtons(HWND hwnd) {
     unlockExitButton(hwnd);
@@ -132,32 +117,12 @@ void inline properties_UnlockAllButtons(HWND hwnd) {
     return;
 }
 
-void inline connection_LockAllButtons(HWND hwnd) {
-    main_LockAllButtons(GetParent(hwnd));
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),false);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),false);
-    EnableWindow(GetDlgItem(hwnd,IDOK),false);
-    EnableWindow(GetDlgItem(hwnd,IDCANCEL),false);
-    return;
-}
-
 void inline connection_UnlockAllButtons(HWND hwnd) {
     main_UnlockAllButtons(GetParent(hwnd));
     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),true);
     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),true);
     EnableWindow(GetDlgItem(hwnd,IDOK),true);
     EnableWindow(GetDlgItem(hwnd,IDCANCEL),true);
-    return;
-}
-
-void inline credentials_LockAllButtons(HWND hwnd) {
-    main_LockAllButtons(GetParent(hwnd));
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON5),false);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),false);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
-    EnableWindow(GetDlgItem(hwnd,IDOK),false);
-    EnableWindow(GetDlgItem(hwnd,IDCANCEL),false);
     return;
 }
 
@@ -172,23 +137,10 @@ void inline credentials_UnlockAllButtons(HWND hwnd) {
     return;
 }
 
-void inline userEdit_LockAllButtons(HWND hwnd) {
-    main_LockAllButtons(GetParent(GetParent(hwnd)));
-    EnableWindow(GetDlgItem(hwnd,IDOK),false);
-    EnableWindow(GetDlgItem(hwnd,IDCANCEL),false);
-    return;
-}
-
 void inline userEdit_UnlockAllButtons(HWND hwnd) {
     main_UnlockAllButtons(GetParent(GetParent(hwnd)));
     EnableWindow(GetDlgItem(hwnd,IDOK),true);
     EnableWindow(GetDlgItem(hwnd,IDCANCEL),true);
-    return;
-}
-
-void inline processMessages(void) {
-    TranslateMessage(g_Msg);
-    DispatchMessage(g_Msg);
     return;
 }
 
@@ -1032,7 +984,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 case ID_ACC_DEL:
                     // yeah... some ugly cheats, right...?
                     // this cheats makes delete and return keys usable in the edit boxes after declaring them as an accelerators in the resources
-                    processMessages();
+                    processMessages(g_Msg);
                     break;
                 //case ID_ACC_ENTER:
                     //SendMessage(GetFocus(), WM_CHAR, VK_RETURN, 0);
@@ -1040,7 +992,7 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 case ID_ACC_TAB:
                     if(GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)) {
                         //SendMessage(GetFocus(), WM_CHAR, VK_TAB, 0);
-                        processMessages();
+                        processMessages(g_Msg);
                     }
                     else {
                         SetFocus(GetNextDlgTabItem(hwnd,GetFocus(),false));
