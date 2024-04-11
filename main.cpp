@@ -5,8 +5,9 @@
 
 #include "resources.h"
 
-// Uncomment for debug purposes (showing integers)
-// #include "debug.hpp"
+#ifdef NOTER_DEBUG
+    #include "debug.hpp"
+#endif
 
 #include "helpers.hpp"
 #include "libutil.hpp"
@@ -26,8 +27,6 @@
 //
 //////////////////////////////////////
 
-LPSTR editWindowClass = "SimpleNoterEdit";
-
 HBRUSH g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
 WINDOWMEMORY winMem;
 HWND g_hwnd;
@@ -45,6 +44,7 @@ bool check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptio
 HINSTANCE g_hInstance=NULL, hCodePageLib=NULL;
 HGLOBAL hCodePageDefinition=NULL;
 LIBRARIES libraries;
+MSG *g_Msg;
 
 //////////////////////////////////////
 //
@@ -188,7 +188,7 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
 
     makeEditWindowTitle(editWin,note,false,mappedCodePage);
     
-    editWin->hwnd =CreateWindow(editWindowClass, editWin->windowTitle.c_str(), WS_OVERLAPPEDWINDOW,
+    editWin->hwnd =CreateWindow(NOTER_EDITWINDOW, editWin->windowTitle.c_str(), WS_OVERLAPPEDWINDOW,
                                 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, g_hInstance, NULL);
 
     if(editWin->hwnd==NULL) {
@@ -305,12 +305,9 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
 //
 //////////////////////////////////////
 
-MSG message;
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     g_hInstance=hInstance;
     storeStringTableInstance(hInstance);
-    LPSTR mainWindowClass = "SimpleNoterMain";
 
     WNDCLASS wc = { 0 };
     WNDCLASS wc2= { 0 };
@@ -322,7 +319,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     HWND temp;
 
     HACCEL hAccel;
-    
+    MSG msg;
+
+    // make global "reference" to the message variable
+    g_Msg=&msg;
     
     GetModuleFileName(hInstance,buffer,32767);
 
@@ -352,7 +352,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc.hbrBackground = g_hBrush;
     wc.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
-    wc.lpszClassName = mainWindowClass;
+    wc.lpszClassName = NOTER_MAINWINDOW;
 
     wc2.style = 0;
     wc2.lpfnWndProc = WndProc2;
@@ -363,7 +363,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc2.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc2.hbrBackground = g_hBrush;
     wc2.lpszMenuName = MAKEINTRESOURCE(IDR_MENU2);
-    wc2.lpszClassName = editWindowClass;
+    wc2.lpszClassName = NOTER_EDITWINDOW;
 
     if(!RegisterClass(&wc)) {
         MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_WNDCLASS_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
@@ -375,7 +375,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         return 1;
     }
 
-    hwnd = CreateWindow(mainWindowClass, getStringFromTable(IDS_APPNAME), WS_OVERLAPPEDWINDOW,
+    hwnd = CreateWindow(NOTER_MAINWINDOW, getStringFromTable(IDS_APPNAME), WS_OVERLAPPEDWINDOW,
                         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
                         NULL, NULL, hInstance, NULL);
 
@@ -511,18 +511,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     firstOptions=false;
 
-    while(GetMessage(&message, NULL, 0, 0 )) {
-        temp=GetParent(message.hwnd);
+    while(GetMessage(&msg, NULL, 0, 0 )) {
+        temp=GetParent(msg.hwnd);
         if(temp==NULL) {
-            temp=message.hwnd;
+            temp=msg.hwnd;
         }
-        if(!TranslateAccelerator(temp, hAccel, &message)) {
-            TranslateMessage(&message);
-            DispatchMessage(&message);
+        if(!TranslateAccelerator(temp, hAccel, &msg)) {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
         }
     }
 
-    return message.wParam;
+    return msg.wParam;
 }
 
 //////////////////////////////////////
@@ -1015,8 +1015,8 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 case ID_ACC_DEL:
                     // yeah... some ugly cheat, doesn't it...?
                     // this cheat makes delete key usable in the edit boxes after declaring it as an accelerator in the resources
-                    TranslateMessage(&message);
-                    DispatchMessage(&message);
+                    TranslateMessage(g_Msg);
+                    DispatchMessage(g_Msg);
                     break;
                 case ID_ACC_ENTER:
                     SendMessage(GetFocus(), WM_CHAR, VK_RETURN, 0);
