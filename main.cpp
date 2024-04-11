@@ -16,10 +16,10 @@
 #include "codepages.hpp"
 #include "constants.hpp"
 #include "responses.hpp"
+#include "additional.hpp"
 #include "conversion.hpp"
 #include "definitions.hpp"
 #include "inihandling.hpp"
-#include "additional.hpp"
 
 //////////////////////////////////////
 //
@@ -52,10 +52,20 @@ MSG *g_Msg;
 //
 //////////////////////////////////////
 
+void inline main_LockAllButtons(HWND);
+void inline main_UnlockAllButtons(HWND);
 void inline edit_LockAllButtons(HWND);
 void inline edit_UnlockAllButtons(HWND);
 void inline properties_LockAllButtons(HWND);
 void inline properties_UnlockAllButtons(HWND);
+void inline connection_LockAllButtons(HWND);
+void inline connection_UnlockAllButtons(HWND);
+void inline credentials_LockAllButtons(HWND);
+void inline credentials_UnlockAllButtons(HWND);
+void inline userEdit_LockAllButtons(HWND);
+void inline userEdit_UnlockAllButtons(HWND);
+void inline processMessages(void);
+HWND createEditWindow(HWND, WINDOWMEMORY&, NOTE*);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc(HWND, UINT, WPARAM, LPARAM);
@@ -173,6 +183,12 @@ void inline userEdit_UnlockAllButtons(HWND hwnd) {
     main_UnlockAllButtons(GetParent(GetParent(hwnd)));
     EnableWindow(GetDlgItem(hwnd,IDOK),true);
     EnableWindow(GetDlgItem(hwnd,IDCANCEL),true);
+    return;
+}
+
+void inline processMessages(void) {
+    TranslateMessage(g_Msg);
+    DispatchMessage(g_Msg);
     return;
 }
 
@@ -1012,18 +1028,19 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             break;
         case WM_COMMAND:
             switch(wParam) {
-                case ID_ACC_DEL:
-                    // yeah... some ugly cheat, doesn't it...?
-                    // this cheat makes delete key usable in the edit boxes after declaring it as an accelerator in the resources
-                    TranslateMessage(g_Msg);
-                    DispatchMessage(g_Msg);
-                    break;
                 case ID_ACC_ENTER:
-                    SendMessage(GetFocus(), WM_CHAR, VK_RETURN, 0);
+                case ID_ACC_DEL:
+                    // yeah... some ugly cheats, right...?
+                    // this cheats makes delete and return keys usable in the edit boxes after declaring them as an accelerators in the resources
+                    processMessages();
                     break;
+                //case ID_ACC_ENTER:
+                    //SendMessage(GetFocus(), WM_CHAR, VK_RETURN, 0);
+                    //break;
                 case ID_ACC_TAB:
                     if(GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)) {
-                        SendMessage(GetFocus(), WM_CHAR, VK_TAB, 0);
+                        //SendMessage(GetFocus(), WM_CHAR, VK_TAB, 0);
+                        processMessages();
                     }
                     else {
                         SetFocus(GetNextDlgTabItem(hwnd,GetFocus(),false));
