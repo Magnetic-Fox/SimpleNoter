@@ -277,9 +277,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     g_Msg=&msg;
     
     GetModuleFileName(hInstance,buffer,32767);
-
     listAvailableLibs(buffer,libraries);
-    
     std::string iniFile=getDefaultIniFile(buffer);
     connectionSettings=getConnectionSettings((char*)iniFile.c_str());
     credentials=getCredentials((char*)iniFile.c_str());
@@ -845,11 +843,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             }
             DeleteObject(g_hBrush);
             WinHelp(g_hwnd,"",HELP_QUIT,0);
-            /*
-            UnlockResource(hCodePageDefinition);
-            FreeResource(hCodePageDefinition);
-            FreeLibrary(hCodePageLib);
-            */
             unloadCodePage(hCodePageLib,hCodePageDefinition);
             PostQuitMessage(0);
             break;
