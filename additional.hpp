@@ -10,8 +10,6 @@
 
 #include "resources.h"
 
-#include "debug.hpp"
-
 // hope more temporary space is not needed...
 #define MAX_TEMP_SIZE       256
 #define MAX_BUFFER_COUNT    2
