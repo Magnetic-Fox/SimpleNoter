@@ -60,7 +60,7 @@ void freeGlobalResources(void);
 LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK EditWndProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK NotePropDlgProc(HWND, UINT, WPARAM, LPARAM);
-BOOL CALLBACK DlgProc2(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc3(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc4(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc5(HWND, UINT, WPARAM, LPARAM);
@@ -576,7 +576,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     WinHelp(g_hwnd,"",HELP_HELPONHELP,0);
                     break;
                 case ID_HELP_ABOUT:
-                    MakeDialogBox(hwnd,IDD_DIALOG2,DlgProc2);
+                    MakeDialogBox(hwnd,IDD_DIALOG2,AboutDlgProc);
                     break;
                 case ID_BUTTON1:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON1))) {
@@ -1041,7 +1041,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         winMem[hwnd]->lastResult=0;
                         SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
-                    MakeDialogBox(hwnd,IDD_DIALOG2,DlgProc2);
+                    MakeDialogBox(hwnd,IDD_DIALOG2,AboutDlgProc);
                     break;
                 case ID_EDIT_EDITBOX1:
                     switch(HIWORD(lParam)) {
@@ -1314,7 +1314,7 @@ BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 //
 //////////////////////////////////////
 
-BOOL CALLBACK DlgProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+BOOL CALLBACK AboutDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     NOTE tempNote;
     switch(msg) {
         case WM_INITDIALOG:
