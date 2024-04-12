@@ -57,8 +57,8 @@ HWND createEditWindow(HWND, WINDOWMEMORY&, NOTE*);
 ATOM registerMainWindowClass(WNDCLASS*);
 ATOM registerEditWindowClass(WNDCLASS*);
 void freeGlobalResources(void);
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK EditWndProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc2(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc3(HWND, UINT, WPARAM, LPARAM);
@@ -192,7 +192,7 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
 
 ATOM registerMainWindowClass(WNDCLASS *wc) {
     wc->style = 0;
-    wc->lpfnWndProc = WndProc;
+    wc->lpfnWndProc = MainWndProc;
     wc->cbClsExtra = 0;
     wc->cbWndExtra = 0;
     wc->hInstance = g_hInstance;
@@ -206,7 +206,7 @@ ATOM registerMainWindowClass(WNDCLASS *wc) {
 
 ATOM registerEditWindowClass(WNDCLASS *wc) {
     wc->style = 0;
-    wc->lpfnWndProc = WndProc2;
+    wc->lpfnWndProc = EditWndProc;
     wc->cbClsExtra = 0;
     wc->cbWndExtra = 0;
     wc->hInstance = g_hInstance;
@@ -439,7 +439,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 //
 //////////////////////////////////////
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     std::string tempString="";
     long int index;
     long int result;
@@ -812,7 +812,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 //
 //////////////////////////////////////
 
-LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     unsigned long int width;
     unsigned long int height;
     unsigned long int sel;
