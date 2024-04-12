@@ -113,9 +113,15 @@ bool loadCodePage(char *libName, HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefi
 }
 
 void unloadCodePage(HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefinition) {
-    UnlockResource(hCodePageDefinition);
-    FreeResource(hCodePageDefinition);
-    FreeLibrary(hCodePageLib);
+    if(hCodePageDefinition!=NULL) {
+        UnlockResource(hCodePageDefinition);
+    }
+    if(hCodePageDefinition!=NULL) {
+        FreeResource(hCodePageDefinition);
+    }
+    if(hCodePageLib!=NULL) {
+        FreeLibrary(hCodePageLib);
+    }
     return;
 }
 
