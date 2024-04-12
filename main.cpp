@@ -52,12 +52,6 @@ MSG *g_Msg;
 //
 //////////////////////////////////////
 
-void inline main_UnlockAllButtons(HWND);
-void inline edit_UnlockAllButtons(HWND);
-void inline properties_UnlockAllButtons(HWND);
-void inline connection_UnlockAllButtons(HWND);
-void inline credentials_UnlockAllButtons(HWND);
-void inline userEdit_UnlockAllButtons(HWND);
 HWND createEditWindow(HWND, WINDOWMEMORY&, NOTE*);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
@@ -69,64 +63,6 @@ BOOL CALLBACK DlgProc5(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc6(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc7(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc8(HWND, UINT, WPARAM, LPARAM);
-
-//////////////////////////////////////
-//
-//  ADDITIONAL PROCEDURES
-//
-//////////////////////////////////////
-
-void inline main_UnlockAllButtons(HWND hwnd) {
-    unlockExitButton(hwnd);
-    if(noter_connectionSettingsAvailable(connectionSettings) && noter_credentialsAvailable(credentials)) {
-        unlockRefreshButton(hwnd);
-        if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0) {
-            unlockOpenButton(hwnd);
-            unlockDeleteButton(hwnd);
-        }
-    }
-    return;
-}
-
-void inline edit_UnlockAllButtons(HWND hwnd) {
-    main_UnlockAllButtons(g_hwnd);
-    if(winMem[hwnd]->note->id!=0) {
-        EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),true);
-    }
-    return;
-}
-
-void inline properties_UnlockAllButtons(HWND hwnd) {
-    edit_UnlockAllButtons(GetParent(hwnd));
-    return;
-}
-
-void inline connection_UnlockAllButtons(HWND hwnd) {
-    main_UnlockAllButtons(GetParent(hwnd));
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),true);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),true);
-    EnableWindow(GetDlgItem(hwnd,IDOK),true);
-    EnableWindow(GetDlgItem(hwnd,IDCANCEL),true);
-    return;
-}
-
-void inline credentials_UnlockAllButtons(HWND hwnd) {
-    main_UnlockAllButtons(GetParent(hwnd));
-    if(noter_connectionSettingsAvailable(connectionSettings)) {
-        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON5),true);
-    }
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),true);
-    EnableWindow(GetDlgItem(hwnd,IDOK),true);
-    EnableWindow(GetDlgItem(hwnd,IDCANCEL),true);
-    return;
-}
-
-void inline userEdit_UnlockAllButtons(HWND hwnd) {
-    main_UnlockAllButtons(GetParent(GetParent(hwnd)));
-    EnableWindow(GetDlgItem(hwnd,IDOK),true);
-    EnableWindow(GetDlgItem(hwnd,IDCANCEL),true);
-    return;
-}
 
 //////////////////////////////////////
 //
@@ -259,7 +195,12 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     g_hInstance=hInstance;
+
     storeStringTableInstance(hInstance);
+    storeConnectionSettingsReference(&connectionSettings);
+    storeCredentialsReference(&credentials);
+    storeGlobalHWNDReference(&g_hwnd);
+    storeWindowMemoryReference(&winMem);
 
     WNDCLASS wc = { 0 };
     WNDCLASS wc2= { 0 };
