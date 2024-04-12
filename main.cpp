@@ -62,7 +62,7 @@ LRESULT CALLBACK EditWndProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK NotePropDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK PreferencesDlgProc(HWND, UINT, WPARAM, LPARAM);
-BOOL CALLBACK DlgProc4(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK ConnSettDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc5(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc6(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc7(HWND, UINT, WPARAM, LPARAM);
@@ -548,7 +548,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     break;
                 case ID_OPTIONS_CONNECTION:
-                    if((MakeDialogBox(hwnd,IDD_DIALOG4,DlgProc4)==IDOK) && (editsChanged)) {
+                    if((MakeDialogBox(hwnd,IDD_DIALOG4,ConnSettDlgProc)==IDOK) && (editsChanged)) {
                         if((!firstOptions) && (noter_credentialsAvailable(credentials)) && (MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WANT_RELOAD),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDYES)) {
                             SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
                         }
@@ -1584,7 +1584,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 //
 //////////////////////////////////////
 
-BOOL CALLBACK DlgProc4(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     NOTER_SERVER_INFO serverInfo;
     NOTER_CONNECTION_SETTINGS tempConnectionSettings;
     char* ipAddress=NULL;
