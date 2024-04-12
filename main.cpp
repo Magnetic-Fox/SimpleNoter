@@ -28,24 +28,29 @@
 //
 //////////////////////////////////////
 
+// Windows types
 HBRUSH g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
-WINDOWMEMORY winMem;
 HWND g_hwnd;
-char buffer[65536];
+HINSTANCE g_hInstance=NULL, hCodePageLib=NULL;
+HGLOBAL hCodePageDefinition=NULL;
+MSG *g_Msg;
+
+// Own types
+WINDOWMEMORY winMem;
 RAWCODEPAGE rawCodePage;
 CODEPAGE mappedCodePage;
 NOTER_CONNECTION_SETTINGS connectionSettings;
 NOTER_CREDENTIALS credentials, tempCredentials, *auxCredentials;
 MAINSETTINGS mainSettings;
 NOTE_SUMMARY *notes=NULL;
+LIBRARIES libraries;
+
+// Standard types
 long int noteCount=0;
 long int mainLastResult=0;
 unsigned int ctlRegs=0;
 bool check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged;
-HINSTANCE g_hInstance=NULL, hCodePageLib=NULL;
-HGLOBAL hCodePageDefinition=NULL;
-LIBRARIES libraries;
-MSG *g_Msg;
+char buffer[65536];
 
 //////////////////////////////////////
 //
@@ -53,12 +58,17 @@ MSG *g_Msg;
 //
 //////////////////////////////////////
 
+// Additional procedures
 HWND createEditWindow(HWND, WINDOWMEMORY&, NOTE*);
 ATOM registerMainWindowClass(WNDCLASS*);
 ATOM registerEditWindowClass(WNDCLASS*);
 void freeGlobalResources(void);
+
+// Main window procedures
 LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK EditWndProc(HWND, UINT, WPARAM, LPARAM);
+
+// Dialog procedures
 BOOL CALLBACK NotePropDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK PreferencesDlgProc(HWND, UINT, WPARAM, LPARAM);
@@ -189,6 +199,12 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
         return editWin->hwnd;
     }
 }
+
+//////////////////////////////////////
+//
+//  ADDITIONAL PROCEDURES
+//
+//////////////////////////////////////
 
 ATOM registerMainWindowClass(WNDCLASS *wc) {
     wc->style = 0;
