@@ -59,7 +59,7 @@ ATOM registerEditWindowClass(WNDCLASS*);
 void freeGlobalResources(void);
 LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK EditWndProc(HWND, UINT, WPARAM, LPARAM);
-BOOL CALLBACK DlgProc(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK NotePropDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc2(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc3(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc4(HWND, UINT, WPARAM, LPARAM);
@@ -1145,7 +1145,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         winMem[hwnd]->lastResult=0;
                         SetWindowText(GetDlgItem(hwnd,ID_EDIT_STATIC4),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
-                    MakeDialogBox(hwnd,IDD_DIALOG1,DlgProc);
+                    MakeDialogBox(hwnd,IDD_DIALOG1,NotePropDlgProc);
                     break;
                 case ID_EDIT_BUTTON3:
                     if((!IsWindowEnabled(GetDlgItem(g_hwnd,ID_BUTTON4))) || (!IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON3)))) {
@@ -1236,7 +1236,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 //
 //////////////////////////////////////
 
-BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     NOTE tempNote;
     long int result;
     bool addUpTest=false;
