@@ -66,7 +66,7 @@ BOOL CALLBACK ConnSettDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK CredsSettDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK UserRegDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK PassConfirmDlgProc(HWND, UINT, WPARAM, LPARAM);
-BOOL CALLBACK DlgProc8(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK PassChangeDlgProc(HWND, UINT, WPARAM, LPARAM);
 
 //////////////////////////////////////
 //
@@ -1922,7 +1922,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         auxCredentials=&tempCredentials;
                     }
                     if(noter_credentialsAvailable(*auxCredentials)) {
-                        if(MakeDialogBox(hwnd,IDD_DIALOG8,DlgProc8)==IDOK) {
+                        if(MakeDialogBox(hwnd,IDD_DIALOG8,PassChangeDlgProc)==IDOK) {
                             SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),(char*)tempCredentials.password.c_str());
                             useTestCredentials=true;
                             SendMessage(hwnd, WM_COMMAND, IDC_BUTTON6, IDC_BUTTON5);
@@ -2127,7 +2127,7 @@ BOOL CALLBACK PassConfirmDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 //
 //////////////////////////////////////
 
-BOOL CALLBACK DlgProc8(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+BOOL CALLBACK PassChangeDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     std::string tempOldPassword, tempNewPassword, tempSecNewPassword;
     long int result;
     switch(msg) {
