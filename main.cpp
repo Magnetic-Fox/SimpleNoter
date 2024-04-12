@@ -64,7 +64,7 @@ BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK PreferencesDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK ConnSettDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK CredsSettDlgProc(HWND, UINT, WPARAM, LPARAM);
-BOOL CALLBACK DlgProc6(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK UserRegDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc7(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc8(HWND, UINT, WPARAM, LPARAM);
 
@@ -1809,7 +1809,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         break;
                     }
                     auxCredentials=&tempCredentials;
-                    if(MakeDialogBox(hwnd,IDD_DIALOG6,DlgProc6)==IDOK) {
+                    if(MakeDialogBox(hwnd,IDD_DIALOG6,UserRegDlgProc)==IDOK) {
                         if(editsChanged2) {
                             SetWindowText(GetDlgItem(hwnd,IDC_EDIT4),(char*)tempCredentials.username.c_str());
                             SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),(char*)tempCredentials.password.c_str());
@@ -1969,7 +1969,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 //
 //////////////////////////////////////
 
-BOOL CALLBACK DlgProc6(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+BOOL CALLBACK UserRegDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     NOTER_CREDENTIALS tempCredentials;
     std::string tempUserName, tempPassword, tempSecPassword, tempString;
     long int result;
