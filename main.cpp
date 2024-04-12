@@ -54,6 +54,9 @@ MSG *g_Msg;
 //////////////////////////////////////
 
 HWND createEditWindow(HWND, WINDOWMEMORY&, NOTE*);
+ATOM registerMainWindowClass(WNDCLASS*);
+ATOM registerEditWindowClass(WNDCLASS*);
+void freeGlobalResources(void);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc(HWND, UINT, WPARAM, LPARAM);
@@ -187,6 +190,41 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
     }
 }
 
+ATOM registerMainWindowClass(WNDCLASS *wc) {
+    wc->style = 0;
+    wc->lpfnWndProc = WndProc;
+    wc->cbClsExtra = 0;
+    wc->cbWndExtra = 0;
+    wc->hInstance = g_hInstance;
+    wc->hIcon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_ICON1));
+    wc->hCursor = LoadCursor(NULL, IDC_ARROW);
+    wc->hbrBackground = g_hBrush;
+    wc->lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
+    wc->lpszClassName = NOTER_MAINWINDOW;
+    return RegisterClass(wc);
+}
+
+ATOM registerEditWindowClass(WNDCLASS *wc) {
+    wc->style = 0;
+    wc->lpfnWndProc = WndProc2;
+    wc->cbClsExtra = 0;
+    wc->cbWndExtra = 0;
+    wc->hInstance = g_hInstance;
+    wc->hIcon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_ICON2));
+    wc->hCursor = LoadCursor(NULL, IDC_ARROW);
+    wc->hbrBackground = g_hBrush;
+    wc->lpszMenuName = MAKEINTRESOURCE(IDR_MENU2);
+    wc->lpszClassName = NOTER_EDITWINDOW;
+    return RegisterClass(wc);
+}
+
+void freeGlobalResources(void) {
+    WSACleanup();
+    DeleteObject(g_hBrush);
+    unloadCodePage(hCodePageLib,hCodePageDefinition);
+    return;
+}
+
 //////////////////////////////////////
 //
 //  MAIN PROGRAM
@@ -224,54 +262,41 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     credentials=getCredentials((char*)iniFile.c_str());
     mainSettings=getMainSettings((char*)iniFile.c_str(),&libraries);
 
-    if(!loadAndPrepareCodePage(mainSettings,libraries,hCodePageLib,hCodePageDefinition,rawCodePage,mappedCodePage)) {
-        MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_CODEPAGE_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
-        return 1;
-    }
-
     if(wsInit() == SOCKET_ERROR) {
         MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_WINSOCK_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
+        freeGlobalResources();
         return 1;
     }
-        
-    wc.style = 0;
-    wc.lpfnWndProc = WndProc;
-    wc.cbClsExtra = 0;
-    wc.cbWndExtra = 0;
-    wc.hInstance = hInstance;
-    wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
-    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wc.hbrBackground = g_hBrush;
-    wc.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
-    wc.lpszClassName = NOTER_MAINWINDOW;
 
-    wc2.style = 0;
-    wc2.lpfnWndProc = WndProc2;
-    wc2.cbClsExtra = 0;
-    wc2.cbWndExtra = 0;
-    wc2.hInstance = hInstance;
-    wc2.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2));
-    wc2.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wc2.hbrBackground = g_hBrush;
-    wc2.lpszMenuName = MAKEINTRESOURCE(IDR_MENU2);
-    wc2.lpszClassName = NOTER_EDITWINDOW;
+    if(!loadAndPrepareCodePage(mainSettings,libraries,hCodePageLib,hCodePageDefinition,rawCodePage,mappedCodePage)) {
+        MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_CODEPAGE_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
+        freeGlobalResources();
+        return 1;
+    }
 
-    if(!RegisterClass(&wc)) {
+    if((!registerMainWindowClass(&wc)) || (!registerEditWindowClass(&wc2))) {
         MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_WNDCLASS_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
+        freeGlobalResources();
         return 1;
     }
-
-    if(!RegisterClass(&wc2)) {
-        MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_WNDCLASS_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
-        return 1;
-    }
-
+    
     hwnd = CreateWindow(NOTER_MAINWINDOW, getStringFromTable(IDS_APPNAME), WS_OVERLAPPEDWINDOW,
                         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
                         NULL, NULL, hInstance, NULL);
 
     if(hwnd == NULL) {
         MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_WND_CREATE_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
+        freeGlobalResources();
+        return 1;
+    }
+    else {
+        g_hwnd=hwnd;
+    }
+
+    hAccel=LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATORS));
+    if(!hAccel) {
+        MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_ACCELERATORS_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
+        freeGlobalResources();
         return 1;
     }
 
@@ -279,14 +304,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         if((mainSettings.mainWindowX!=CW_USEDEFAULT) && (mainSettings.mainWindowY!=CW_USEDEFAULT) && (mainSettings.mainWindowSizeX!=CW_USEDEFAULT) && (mainSettings.mainWindowSizeY!=CW_USEDEFAULT)) {
             SetWindowPos(hwnd,NULL,mainSettings.mainWindowX,mainSettings.mainWindowY,mainSettings.mainWindowSizeX,mainSettings.mainWindowSizeY,SWP_NOZORDER);
         }
-    }
-
-    g_hwnd=hwnd;
-
-    hAccel=LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATORS));
-    if(!hAccel) {
-        MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_ACCELERATORS_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
-        return 1;
     }
 
     hButton =  CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_DOWNLOAD), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
@@ -402,7 +419,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     firstOptions=false;
 
-    while(GetMessage(&msg, NULL, 0, 0 )) {
+    while(GetMessage(&msg, NULL, 0, 0)) {
         temp=GetParent(msg.hwnd);
         if(temp==NULL) {
             temp=msg.hwnd;
@@ -776,13 +793,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             if(Ctl3dEnabled() && (!Ctl3dUnregister(g_hInstance))) {
                 MessageBox(0,getStringFromTable(IDS_STRING_MSG_CTL3D_UNREG_ERROR),getStringFromTable(IDS_STRING_WARNING,1),MB_ICONEXCLAMATION);
             }
-            WSACleanup();
             if(noteCount>0) {
                 freeNoteList(notes);
             }
-            DeleteObject(g_hBrush);
             WinHelp(g_hwnd,"",HELP_QUIT,0);
-            unloadCodePage(hCodePageLib,hCodePageDefinition);
+            freeGlobalResources();
             PostQuitMessage(0);
             break;
         default:
