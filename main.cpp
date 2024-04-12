@@ -13,6 +13,7 @@
 #include "libutil.hpp"
 #include "wsprocs.hpp"
 #include "noterapi.hpp"
+#include "winconst.hpp"
 #include "codepages.hpp"
 #include "constants.hpp"
 #include "responses.hpp"
