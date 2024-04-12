@@ -65,7 +65,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK ConnSettDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK CredsSettDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK UserRegDlgProc(HWND, UINT, WPARAM, LPARAM);
-BOOL CALLBACK DlgProc7(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK PassConfirmDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc8(HWND, UINT, WPARAM, LPARAM);
 
 //////////////////////////////////////
@@ -1880,7 +1880,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                     +auxCredentials->username
                                     +(std::string)getStringFromTable(IDS_STRING_MSG_ACC_DELETE_PART2,1);
                         if(MessageBox(hwnd,(char*)tempString.c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDYES) {
-                            if(MakeDialogBox(hwnd,IDD_DIALOG7,DlgProc7)==IDOK) {
+                            if(MakeDialogBox(hwnd,IDD_DIALOG7,PassConfirmDlgProc)==IDOK) {
                                 if(useTestCredentials) {
                                     SetWindowText(GetDlgItem(hwnd,IDC_EDIT4),"");
                                     SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),"");
@@ -2060,7 +2060,7 @@ BOOL CALLBACK UserRegDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 //
 //////////////////////////////////////
 
-BOOL CALLBACK DlgProc7(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+BOOL CALLBACK PassConfirmDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     long int result;
     std::string tempSecPassword, tempString;
     switch(msg) {
