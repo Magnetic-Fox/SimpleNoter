@@ -73,7 +73,6 @@ BOOL CALLBACK DlgProc8(HWND, UINT, WPARAM, LPARAM);
 
 HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
     EDITWINDOW *editWin = new EDITWINDOW;
-    //HINSTANCE hInstance=(HINSTANCE)GetWindowWord(hwnd,GWW_HINSTANCE);
 
     makeEditWindowTitle(editWin,note,false,mappedCodePage);
     
