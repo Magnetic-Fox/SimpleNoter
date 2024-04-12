@@ -61,7 +61,7 @@ LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK EditWndProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK NotePropDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
-BOOL CALLBACK DlgProc3(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK PreferencesDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc4(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc5(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc6(HWND, UINT, WPARAM, LPARAM);
@@ -541,7 +541,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON4, 0);
                     break;
                 case ID_OPTIONS_PREFERENCES:
-                    if((MakeDialogBox(hwnd,IDD_DIALOG3,DlgProc3)==IDOK) && (codePageChanged)) {
+                    if((MakeDialogBox(hwnd,IDD_DIALOG3,PreferencesDlgProc)==IDOK) && (codePageChanged)) {
                         if(MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WANT_RELOAD),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDYES) {
                             SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
                         }
@@ -1341,7 +1341,7 @@ BOOL CALLBACK AboutDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 //
 //////////////////////////////////////
 
-BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     bool enabled;
     std::string iniFile;
     LIB_ITER lIt;
