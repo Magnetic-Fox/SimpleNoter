@@ -611,7 +611,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     }
                     if(mainLastResult!=0) {
                         mainLastResult=0;
-                        // SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                     }
                     SetWindowText(GetDlgItem(hwnd,ID_STATIC5),getStringFromTable(IDS_STRING_CREATING_EDIT_WINDOW));
                     if(createEditWindow(hwnd,winMem,NULL)==NULL) {
@@ -629,7 +628,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     main_LockAllButtons(hwnd);
                     if(mainLastResult!=0) {
                         mainLastResult=0;
-                        // SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                     }
                     SetWindowText(GetDlgItem(hwnd,ID_STATIC5),getStringFromTable(IDS_STRING_DOWNLOADING_NOTE));
                     index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
@@ -825,7 +823,6 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_PROPERTIES,MF_GRAYED);
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_TONEWNOTE,MF_GRAYED);
                 ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_ADD));
-                //if((winMem[hwnd]->subjectChanged) && (winMem[hwnd]->entryChanged))
                 if(IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1))) {
                     EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,MF_ENABLED);
                 }
@@ -842,7 +839,6 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 }
                 EnableMenuItem(GetMenu(hwnd),ID_FILE_TONEWNOTE,MF_ENABLED);
                 ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_UPDATE));
-                //if((winMem[hwnd]->subjectChanged) || (winMem[hwnd]->entryChanged))
                 if(IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1))) {
                     EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,MF_ENABLED);
                 }
@@ -904,12 +900,8 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     // this cheats makes delete and return keys usable in the edit boxes after declaring them as an accelerators in the resources
                     processMessages(g_Msg);
                     break;
-                //case ID_ACC_ENTER:
-                    //SendMessage(GetFocus(), WM_CHAR, VK_RETURN, 0);
-                    //break;
                 case ID_ACC_TAB:
                     if(GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2)) {
-                        //SendMessage(GetFocus(), WM_CHAR, VK_TAB, 0);
                         processMessages(g_Msg);
                     }
                     else {
@@ -1103,8 +1095,6 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             if(mainSettings.autoRefresh) {
                                 SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);
                             }
-                            //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
-                            //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),true);
                             SetWindowText(GetDlgItem(hwnd,ID_EDIT_BUTTON1),getStringFromTable(IDS_STRING_UPDATE));
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
@@ -1123,7 +1113,6 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             if(mainSettings.autoRefresh) {
                                 SendMessage(g_hwnd,WM_COMMAND,ID_BUTTON1,0);
                             }
-                            //EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
                             winMem[hwnd]->subjectChanged=false;
                             winMem[hwnd]->entryChanged=false;
                             makeEditWindowTitle(winMem[hwnd],winMem[hwnd]->note,true,mappedCodePage);
@@ -1187,7 +1176,6 @@ LRESULT CALLBACK WndProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 break;
             }
             if((winMem[hwnd]!=NULL) && (winMem[hwnd]->subjectChanged || winMem[hwnd]->entryChanged)) {
-                //GetWindowText(hwnd,buffer,32767);
                 result=MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WANT_CHANGES_SAVED),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_YESNOCANCEL);
             }
             else {
@@ -1261,20 +1249,10 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 }
             }
             else {
-                //GetWindowText(GetParent(hwnd),buffer,32767);
                 MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONHAND | MB_OK);
                 EndDialog(hwnd,IDOK);
             }
             break;
-            /*
-        case WM_CTLCOLOR:
-            switch(HIWORD(lParam)) {
-                case CTLCOLOR_BTN:
-                    SetBkMode((HDC)wParam, TRANSPARENT);
-                    break;
-            }
-            break;
-            */
         case WM_COMMAND:
             switch(wParam) {
                 case IDOK:
@@ -1289,7 +1267,6 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),true);
                     }
                     else {
-                        //GetWindowText(GetParent(hwnd),buffer,32767);
                         MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONHAND | MB_OK);
                     }
                     break;
@@ -1302,7 +1279,6 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),false);
                     }
                     else {
-                        //GetWindowText(GetParent(hwnd),buffer,32767);
                         MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONHAND | MB_OK);
                     }
                     break;
@@ -1327,23 +1303,8 @@ BOOL CALLBACK DlgProc2(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     NOTE tempNote;
     switch(msg) {
         case WM_INITDIALOG:
-            /*
-            if(Ctl3dEnabled()) {
-                unsigned int ctlRegs=CTL3D_ALL;
-                Ctl3dSubclassDlg(hwnd,ctlRegs);
-            }
-            */
             SetWindowText(GetDlgItem(hwnd,IDC_STATIC7),getStringFromTable(IDS_APPNAME));
             break;
-            /*
-        case WM_CTLCOLOR:
-            switch(HIWORD(lParam)) {
-                case CTLCOLOR_BTN:
-                    SetBkMode((HDC)wParam, TRANSPARENT);
-                    break;
-            }
-            break;
-            */
         case WM_COMMAND:
             switch(wParam) {
                 case IDOK:
@@ -1486,15 +1447,6 @@ BOOL CALLBACK DlgProc3(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             EnableWindow(GetDlgItem(hwnd,IDC_CHECK7),enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_CHECK8),enabled);
             break;
-            /*
-        case WM_CTLCOLOR:
-            switch(HIWORD(lParam)) {
-                case CTLCOLOR_BTN:
-                    SetBkMode((HDC)wParam, TRANSPARENT);
-                    break;
-            }
-            break;
-            */
         case WM_COMMAND:
             switch(wParam) {
                 case IDOK:
