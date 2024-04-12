@@ -63,7 +63,7 @@ BOOL CALLBACK NotePropDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK PreferencesDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK ConnSettDlgProc(HWND, UINT, WPARAM, LPARAM);
-BOOL CALLBACK DlgProc5(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK CredsSettDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc6(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc7(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProc8(HWND, UINT, WPARAM, LPARAM);
@@ -555,7 +555,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     break;
                 case ID_OPTIONS_CREDENTIALS:
-                    if((MakeDialogBox(hwnd,IDD_DIALOG5,DlgProc5)==IDOK) && (editsChanged || firstOptions)) {
+                    if((MakeDialogBox(hwnd,IDD_DIALOG5,CredsSettDlgProc)==IDOK) && (editsChanged || firstOptions)) {
                         if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCOUNT, 0, 0)>0) {
                             SendMessage(hwnd, WM_COMMAND, ID_BUTTON1, ID_FILE_RELOAD);
                         }
@@ -1732,7 +1732,7 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 //
 //////////////////////////////////////
 
-BOOL CALLBACK DlgProc5(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     USER_INFO userInfo;
     long int result;
     std::string tempString, iniFile;
