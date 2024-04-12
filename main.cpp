@@ -104,43 +104,43 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
             editWin->note=note;
         }
         
-        editWin->hStatic = CreateWindow("STATIC", getStringFromTable(IDS_STRING_EDITWIN_TITLE), WS_CHILD | WS_VISIBLE | SS_LEFT,
+        editWin->hStatic = CreateWindow(WC_STATIC, getStringFromTable(IDS_STRING_EDITWIN_TITLE), WS_CHILD | WS_VISIBLE | SS_LEFT,
                                         0, 0, 600, 16, editWin->hwnd, (HMENU)ID_EDIT_STATIC1, g_hInstance, NULL);
 
-        editWin->hEditBox= CreateWindow("EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL,
+        editWin->hEditBox= CreateWindow(WC_EDIT, NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL,
                                         0, 16, 600, 24, editWin->hwnd, (HMENU)ID_EDIT_EDITBOX1, g_hInstance, NULL);
 
-        editWin->hStatic2= CreateWindow("STATIC", getStringFromTable(IDS_STRING_EDITWIN_ENTRY), WS_CHILD | WS_VISIBLE | SS_LEFT,
+        editWin->hStatic2= CreateWindow(WC_STATIC, getStringFromTable(IDS_STRING_EDITWIN_ENTRY), WS_CHILD | WS_VISIBLE | SS_LEFT,
                                         0, 40, 600, 16, editWin->hwnd, (HMENU)ID_EDIT_STATIC2, g_hInstance, NULL);
 
-        editWin->hEditBox2=CreateWindow("EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP | ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN,
+        editWin->hEditBox2=CreateWindow(WC_EDIT, NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP | ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN,
                                         0, 56, 600, 300, editWin->hwnd, (HMENU)ID_EDIT_EDITBOX2, g_hInstance, NULL);
 
         if(editWin->note->id==0) {
-            editWin->hButton = CreateWindow("BUTTON", getStringFromTable(IDS_STRING_ADD), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
+            editWin->hButton = CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_ADD), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
                                             0, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON1, g_hInstance, NULL);
         }
         else {
-            editWin->hButton = CreateWindow("BUTTON", getStringFromTable(IDS_STRING_UPDATE), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
+            editWin->hButton = CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_UPDATE), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
                                             0, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON1, g_hInstance, NULL);
         }
 
         if(editWin->note->id==0) {
-            editWin->hButton2 =CreateWindow("BUTTON", getStringFromTable(IDS_STRING_PROPERTIES), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
+            editWin->hButton2 =CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_PROPERTIES), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
                                             96, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON2, g_hInstance, NULL);
         }
         else {
-            editWin->hButton2 =CreateWindow("BUTTON", getStringFromTable(IDS_STRING_PROPERTIES), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+            editWin->hButton2 =CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_PROPERTIES), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
                                             96, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON2, g_hInstance, NULL);
         }
 
-        editWin->hButton3 =CreateWindow("BUTTON", getStringFromTable(IDS_STRING_CLOSE), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+        editWin->hButton3 =CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_CLOSE), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
                                         192, 356, 96, 21, editWin->hwnd, (HMENU)ID_EDIT_BUTTON3, g_hInstance, NULL);
 
-        editWin->hStatic3 =CreateWindow("STATIC", NULL, WS_CHILD | WS_VISIBLE | SS_GRAYRECT,
+        editWin->hStatic3 =CreateWindow(WC_STATIC, NULL, WS_CHILD | WS_VISIBLE | SS_GRAYRECT,
                                         288, 356, 312, 21, editWin->hwnd, (HMENU)ID_EDIT_STATIC3, g_hInstance, NULL);
 
-        editWin->hStatic4= CreateWindow("STATIC", getStringFromTable(IDS_STRING_INFO_OK), WS_CHILD | WS_VISIBLE | SS_LEFT,
+        editWin->hStatic4= CreateWindow(WC_STATIC, getStringFromTable(IDS_STRING_INFO_OK), WS_CHILD | WS_VISIBLE | SS_LEFT,
                                         0, 377, 600, 16, editWin->hwnd, (HMENU)ID_EDIT_STATIC4, g_hInstance, NULL);
 
         bool warningState=false;
@@ -289,25 +289,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         return 1;
     }
 
-    hButton =  CreateWindow("BUTTON", getStringFromTable(IDS_STRING_DOWNLOAD), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+    hButton =  CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_DOWNLOAD), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
                             0, 0, 80, 21, hwnd, (HMENU)ID_BUTTON1, hInstance, NULL);
 
-    hButton2 = CreateWindow("BUTTON", getStringFromTable(IDS_STRING_CREATE), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+    hButton2 = CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_CREATE), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
                             80, 0, 80, 21, hwnd, (HMENU)ID_BUTTON2, hInstance, NULL);
 
-    hButton3 = CreateWindow("BUTTON", getStringFromTable(IDS_STRING_OPEN), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
+    hButton3 = CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_OPEN), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
                             160, 0, 80, 21, hwnd, (HMENU)ID_BUTTON3, hInstance, NULL);
 
-    hButton5 = CreateWindow("BUTTON", getStringFromTable(IDS_STRING_DELETE), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
+    hButton5 = CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_DELETE), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
                             240, 0, 80, 21, hwnd, (HMENU)ID_BUTTON5, hInstance, NULL);
 
-    hButton4 = CreateWindow("BUTTON", getStringFromTable(IDS_STRING_EXIT), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+    hButton4 = CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_EXIT), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
                             320, 0, 80, 21, hwnd, (HMENU)ID_BUTTON4, hInstance, NULL);
 
-    hStatic6 = CreateWindow("STATIC", NULL, WS_CHILD | WS_VISIBLE | SS_GRAYRECT,
+    hStatic6 = CreateWindow(WC_STATIC, NULL, WS_CHILD | WS_VISIBLE | SS_GRAYRECT,
                             400, 0, 200, 21, hwnd, (HMENU)ID_STATIC6, hInstance, NULL);
 
-    hListBox = CreateWindow("LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER |
+    hListBox = CreateWindow(WC_LISTBOX, NULL, WS_CHILD | WS_VISIBLE | WS_BORDER |
                             WS_VSCROLL | WS_TABSTOP | ES_AUTOVSCROLL | LBS_NOTIFY | LBS_NOINTEGRALHEIGHT,
                             0, 21, 600, 300, hwnd, (HMENU)ID_LISTBOX, hInstance, NULL);
 
@@ -318,19 +318,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         SetWindowPos(hListBox,NULL,0,21,600,300,SWP_NOZORDER);
     }
 
-    hStatic  = CreateWindow("STATIC", getStringFromTable(IDS_STRING_ID), WS_CHILD | WS_VISIBLE | SS_LEFT,
+    hStatic  = CreateWindow(WC_STATIC, getStringFromTable(IDS_STRING_ID), WS_CHILD | WS_VISIBLE | SS_LEFT,
                             8, 329, 128, 16, hwnd, (HMENU)ID_STATIC1, hInstance, NULL);
                            
-    hStatic2 = CreateWindow("STATIC", getStringFromTable(IDS_STRING_LAST_CHANGED), WS_CHILD | WS_VISIBLE | SS_LEFT,
+    hStatic2 = CreateWindow(WC_STATIC, getStringFromTable(IDS_STRING_LAST_CHANGED), WS_CHILD | WS_VISIBLE | SS_LEFT,
                             8, 346, 128, 16, hwnd, (HMENU)ID_STATIC2, hInstance, NULL);
                            
-    hStatic3 = CreateWindow("STATIC", getStringFromTable(IDS_STRING_NOT_CHOSEN), WS_CHILD | WS_VISIBLE | SS_LEFT,
+    hStatic3 = CreateWindow(WC_STATIC, getStringFromTable(IDS_STRING_NOT_CHOSEN), WS_CHILD | WS_VISIBLE | SS_LEFT,
                             137, 329, 454, 16, hwnd, (HMENU)ID_STATIC3, hInstance, NULL);
                            
-    hStatic4 = CreateWindow("STATIC", getStringFromTable(IDS_STRING_NOT_CHOSEN), WS_CHILD | WS_VISIBLE | SS_LEFT,
+    hStatic4 = CreateWindow(WC_STATIC, getStringFromTable(IDS_STRING_NOT_CHOSEN), WS_CHILD | WS_VISIBLE | SS_LEFT,
                             137, 346, 454, 16, hwnd, (HMENU)ID_STATIC4, hInstance, NULL);
                            
-    hStatic5 = CreateWindow("STATIC", getStringFromTable(IDS_STRING_INFO_OK), WS_CHILD | WS_VISIBLE | SS_LEFT,
+    hStatic5 = CreateWindow(WC_STATIC, getStringFromTable(IDS_STRING_INFO_OK), WS_CHILD | WS_VISIBLE | SS_LEFT,
                             0, 370, 600, 16, hwnd, (HMENU)ID_STATIC5, hInstance, NULL);
 
     if(mainSettings.use3DControls) {
