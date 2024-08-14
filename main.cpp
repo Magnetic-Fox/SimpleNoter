@@ -341,7 +341,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                             400, 0, 200, 21, hwnd, (HMENU)ID_STATIC6, hInstance, NULL);
 
     hListBox = CreateWindow(WC_LISTBOX, NULL, WS_CHILD | WS_VISIBLE | WS_BORDER |
-                            WS_VSCROLL | WS_TABSTOP | ES_AUTOVSCROLL | LBS_NOTIFY | LBS_NOINTEGRALHEIGHT,
+                            WS_VSCROLL | WS_TABSTOP | ES_AUTOVSCROLL | LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL,
                             0, 21, 600, 300, hwnd, (HMENU)ID_LISTBOX, hInstance, NULL);
 
     if(mainSettings.use3DLists) {
@@ -447,6 +447,35 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     return msg.wParam;
+}
+
+unsigned int getSelection(HWND listHwnd, unsigned int *&selected) {
+    unsigned long int selCount=SendMessage(listHwnd, LB_GETSELCOUNT, 0, 0);
+    unsigned int selSize=0;
+    if((selCount<=65535) && (selCount>0)) {
+        selected=new unsigned int[selCount];
+        if(selected==NULL) {
+            selSize=0;
+        }
+        else {
+            selSize=selCount;
+        }
+    }
+    unsigned int itemsInBuffer=SendMessage(listHwnd, LB_GETSELITEMS, selSize, (LPARAM)selected);
+    if(selCount==0) {
+        return 0;
+    }
+    else if(selCount>itemsInBuffer) {
+        return 0;
+    }
+    else {
+        return itemsInBuffer;
+    }
+}
+
+void freeSelectionBuffer(unsigned int *&selected) {
+    delete[] selected;
+    return;
 }
 
 //////////////////////////////////////
@@ -580,10 +609,14 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     if(index>=0) {
                         if(lParam==0) {
-                            SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_SETCURSEL, 0, 0);
+                            SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_SETSEL, TRUE, 0);
                         }
                         else {
-                            SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_SETCURSEL, index, 0);
+                            SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_SETSEL, TRUE, index);
+                        }
+                        if(index<noteCount) {
+                            SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[index].id).c_str());
+                            SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[index].lastModified.c_str());
                         }
                     }
                     if(noteCount>=0) {
@@ -627,38 +660,45 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON3))) {
                         break;
                     }
-                    main_LockAllButtons(hwnd);
-                    if(mainLastResult!=0) {
-                        mainLastResult=0;
-                    }
-                    SetWindowText(GetDlgItem(hwnd,ID_STATIC5),getStringFromTable(IDS_STRING_DOWNLOADING_NOTE));
-                    index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
-                    if(index>=0) {
-                        NOTE *note=new NOTE;
-                        result=noter_getNote(connectionSettings,credentials,notes[index].id,buffer,*note);
-                        if(result>=0) {
-                            HWND tempHwnd=createEditWindow(hwnd,winMem,note);
-                            if(tempHwnd!=NULL) {
-                                tempString=noter_getAnswerString(result)+(std::string)getStringFromTable(IDS_STRING_SPACED_LAST_MOD_DATE)+toCodePage(mappedCodePage,(char*)note->lastModified.c_str())+".";
-                                compressionRatio=getCompressionRatio();
-                                if(compressionRatio!=100) {
-                                    tempString=tempString+(std::string)getStringFromTable(IDS_STRING_SPACED_COMPRESSION)+IntToStr(getCompressionRatio())+"%.";
+                    unsigned int *selection=NULL;
+                    unsigned int count=getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
+                    if(count>0) {
+                        main_LockAllButtons(hwnd);
+                        if(mainLastResult!=0) {
+                            mainLastResult=0;
+                        }
+                        for(unsigned int x=0; x<count; ++x) {
+                            SetWindowText(GetDlgItem(hwnd,ID_STATIC5),getStringFromTable(IDS_STRING_DOWNLOADING_NOTE));
+                            index=selection[x];
+                            if(index>=0) {
+                                NOTE *note=new NOTE;
+                                result=noter_getNote(connectionSettings,credentials,notes[index].id,buffer,*note);
+                                if(result>=0) {
+                                    HWND tempHwnd=createEditWindow(hwnd,winMem,note);
+                                    if(tempHwnd!=NULL) {
+                                        tempString=noter_getAnswerString(result)+(std::string)getStringFromTable(IDS_STRING_SPACED_LAST_MOD_DATE)+toCodePage(mappedCodePage,(char*)note->lastModified.c_str())+".";
+                                        compressionRatio=getCompressionRatio();
+                                        if(compressionRatio!=100) {
+                                            tempString=tempString+(std::string)getStringFromTable(IDS_STRING_SPACED_COMPRESSION)+IntToStr(getCompressionRatio())+"%.";
+                                        }
+                                        SetWindowText(GetDlgItem(tempHwnd,ID_EDIT_STATIC4),(char*)tempString.c_str());
+                                        winMem[tempHwnd]->lastResult=result;
+                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(INFO_OK).c_str());
+                                    }
+                                    else {
+                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),getStringFromTable(IDS_STRING_EDITWIN_CREATE_ERROR));
+                                        mainLastResult=-2048;
+                                    }
                                 }
-                                SetWindowText(GetDlgItem(tempHwnd,ID_EDIT_STATIC4),(char*)tempString.c_str());
-                                winMem[tempHwnd]->lastResult=result;
-                                SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(INFO_OK).c_str());
-                            }
-                            else {
-                                SetWindowText(GetDlgItem(hwnd,ID_STATIC5),getStringFromTable(IDS_STRING_EDITWIN_CREATE_ERROR));
-                                mainLastResult=-2048;
+                                else {
+                                    mainLastResult=result;
+                                    SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
+                                }
                             }
                         }
-                        else {
-                            mainLastResult=result;
-                            SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
-                        }
+                        main_UnlockAllButtons(hwnd);
+                        freeSelectionBuffer(selection);
                     }
-                    main_UnlockAllButtons(hwnd);
                     break;
                 case ID_BUTTON4:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
@@ -699,11 +739,20 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                             SendMessage(hwnd, WM_COMMAND, ID_BUTTON3, 0);
                             break;
                         case LBN_SELCHANGE:
-                            index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
-                            SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[index].id).c_str());
-                            SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[index].lastModified.c_str());
-                            EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), true);
-                            EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), true);
+                            index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0);
+                            if(index==0) {
+                                SetWindowText(GetDlgItem(hwnd,ID_STATIC3),getStringFromTable(IDS_STRING_NOT_CHOSEN));
+                                SetWindowText(GetDlgItem(hwnd,ID_STATIC4),getStringFromTable(IDS_STRING_NOT_CHOSEN));
+                                EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), false);
+                                EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), false);
+                            }
+                            else {
+                                index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
+                                SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[index].id).c_str());
+                                SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[index].lastModified.c_str());
+                                EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), true);
+                                EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), true);
+                            }
                             if(mainLastResult!=0) {
                                 mainLastResult=0;
                                 SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
