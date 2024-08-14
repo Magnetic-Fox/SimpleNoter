@@ -725,17 +725,17 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             }
 
             if(mainSettings.use3DLists) {
-                SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,width,height-88,SWP_NOZORDER | SWP_NOMOVE);
+                SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,width,height-88,      SWP_NOZORDER | SWP_NOMOVE);
             }
             else {
-                SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,width,height-86,SWP_NOZORDER | SWP_NOMOVE);
+                SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,width,height-86,      SWP_NOZORDER | SWP_NOMOVE);
             }
-            SetWindowPos(GetDlgItem(hwnd,ID_STATIC6),NULL,0,0,width-400,21,SWP_NOZORDER | SWP_NOMOVE);
-            SetWindowPos(GetDlgItem(hwnd,ID_STATIC1),NULL,8,height-57,0,0,SWP_NOZORDER | SWP_NOSIZE);
-            SetWindowPos(GetDlgItem(hwnd,ID_STATIC2),NULL,8,height-40,0,0,SWP_NOZORDER | SWP_NOSIZE);
-            SetWindowPos(GetDlgItem(hwnd,ID_STATIC3),NULL,137,height-57,width-146,16,SWP_NOZORDER);
-            SetWindowPos(GetDlgItem(hwnd,ID_STATIC4),NULL,137,height-40,width-146,16,SWP_NOZORDER);
-            SetWindowPos(GetDlgItem(hwnd,ID_STATIC5),NULL,0,height-16,width,16,SWP_NOZORDER);
+            SetWindowPos(GetDlgItem(hwnd,ID_STATIC6),NULL,0,0,width-400,21,             SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,ID_STATIC1),NULL,8,height-57,0,0,              SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,ID_STATIC2),NULL,8,height-40,0,0,              SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,ID_STATIC3),NULL,137,height-57,width-146,16,   SWP_NOZORDER);
+            SetWindowPos(GetDlgItem(hwnd,ID_STATIC4),NULL,137,height-40,width-146,16,   SWP_NOZORDER);
+            SetWindowPos(GetDlgItem(hwnd,ID_STATIC5),NULL,0,height-16,width,16,         SWP_NOZORDER);
 
             break;
         case WM_GETMINMAXINFO:
@@ -1118,15 +1118,15 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                 height=240;
             }
 
-            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC1),NULL,0,0,width,16,SWP_NOZORDER | SWP_NOMOVE);
-            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_EDITBOX1),NULL,0,0,width,24,SWP_NOZORDER | SWP_NOMOVE);
-            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC2),NULL,0,0,width,16,SWP_NOZORDER | SWP_NOMOVE);
-            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_EDITBOX2),NULL,0,0,width,height-93,SWP_NOZORDER | SWP_NOMOVE);
-            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_BUTTON1),NULL,0,height-37,0,0,SWP_NOZORDER | SWP_NOSIZE);
-            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_BUTTON2),NULL,96,height-37,0,0,SWP_NOZORDER | SWP_NOSIZE);
-            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_BUTTON3),NULL,192,height-37,0,0,SWP_NOZORDER | SWP_NOSIZE);
-            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC3),NULL,288,height-37,width-288,21,SWP_NOZORDER);
-            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC4),NULL,0,height-16,width,16,SWP_NOZORDER);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC1),  NULL,0,0,width,16,              SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_EDITBOX1), NULL,0,0,width,24,              SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC2),  NULL,0,0,width,16,              SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_EDITBOX2), NULL,0,0,width,height-93,       SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_BUTTON1),  NULL,0,height-37,0,0,           SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_BUTTON2),  NULL,96,height-37,0,0,          SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_BUTTON3),  NULL,192,height-37,0,0,         SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC3),  NULL,288,height-37,width-288,21,SWP_NOZORDER);
+            SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC4),  NULL,0,height-16,width,16,      SWP_NOZORDER);
             
             break;
         case WM_GETMINMAXINFO:
