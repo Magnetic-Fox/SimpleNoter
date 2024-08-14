@@ -1907,10 +1907,7 @@ BOOL CALLBACK UserRegDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                                 EnableWindow(GetDlgItem(hwnd,IDOK),false);
                             }
                             else {
-                                if(GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT6))>0
-                                    && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT7))>0
-                                    && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT8))>0)
-                                {
+                                if(GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT6))>0 && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT7))>0 && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT8))>0) {
                                     EnableWindow(GetDlgItem(hwnd,IDOK),true);
                                 }
                             }
