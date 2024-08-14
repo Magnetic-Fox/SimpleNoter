@@ -1484,18 +1484,13 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 SetWindowText(GetDlgItem(hwnd,IDC_EDIT1),(char*)connectionSettings.serverAddress.c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_EDIT2),(char*)IntToStr(connectionSettings.port).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_EDIT3),(char*)connectionSettings.share.c_str());
-                if(connectionSettings.requestCompression) {
-                    CheckDlgButton(hwnd, IDC_CHECK11, BST_CHECKED);
-                }
-                else {
-                    CheckDlgButton(hwnd, IDC_CHECK11, BST_UNCHECKED);
-                }
+                CheckDlgButton(hwnd,IDC_CHECK11,connectionSettings.requestCompression ? BST_CHECKED : BST_UNCHECKED);
                 connection_LockAllButtons(hwnd);
                 serverInfo=noter_getServerInfo(connectionSettings,buffer);
                 connection_UnlockAllButtons(hwnd);
                 if(serverInfo.version==MATCH_VERSION) {
-                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),(char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
-                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),(char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
+                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC8), (char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
+                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC9), (char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
                     SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(mappedCodePage,(char*)serverInfo.version.c_str()).c_str());
                 }
             }
@@ -1558,14 +1553,14 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         serverInfo=noter_getServerInfo(tempConnectionSettings,buffer);
                         connection_UnlockAllButtons(hwnd);
                         if(noter_checkServerVersion(serverInfo)) {
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),(char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),(char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8), (char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9), (char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
                             SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(mappedCodePage,(char*)serverInfo.version.c_str()).c_str());
                             MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_CONN_ESTABLISHED),getStringFromTable(IDS_STRING_INFORMATION,1),MB_ICONINFORMATION | MB_OK);
                         }
                         else {
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),getStringFromTable(IDS_STRING_NOT_CONNECTED));
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9),getStringFromTable(IDS_STRING_NOT_CONNECTED));
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8), getStringFromTable(IDS_STRING_NOT_CONNECTED));
+                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9), getStringFromTable(IDS_STRING_NOT_CONNECTED));
                             SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),getStringFromTable(IDS_STRING_NOT_CONNECTED));
                             MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_CONNECTION_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
                         }
@@ -1590,10 +1585,7 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                                 if(wParam==IDC_EDIT1) {
                                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),true);
                                 }
-                                if((GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT1))>0)
-                                    && (GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT2))>0)
-                                    && (GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT3))>0))
-                                {
+                                if((GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT1))>0) && (GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT2))>0) && (GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT3))>0)) {
                                     EnableWindow(GetDlgItem(hwnd,IDOK),true);
                                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),true);
                                 }
