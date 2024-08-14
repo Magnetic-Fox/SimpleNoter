@@ -842,7 +842,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     CloseClipboard();
                 }
                 else {
-                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE,MF_GRAYED);
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE, MF_GRAYED);
                 }
                 EnableMenuItem(GetMenu(hwnd),ID_EDIT_SELECTALL, ((GetWindowTextLength(GetFocus())>0) && (GetWindowTextLength(GetFocus())>(HIWORD(sel)-LOWORD(sel)))) ? MF_ENABLED : MF_GRAYED);
             }
@@ -1349,60 +1349,15 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                 CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO4);
                 EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),true);
             }
-            if(mainSettings.autoReload) {
-                CheckDlgButton(hwnd, IDC_CHECK2, BST_CHECKED);
-            }
-            else {
-                CheckDlgButton(hwnd, IDC_CHECK2, BST_UNCHECKED);
-            }
-            if(mainSettings.autoRefresh) {
-                CheckDlgButton(hwnd, IDC_CHECK9, BST_CHECKED);
-            }
-            else {
-                CheckDlgButton(hwnd, IDC_CHECK9, BST_UNCHECKED);
-            }
-            if(mainSettings.savePosSizes) {
-                CheckDlgButton(hwnd, IDC_CHECK10, BST_CHECKED);
-            }
-            else {
-                CheckDlgButton(hwnd, IDC_CHECK10, BST_UNCHECKED);
-            }
-            if(mainSettings.use3DControls) {
-                CheckDlgButton(hwnd, IDC_CHECK3, BST_CHECKED);
-            }
-            else {
-                CheckDlgButton(hwnd, IDC_CHECK3, BST_UNCHECKED);
-            }
-            if(mainSettings.use3DButtons) {
-                CheckDlgButton(hwnd, IDC_CHECK4, BST_CHECKED);
-            }
-            else {
-                CheckDlgButton(hwnd, IDC_CHECK4, BST_UNCHECKED);
-            }
-            if(mainSettings.use3DLists) {
-                CheckDlgButton(hwnd, IDC_CHECK5, BST_CHECKED);
-            }
-            else {
-                CheckDlgButton(hwnd, IDC_CHECK5, BST_UNCHECKED);
-            }
-            if(mainSettings.use3DEdits) {
-                CheckDlgButton(hwnd, IDC_CHECK6, BST_CHECKED);
-            }
-            else {
-                CheckDlgButton(hwnd, IDC_CHECK6, BST_UNCHECKED);
-            }
-            if(mainSettings.use3DCombos) {
-                CheckDlgButton(hwnd, IDC_CHECK7, BST_CHECKED);
-            }
-            else {
-                CheckDlgButton(hwnd, IDC_CHECK7, BST_UNCHECKED);
-            }
-            if(mainSettings.use3DDialogs) {
-                CheckDlgButton(hwnd, IDC_CHECK8, BST_CHECKED);
-            }
-            else {
-                CheckDlgButton(hwnd, IDC_CHECK8, BST_UNCHECKED);
-            }
+            CheckDlgButton(hwnd, IDC_CHECK2,    mainSettings.autoReload     ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK9,    mainSettings.autoRefresh    ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK10,   mainSettings.savePosSizes   ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK3,    mainSettings.use3DControls  ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK4,    mainSettings.use3DButtons   ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK5,    mainSettings.use3DLists     ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK6,    mainSettings.use3DEdits     ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK7,    mainSettings.use3DCombos    ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK8,    mainSettings.use3DDialogs   ? BST_CHECKED : BST_UNCHECKED);
             enabled=IsDlgButtonChecked(hwnd, IDC_CHECK3);
             EnableWindow(GetDlgItem(hwnd,IDC_CHECK4),enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_CHECK5),enabled);
