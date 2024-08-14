@@ -1202,14 +1202,8 @@ BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC4),(char*)toCodePage(mappedCodePage,(char*)tempNote.userAgent.c_str()).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC5),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastModified.c_str()).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC6),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastUserAgent.c_str()).c_str());
-                if(tempNote.locked) {
-                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),true);
-                }
-                else {
-                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),true);
-                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),false);
-                }
+                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1), !tempNote.locked);
+                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),  tempNote.locked);
             }
             else {
                 MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONHAND | MB_OK);
