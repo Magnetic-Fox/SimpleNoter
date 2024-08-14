@@ -1456,17 +1456,9 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                     EnableWindow(GetDlgItem(hwnd,IDC_CHECK8),enabled);
                     break;
                 case IDC_CHECK4:
-                    check3DChanged=true;
-                    break;
                 case IDC_CHECK5:
-                    check3DChanged=true;
-                    break;
                 case IDC_CHECK6:
-                    check3DChanged=true;
-                    break;
                 case IDC_CHECK7:
-                    check3DChanged=true;
-                    break;
                 case IDC_CHECK8:
                     check3DChanged=true;
                     break;
