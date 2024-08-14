@@ -1632,27 +1632,27 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),(char*)userInfo.userAgent.c_str());
                         SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),(char*)userInfo.lastChanged.c_str());
                         SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),(char*)userInfo.lastUserAgent.c_str());
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),true);
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),true);
+                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),  true);
+                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),  true);
                     }
                     else {
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
+                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),  false);
+                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),  false);
                     }
                 }
                 else {
-                    EnableWindow(GetDlgItem(hwnd,IDOK),false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
+                    EnableWindow(GetDlgItem(hwnd,IDOK),         false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),  false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),  false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),  false);
                 }
             }
             else {
-                EnableWindow(GetDlgItem(hwnd,IDOK),false);
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON5),false);
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),false);
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
+                EnableWindow(GetDlgItem(hwnd,IDOK),         false);
+                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON5),  false);
+                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),  false);
+                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),  false);
+                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),  false);
             }
             editsChanged=false;
             editsChanged2=false;
@@ -1770,8 +1770,8 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                     SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                     SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                     SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
-                                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
+                                    EnableWindow( GetDlgItem(hwnd,IDC_BUTTON7),false);
+                                    EnableWindow( GetDlgItem(hwnd,IDC_BUTTON8),false);
                                 }
                                 else {
                                     credentials.username="";
@@ -1823,9 +1823,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                 EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),false);
                             }
                             else {
-                                if(GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT4))>0
-                                    && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT5))>0)
-                                {
+                                if(GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT4))>0 && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT5))>0) {
                                     EnableWindow(GetDlgItem(hwnd,IDOK),true);
                                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),true);
                                 }
