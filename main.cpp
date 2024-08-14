@@ -2062,10 +2062,7 @@ BOOL CALLBACK PassChangeDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
                                 EnableWindow(GetDlgItem(hwnd,IDOK),false);
                             }
                             else {
-                                if(GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT9))>0
-                                    && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT10))>0
-                                    && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT11))>0)
-                                {
+                                if(GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT9))>0 && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT10))>0 && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT11))>0) {
                                     EnableWindow(GetDlgItem(hwnd,IDOK),true);
                                 }
                             }
