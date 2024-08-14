@@ -479,44 +479,13 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             break;
         case WM_INITMENU:
             index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
-            if(index>=0) {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,MF_ENABLED);
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,MF_ENABLED);
-            }
-            else {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,MF_GRAYED);
-            }
-            if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON1))) {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_RELOAD,MF_ENABLED);
-            }
-            else {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_RELOAD,MF_GRAYED);
-            }
-            if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON3))) {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,MF_ENABLED);
-            }
-            else {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,MF_GRAYED);
-            }
-            if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_EXIT,MF_ENABLED);
-            }
-            else {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_EXIT,MF_GRAYED);
-            }
-            if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON5))) {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,MF_ENABLED);
-            }
-            else {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,MF_GRAYED);
-            }
-            if(noter_connectionSettingsAvailable(connectionSettings)) {
-                EnableMenuItem(GetMenu(hwnd),ID_OPTIONS_CREDENTIALS,MF_ENABLED);
-            }
-            else {
-                EnableMenuItem(GetMenu(hwnd),ID_OPTIONS_CREDENTIALS,MF_GRAYED);
-            }
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,          (index>=0)                                              ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,        (index>=0)                                              ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_RELOAD,        IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON1))            ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,          IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON3))            ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_EXIT,          IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))            ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,        IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON5))            ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_OPTIONS_CREDENTIALS,noter_connectionSettingsAvailable(connectionSettings)   ? MF_ENABLED : MF_GRAYED);
             break;
         case WM_COMMAND:
             switch(wParam) {
