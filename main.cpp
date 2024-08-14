@@ -478,7 +478,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             }
             break;
         case WM_INITMENU:
-            index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
+            index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX),      LB_GETCURSEL, 0, 0);
             EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,          (index>=0)                                              ? MF_ENABLED : MF_GRAYED);
             EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,        (index>=0)                                              ? MF_ENABLED : MF_GRAYED);
             EnableMenuItem(GetMenu(hwnd),ID_FILE_RELOAD,        IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON1))            ? MF_ENABLED : MF_GRAYED);
@@ -820,39 +820,39 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             break;
         case WM_INITMENU:
             if(winMem[hwnd]->note->id==0) {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_PROPERTIES,MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_TONEWNOTE, MF_GRAYED);
-                ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_ADD));
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_FILE_PROPERTIES, MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_FILE_TONEWNOTE,  MF_GRAYED);
+                ModifyMenu(GetMenu(hwnd),       ID_FILE_ADDUP,      MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_ADD));
+                EnableMenuItem(GetMenu(hwnd),   ID_FILE_ADDUP,      IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1)) ? MF_ENABLED : MF_GRAYED);
             }
             else {
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_PROPERTIES,IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON2)) ? MF_ENABLED : MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_TONEWNOTE,MF_ENABLED);
-                ModifyMenu(GetMenu(hwnd),ID_FILE_ADDUP,MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_UPDATE));
-                EnableMenuItem(GetMenu(hwnd),ID_FILE_ADDUP,IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_FILE_PROPERTIES, IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON2)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_FILE_TONEWNOTE,  MF_ENABLED);
+                ModifyMenu(GetMenu(hwnd),       ID_FILE_ADDUP,      MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_UPDATE));
+                EnableMenuItem(GetMenu(hwnd),   ID_FILE_ADDUP,      IsWindowEnabled(GetDlgItem(hwnd,ID_EDIT_BUTTON1)) ? MF_ENABLED : MF_GRAYED);
             }
             if((GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX1)) || (GetFocus()==GetDlgItem(hwnd,ID_EDIT_EDITBOX2))) {
-                EnableMenuItem(GetMenu(hwnd),ID_EDIT_UNDO,SendMessage(GetFocus(), EM_CANUNDO, 0, 0) ? MF_ENABLED : MF_GRAYED);
-                sel=SendMessage(GetFocus(), EM_GETSEL, 0, 0);
-                EnableMenuItem(GetMenu(hwnd),ID_EDIT_CUT,   (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),ID_EDIT_COPY,  (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),ID_EDIT_CLEAR, (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_UNDO,       SendMessage(GetFocus(), EM_CANUNDO, 0, 0) ? MF_ENABLED : MF_GRAYED);
+                sel=SendMessage(GetFocus(),     EM_GETSEL,          0, 0);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_CUT,        (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_COPY,       (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_CLEAR,      (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
                 if(OpenClipboard(GetFocus())) {
-                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE, (IsClipboardFormatAvailable(CF_TEXT) || IsClipboardFormatAvailable(CF_OEMTEXT)) ? MF_ENABLED : MF_GRAYED);
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE,     (IsClipboardFormatAvailable(CF_TEXT) || IsClipboardFormatAvailable(CF_OEMTEXT)) ? MF_ENABLED : MF_GRAYED);
                     CloseClipboard();
                 }
                 else {
-                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE, MF_GRAYED);
+                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE,     MF_GRAYED);
                 }
-                EnableMenuItem(GetMenu(hwnd),ID_EDIT_SELECTALL, ((GetWindowTextLength(GetFocus())>0) && (GetWindowTextLength(GetFocus())>(HIWORD(sel)-LOWORD(sel)))) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_SELECTALL,  ((GetWindowTextLength(GetFocus())>0) && (GetWindowTextLength(GetFocus())>(HIWORD(sel)-LOWORD(sel)))) ? MF_ENABLED : MF_GRAYED);
             }
             else {
-                EnableMenuItem(GetMenu(hwnd),ID_EDIT_UNDO,      MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),ID_EDIT_CUT,       MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),ID_EDIT_COPY,      MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE,     MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),ID_EDIT_CLEAR,     MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),ID_EDIT_SELECTALL, MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_UNDO,       MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_CUT,        MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_COPY,       MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_PASTE,      MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_CLEAR,      MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_SELECTALL,  MF_GRAYED);
             }
             break;
         case WM_COMMAND:
