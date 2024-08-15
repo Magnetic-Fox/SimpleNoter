@@ -662,6 +662,11 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     unsigned int *selection=NULL;
                     unsigned int count=getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
+                    unsigned int errorCount=0;
+                    if((count>=10) && (MessageBox(hwnd,(char*)(getStringFromTable(IDS_STRING_YOU_LIKE_TO_OPEN_SPACED)+IntToStr(count)+(std::string)getStringFromTable(IDS_STRING_NOTES_SPACED)).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDNO)) {
+                        count=0;
+                        freeSelectionBuffer(selection);
+                    }
                     if(count>0) {
                         main_LockAllButtons(hwnd);
                         if(mainLastResult!=0) {
@@ -688,16 +693,21 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                                     else {
                                         SetWindowText(GetDlgItem(hwnd,ID_STATIC5),getStringFromTable(IDS_STRING_EDITWIN_CREATE_ERROR));
                                         mainLastResult=-2048;
+                                        ++errorCount;
                                     }
                                 }
                                 else {
                                     mainLastResult=result;
                                     SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
+                                    ++errorCount;
                                 }
                             }
                         }
                         main_UnlockAllButtons(hwnd);
                         freeSelectionBuffer(selection);
+                        if(errorCount>1) {
+                            SetWindowText(GetDlgItem(hwnd,ID_STATIC5),getStringFromTable(IDS_STRING_NOT_ALL_NOTES_LOADED));
+                        }
                     }
                     break;
                 case ID_BUTTON4:
