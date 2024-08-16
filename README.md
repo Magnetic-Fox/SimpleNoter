@@ -1,4 +1,3 @@
-
 # Simple Noter for Windows 3.11 (16-bit)
 
 This repository contains my first big project using clean, 16-bit WinAPI. It's client for my (too) simple PHP backend for notetaking.
@@ -37,8 +36,8 @@ Thank You for creating really useful procedures! Without 'em my program would ne
 
 As JSON and Noter backend itself utilizes UTF-8, there is need to convert text to and from it.
 
-* I've implemented only 1250 codepage translation table (used mostly in Polish Windows distributions). If You like to use this program with Your own codepage, You'll have to create conversion table on Your own and remap it in the code. I will try to make it more dynamic someday (and provide option to select which codepage to use).
-* Converting from ANSI to UTF-8 and then to URL encoded takes huge amounts of memory and can quickly exceed 32K size of internal string variable even if written text is not so long. This will cause string class to reallocate internal buffer and make it twice as big, which unfortunately causes program to hang (at least under Windows XP). I'm not sure why this happens (OS should not allow allocating too big memory section or at least Watcom compiler should be aware of this problem). Probably the best solution for this would be to program own memory handler and simple "string-like" class. As this would take huge amount of time to do, I haven't done it for now - maybe someday.
+* I've implemented 1250 codepage translation table only (which is used mostly in Polish Windows distributions). If You like to use this program with Your own codepage, You'll have to create conversion table on Your own according to the `CP1250-DLL` repository.
+* Converting from ANSI to UTF-8 and then to URL encoded takes huge amounts of memory and can quickly exceed 32K size of internal string variable even if written text is not so long. This will cause string class to reallocate internal buffer and make it twice as big, which unfortunately causes program to hang (at least under Windows XP). I'm not sure why this happens (OS should not allow allocating too big memory section when using non-huge pointers or at least Watcom compiler should be aware of this problem). Probably the best solution for this would be to program own memory handler and simple "string-like" class. As this would take huge amount of time to do, I haven't done it for now - maybe someday.
 
 ## Tests information
 
@@ -56,4 +55,4 @@ If you like to use any part of these codes in your software, just please give me
 In case you would like to make paid software and use parts of these codes - please, contact me before.
 
 *Bartłomiej "Magnetic-Fox" Węgrzyn,
-4th November, 2023 - 27th March, 2024*
+4th November, 2023 - 17th August, 2024*
