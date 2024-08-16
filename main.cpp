@@ -473,6 +473,13 @@ unsigned int getSelection(HWND listHwnd, unsigned int *&selected) {
     }
 }
 
+void setSelection(HWND listHwnd, unsigned int *&selected, unsigned int itemsInBuffer) {
+    for(unsigned int x=0; x<itemsInBuffer; ++x) {
+        SendMessage(listHwnd, LB_SETSEL, TRUE, selected[x]);
+    }
+    return;
+}
+
 void freeSelectionBuffer(unsigned int *&selected) {
     delete[] selected;
     return;
@@ -491,7 +498,8 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
     unsigned long int width;
     unsigned long int height;
     int x, y, size_x, size_y;
-    unsigned int state, compressionRatio;
+    unsigned int state, compressionRatio, count, errorCount;
+    unsigned int *selection=NULL;
     switch(msg) {
         case WM_CTLCOLOR:
             switch(HIWORD(lParam)) {
@@ -602,22 +610,26 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         freeNoteList(notes);
                     }
                     noteCount=noter_getNoteList(connectionSettings,credentials,buffer,notes);
-                    index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
+                    count=getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
                     SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_RESETCONTENT, 0, 0);
                     for(long int x=0; x<noteCount; ++x) {
                         SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_ADDSTRING, 0, (LPARAM)toCodePage(mappedCodePage,(char*)notes[x].subject.c_str()).c_str());
                     }
-                    if(index>=0) {
+                    if(count>0) {
                         if(lParam==0) {
                             SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_SETSEL, TRUE, 0);
                         }
                         else {
-                            SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_SETSEL, TRUE, index);
+                            setSelection(GetDlgItem(hwnd,ID_LISTBOX),selection,count);
                         }
-                        if(index<noteCount) {
-                            SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[index].id).c_str());
-                            SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[index].lastModified.c_str());
-                        }
+                        SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[selection[0]].id).c_str());
+                        SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[selection[0]].lastModified.c_str());
+                    }
+                    else {
+                        SetWindowText(GetDlgItem(hwnd,ID_STATIC3),getStringFromTable(IDS_STRING_NOT_CHOSEN));
+                        SetWindowText(GetDlgItem(hwnd,ID_STATIC4),getStringFromTable(IDS_STRING_NOT_CHOSEN));
+                        EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), false);
+                        EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), false);
                     }
                     if(noteCount>=0) {
                         mainLastResult=INFO_LIST_SUCCESSFUL;
@@ -639,6 +651,11 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), false);
                     }
                     main_UnlockAllButtons(hwnd);
+                    if(count==0) {
+                        EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), false);
+                        EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), false);
+                    }
+                    freeSelectionBuffer(selection);
                     break;
                 case ID_BUTTON2:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON2))) {
@@ -660,9 +677,8 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON3))) {
                         break;
                     }
-                    unsigned int *selection=NULL;
-                    unsigned int count=getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
-                    unsigned int errorCount=0;
+                    count=getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
+                    errorCount=0;
                     if((count>=10) && (MessageBox(hwnd,(char*)(getStringFromTable(IDS_STRING_YOU_LIKE_TO_OPEN_SPACED)+IntToStr(count)+(std::string)getStringFromTable(IDS_STRING_NOTES_SPACED)).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDNO)) {
                         count=0;
                         freeSelectionBuffer(selection);
