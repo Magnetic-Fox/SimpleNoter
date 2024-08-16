@@ -770,8 +770,8 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                             SendMessage(hwnd, WM_COMMAND, ID_BUTTON3, 0);
                             break;
                         case LBN_SELCHANGE:
-                            index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0);
-                            if(index==0) {
+                            count=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0);
+                            if(count==0) {
                                 SetWindowText(GetDlgItem(hwnd,ID_STATIC3),getStringFromTable(IDS_STRING_NOT_CHOSEN));
                                 SetWindowText(GetDlgItem(hwnd,ID_STATIC4),getStringFromTable(IDS_STRING_NOT_CHOSEN));
                                 EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), false);
