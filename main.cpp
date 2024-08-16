@@ -600,6 +600,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                 case ID_HELP_ABOUT:
                     MakeDialogBox(hwnd,IDD_DIALOG2,AboutDlgProc);
                     break;
+                // Refresh button
                 case ID_BUTTON1:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON1))) {
                         break;
@@ -657,6 +658,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     freeSelectionBuffer(selection);
                     break;
+                // Create button
                 case ID_BUTTON2:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON2))) {
                         break;
@@ -673,13 +675,14 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(INFO_OK).c_str());
                     }
                     break;
+                // Open button
                 case ID_BUTTON3:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON3))) {
                         break;
                     }
                     count=getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
                     errorCount=0;
-                    if((count>=10) && (MessageBox(hwnd,(char*)(getStringFromTable(IDS_STRING_YOU_LIKE_TO_OPEN_SPACED)+IntToStr(count)+(std::string)getStringFromTable(IDS_STRING_NOTES_SPACED)).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDNO)) {
+                    if((count>=10) && (MessageBox(hwnd,(char*)(getStringFromTable(IDS_STRING_MSG_LIKE_TO_OPEN_SPACED)+IntToStr(count)+(std::string)getStringFromTable(IDS_STRING_MSG_NOTES_SPACED)).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDNO)) {
                         count=0;
                         freeSelectionBuffer(selection);
                     }
@@ -726,6 +729,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         }
                     }
                     break;
+                // Close button
                 case ID_BUTTON4:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
                         break;
@@ -736,6 +740,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     SendMessage(hwnd, WM_CLOSE, 0, 0);
                     break;
+                // Remove button
                 case ID_BUTTON5:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON5))) {
                         break;

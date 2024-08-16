@@ -398,7 +398,8 @@ BEGIN
     IDS_STRING_MSG_CODEPAGE_ERROR       "Odnalezienie definicji strony kodowej by³o nie mo¿liwe. Program zostanie zamkniêty."
     IDS_STRING_MSG_CODEPAGE_ERROR_2     "Prze³adowanie definicji strony kodowej nie powiod³o siê. Zakoñcz program jak najszybciej!"
     IDS_STRING_BUILD_INFO               "Build info: "
-    IDS_STRING_YOU_LIKE_TO_OPEN_SPACED  "Czy na pewno chcesz otworzyæ "
-    IDS_STRING_NOTES_SPACED             " notatek?"
+    IDS_STRING_MSG_LIKE_TO_OPEN_SPACED  "Czy na pewno chcesz otworzyæ "
+    IDS_STRING_MSG_NOTES_SPACED         " notatek?"
     IDS_STRING_NOT_ALL_NOTES_LOADED     "Nie uda³o siê za³adowaæ wszystkich wybranych notatek."
+    IDS_STRING_MSG_WANT_NOTES_REMOVAL   "Czy na pewno chcesz usun¹æ wybrane notatki?"
 END
