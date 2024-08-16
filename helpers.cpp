@@ -53,3 +53,51 @@ void getWindowCoordinates(HWND hwnd, int &x, int &y, int &size_x, int &size_y, u
     state=getState(hwnd);
     return;
 }
+
+unsigned int getSelection(HWND listHwnd, unsigned int *&selected) {
+    unsigned long int selCount=SendMessage(listHwnd, LB_GETSELCOUNT, 0, 0);
+    unsigned int selSize=0;
+    if((selCount<=65535) && (selCount>0)) {
+        selected=new unsigned int[selCount];
+        if(selected==NULL) {
+            selSize=0;
+        }
+        else {
+            selSize=selCount;
+        }
+    }
+    unsigned int itemsInBuffer=SendMessage(listHwnd, LB_GETSELITEMS, selSize, (LPARAM)selected);
+    if(selCount==0) {
+        return 0;
+    }
+    else if(selCount>itemsInBuffer) {
+        return 0;
+    }
+    else {
+        return itemsInBuffer;
+    }
+}
+
+void setSelection(HWND listHwnd, unsigned int *&selected, unsigned int itemsInBuffer) {
+    for(unsigned int x=0; x<itemsInBuffer; ++x) {
+        SendMessage(listHwnd, LB_SETSEL, TRUE, selected[x]);
+    }
+    return;
+}
+
+void selectIndexes(HWND listHwnd, unsigned int *&nowId, unsigned int itemsInBuffer, NOTE_SUMMARY *&notes, unsigned int noteCount) {
+    for(unsigned int y=0; y<itemsInBuffer; ++y) {
+        for(unsigned int x=0; x<noteCount; ++x) {
+            if(nowId[y]==notes[x].id) {
+                SendMessage(listHwnd, LB_SETSEL, TRUE, x);
+                break;
+            }
+        }
+    }
+    return;
+}
+
+void freeSelectionBuffer(unsigned int *&selected) {
+    delete[] selected;
+    return;
+}
