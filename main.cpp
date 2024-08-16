@@ -480,6 +480,18 @@ void setSelection(HWND listHwnd, unsigned int *&selected, unsigned int itemsInBu
     return;
 }
 
+void selectIndexes(HWND listHwnd, unsigned int *&nowId, unsigned int itemsInBuffer, NOTE_SUMMARY *&notes, unsigned int noteCount) {
+    for(unsigned int y=0; y<itemsInBuffer; ++y) {
+        for(unsigned int x=0; x<noteCount; ++x) {
+            if(nowId[y]==notes[x].id) {
+                SendMessage(listHwnd, LB_SETSEL, TRUE, x);
+                break;
+            }
+        }
+    }
+    return;
+}
+
 void freeSelectionBuffer(unsigned int *&selected) {
     delete[] selected;
     return;
@@ -749,20 +761,51 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         mainLastResult=0;
                         SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                     }
-                    index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
-                    tempString=(std::string)getStringFromTable(IDS_STRING_MSG_WANT_NOTE_REMOVAL);
-                    tempString=tempString+" \"";
-                    tempString=tempString+toCodePage(mappedCodePage,(char*)notes[index].subject.c_str());
-                    tempString=tempString+"\"?";
+                    // index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
+                    count=getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
+                    if(count==1) {
+                        tempString=(std::string)getStringFromTable(IDS_STRING_MSG_WANT_NOTE_REMOVAL);
+                        tempString=tempString+" \"";
+                        tempString=tempString+toCodePage(mappedCodePage,(char*)notes[selection[0]].subject.c_str());
+                        tempString=tempString+"\"?";
+                    }
+                    else {
+                        tempString=(std::string)getStringFromTable(IDS_STRING_MSG_WANT_NOTES_REMOVAL);
+                    }
+                    errorCount=0;
+                    bool atLeastOneDeleted=false;
                     if(MessageBox(hwnd,(char*)tempString.c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDYES) {
                         main_LockAllButtons(hwnd);
-                        mainLastResult=noter_deleteNote(connectionSettings,credentials,notes[index].id,buffer);
+                        for(unsigned int x=0; x<count; ++x) {
+                            SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_SETSEL, FALSE, selection[x]);
+                            mainLastResult=noter_deleteNote(connectionSettings,credentials,notes[selection[x]].id,buffer);
+                            if(mainLastResult==INFO_NOTE_DELETED) {
+                                selection[x]=0;
+                                if(!atLeastOneDeleted) {
+                                    atLeastOneDeleted=true;
+                                }
+                            }
+                            else {
+                                selection[x]=notes[selection[x]].id;
+                                ++errorCount;
+                            }
+                        }
                         main_UnlockAllButtons(hwnd);
-                        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
-                        if(mainLastResult==INFO_NOTE_DELETED) {
+                        if(atLeastOneDeleted) {
                             SendMessage(hwnd,WM_COMMAND,ID_BUTTON1,0);
                         }
+                        if((errorCount==0) || (errorCount==count)) {
+                            SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
+                            if(errorCount>0) {
+                                selectIndexes(GetDlgItem(hwnd,ID_LISTBOX),selection,count,notes,noteCount);
+                            }
+                        }
+                        else {
+                            SetWindowText(GetDlgItem(hwnd,ID_STATIC5),getStringFromTable(IDS_STRING_NOT_ALL_NOTES_REMOVED));
+                            selectIndexes(GetDlgItem(hwnd,ID_LISTBOX),selection,count,notes,noteCount);
+                        }
                     }
+                    freeSelectionBuffer(selection);
                     break;
                 case ID_LISTBOX:
                     switch(HIWORD(lParam)) {
