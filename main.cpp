@@ -508,8 +508,14 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                 case ID_ACC_DEL:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON5, 0);
                     break;
+                case ID_ACC_CTRLE:
+                    SendMessage(hwnd, WM_COMMAND, ID_FILE_EXPORT, 0);
+                    break;
                 case ID_ACC_ALTF4:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON4, 0);
+                    break;
+                case ID_ACC_CTRLA:
+                    SendMessage(hwnd, WM_COMMAND, ID_EDIT_SELECTALL, 0);
                     break;
                 case ID_ACC_F1:
                     SendMessage(hwnd, WM_COMMAND, ID_HELP_HELP, 0);
@@ -526,8 +532,18 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                 case ID_FILE_DELETE:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON5, 0);
                     break;
+                case ID_FILE_EXPORT:
+                    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX),LB_GETSELCOUNT,0,0)>0) {
+                        // TODO: Export section
+                    }
+                    break;
                 case ID_FILE_EXIT:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON4, 0);
+                    break;
+                case ID_EDIT_SELECTALL:
+                    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX),LB_GETSELCOUNT,0,0)!=noteCount) {
+                        SendMessage(GetDlgItem(hwnd,ID_LISTBOX),LB_SETSEL,TRUE,-1);
+                    }
                     break;
                 case ID_OPTIONS_PREFERENCES:
                     if((MakeDialogBox(hwnd,IDD_DIALOG3,PreferencesDlgProc)==IDOK) && (codePageChanged)) {
