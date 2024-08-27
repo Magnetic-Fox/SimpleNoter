@@ -449,8 +449,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return msg.wParam;
 }
 
-
-
 //////////////////////////////////////
 //
 //  MAIN WINDOW PROCEDURE
@@ -466,6 +464,9 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
     int x, y, size_x, size_y;
     unsigned int state, compressionRatio, count, errorCount;
     unsigned int *selection=NULL;
+    bool atLeastOneDeleted;
+    MINMAXINFO *lpMMI;
+    
     switch(msg) {
         case WM_CTLCOLOR:
             switch(HIWORD(lParam)) {
@@ -727,7 +728,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         tempString=(std::string)getStringFromTable(IDS_STRING_MSG_WANT_NOTES_REMOVAL);
                     }
                     errorCount=0;
-                    bool atLeastOneDeleted=false;
+                    atLeastOneDeleted=false;
                     if(MessageBox(hwnd,(char*)tempString.c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDYES) {
                         main_LockAllButtons(hwnd);
                         for(unsigned int x=0; x<count; ++x) {
@@ -820,7 +821,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 
             break;
         case WM_GETMINMAXINFO:
-            MINMAXINFO *lpMMI=(MINMAXINFO*)lParam;
+            lpMMI=(MINMAXINFO*)lParam;
             lpMMI->ptMinTrackSize.x=480;
             lpMMI->ptMinTrackSize.y=320;
             break;
@@ -831,7 +832,6 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         SendMessage(it->second->hwnd, WM_CLOSE, 0, 0);
                     }
                 }
-                
                 if(mainSettings.savePosSizes) {
                     getWindowCoordinates(hwnd,x,y,size_x,size_y,state);
                     if(state==SW_SHOWNORMAL) {
@@ -848,7 +848,6 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     GetModuleFileName(g_hInstance,buffer,32767);
                     saveWindowCoordinatesSettings(mainSettings,(char*)getDefaultIniFile(buffer).c_str());
                 }
-                
                 if(winMem.size()==0) {
                     DestroyWindow(hwnd);
                 }
@@ -885,6 +884,8 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
     unsigned int result;
     int x, y, size_x, size_y;
     unsigned int state;
+    MINMAXINFO *lpMMI;
+    
     switch(msg) {
         case WM_CTLCOLOR:
             switch(HIWORD(lParam)) {
@@ -1211,7 +1212,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             
             break;
         case WM_GETMINMAXINFO:
-            MINMAXINFO *lpMMI=(MINMAXINFO*)lParam;
+            lpMMI=(MINMAXINFO*)lParam;
             lpMMI->ptMinTrackSize.x=480;
             lpMMI->ptMinTrackSize.y=320;
             break;
@@ -1231,7 +1232,6 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             else if(result==IDNO) {
                 winMem[hwnd]->lastResult=0;
             }
-
             if(mainSettings.savePosSizes) {
                 getWindowCoordinates(hwnd,x,y,size_x,size_y,state);
                 if(state==SW_SHOWNORMAL) {
@@ -1245,7 +1245,6 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     mainSettings.editWindowStyle=state-1;
                 }
             }
-            
             if((result!=IDCANCEL) && (winMem[hwnd]->lastResult>=0)) {
                 DestroyWindow(hwnd);
             }
