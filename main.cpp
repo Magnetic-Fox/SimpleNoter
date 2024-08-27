@@ -716,7 +716,6 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         mainLastResult=0;
                         SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                     }
-                    // index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
                     count=getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
                     if(count==1) {
                         tempString=(std::string)getStringFromTable(IDS_STRING_MSG_WANT_NOTE_REMOVAL);
