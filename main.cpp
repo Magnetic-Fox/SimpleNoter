@@ -810,10 +810,12 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                             }
                             else {
                                 index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
-                                SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[index].id).c_str());
-                                SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[index].lastModified.c_str());
-                                EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), true);
-                                EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), true);
+                                if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
+                                    SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[index].id).c_str());
+                                    SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[index].lastModified.c_str());
+                                    EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), true);
+                                    EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), true);
+                                }
                             }
                             if(mainLastResult!=0) {
                                 mainLastResult=0;
