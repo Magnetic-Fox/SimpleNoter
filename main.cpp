@@ -1390,7 +1390,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
     switch(msg) {
         case WM_INITDIALOG:
             check3DChanged=false;
-            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),((std::string)(getStringFromTable(IDS_STRING_BUILD_INFO))+__DATE__+", "+__TIME__).c_str());
+            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8),((std::string)(getStringFromTable(IDS_STRING_BUILD_DATE))+__DATE__+", "+__TIME__).c_str());
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_NORMAL_WINDOW));
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MINIMIZED_WINDOW));
             SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MAXIMIZED_WINDOW));
