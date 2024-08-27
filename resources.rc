@@ -41,19 +41,26 @@ BEGIN
     "A",            ID_ACC_CTRLA,           VIRTKEY, CONTROL, NOINVERT
     "S",            ID_ACC_CTRLS,           VIRTKEY, CONTROL, NOINVERT
     "D",            ID_ACC_CTRLD,           VIRTKEY, CONTROL, NOINVERT
+    "E",            ID_ACC_CTRLE,           VIRTKEY, CONTROL, NOINVERT
 END
 
 IDR_MENU1 MENU DISCARDABLE 
 BEGIN
     POPUP "&Plik"
     BEGIN
-        MENUITEM "&Nowa\tCtrl+N",               ID_FILE_NEW
-        MENUITEM "&Otwórz\tEnter",              ID_FILE_OPEN
+        MENUITEM "&Nowa...\tCtrl+N",            ID_FILE_NEW
+        MENUITEM "&Otwórz...\tEnter",           ID_FILE_OPEN
         MENUITEM SEPARATOR
-        MENUITEM "Pobierz listê\tF5",           ID_FILE_RELOAD
-        MENUITEM "Usuñ\tDel",                   ID_FILE_DELETE
+        MENUITEM "&Pobierz listê\tF5",          ID_FILE_RELOAD
+        MENUITEM "&Usuñ\tDel",                  ID_FILE_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "&Eksportuj...\tCtrl+E",       ID_FILE_EXPORT
         MENUITEM SEPARATOR
         MENUITEM "Za&koñcz\tAlt+F4",            ID_FILE_EXIT
+    END
+    POPUP "&Edycja"
+    BEGIN
+        MENUITEM "Zaznacz w&szystko\tCtrl+A",   ID_EDIT_SELECTALL
     END
     POPUP "&Opcje"
     BEGIN
