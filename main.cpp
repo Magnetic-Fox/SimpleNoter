@@ -483,13 +483,15 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             break;
         case WM_INITMENU:
             count=SendMessage(GetDlgItem(hwnd,ID_LISTBOX),      LB_GETSELCOUNT, 0, 0);
-            EnableMenuItem(GetMenu(hwnd),ID_FILE_RELOAD,        IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON1))            ? MF_ENABLED : MF_GRAYED);
-            EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,          IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON3))            ? MF_ENABLED : MF_GRAYED);
-            EnableMenuItem(GetMenu(hwnd),ID_FILE_EXIT,          IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))            ? MF_ENABLED : MF_GRAYED);
-            EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,        IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON5))            ? MF_ENABLED : MF_GRAYED);
-            EnableMenuItem(GetMenu(hwnd),ID_FILE_EXPORT,        (count>0)                                               ? MF_ENABLED : MF_GRAYED);
-            EnableMenuItem(GetMenu(hwnd),ID_EDIT_SELECTALL,     (count!=noteCount)                                      ? MF_ENABLED : MF_GRAYED);
-            EnableMenuItem(GetMenu(hwnd),ID_OPTIONS_CREDENTIALS,noter_connectionSettingsAvailable(connectionSettings)   ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_RELOAD,        IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON1))                                                            ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,          IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON3))                                                            ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_EXIT,          IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))                                                            ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_DELETE,        IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON5))                                                            ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_IMPORT,        (noter_connectionSettingsAvailable(connectionSettings) && IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_FILE_EXPORT,        ((count>0) && IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4)))                                             ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_EDIT_SELECTALL,     (count!=noteCount)                                                                                      ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_OPTIONS_CONNECTION, IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))                                                            ? MF_ENABLED : MF_GRAYED);
+            EnableMenuItem(GetMenu(hwnd),ID_OPTIONS_CREDENTIALS,(noter_connectionSettingsAvailable(connectionSettings) && IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) ? MF_ENABLED : MF_GRAYED);
             break;
         case WM_COMMAND:
             switch(wParam) {
@@ -507,6 +509,9 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     break;
                 case ID_ACC_DEL:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON5, 0);
+                    break;
+                case ID_ACC_CTRLI:
+                    SendMessage(hwnd, WM_COMMAND, ID_FILE_IMPORT, 0);
                     break;
                 case ID_ACC_CTRLE:
                     SendMessage(hwnd, WM_COMMAND, ID_FILE_EXPORT, 0);
@@ -532,8 +537,13 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                 case ID_FILE_DELETE:
                     SendMessage(hwnd, WM_COMMAND, ID_BUTTON5, 0);
                     break;
+                case ID_FILE_IMPORT:
+                    if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
+                        // TODO: Import section
+                    }
+                    break;
                 case ID_FILE_EXPORT:
-                    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX),LB_GETSELCOUNT,0,0)>0) {
+                    if((SendMessage(GetDlgItem(hwnd,ID_LISTBOX),LB_GETSELCOUNT,0,0)>0) && IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
                         // TODO: Export section
                     }
                     break;
