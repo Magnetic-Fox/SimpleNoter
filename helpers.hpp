@@ -93,7 +93,7 @@ void inline unlockDeleteButton(HWND hwnd) {
 void inline main_LockAllButtons(HWND hwnd) {
     lockExitButton(hwnd);
     lockRefreshButton(hwnd);
-    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0) {
+    if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0)>0) {
         lockOpenButton(hwnd);
         lockDeleteButton(hwnd);
     }
@@ -104,7 +104,7 @@ void inline main_UnlockAllButtons(HWND hwnd) {
     unlockExitButton(hwnd);
     if(noter_connectionSettingsAvailable(*conn) && noter_credentialsAvailable(*creds)) {
         unlockRefreshButton(hwnd);
-        if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0)>=0) {
+        if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0)>0) {
             unlockOpenButton(hwnd);
             unlockDeleteButton(hwnd);
         }
