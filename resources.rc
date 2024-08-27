@@ -41,6 +41,7 @@ BEGIN
     "A",            ID_ACC_CTRLA,           VIRTKEY, CONTROL, NOINVERT
     "S",            ID_ACC_CTRLS,           VIRTKEY, CONTROL, NOINVERT
     "D",            ID_ACC_CTRLD,           VIRTKEY, CONTROL, NOINVERT
+    "I",            ID_ACC_CTRLI,           VIRTKEY, CONTROL, NOINVERT
     "E",            ID_ACC_CTRLE,           VIRTKEY, CONTROL, NOINVERT
 END
 
@@ -54,6 +55,7 @@ BEGIN
         MENUITEM "&Pobierz listê\tF5",          ID_FILE_RELOAD
         MENUITEM "&Usuñ\tDel",                  ID_FILE_DELETE
         MENUITEM SEPARATOR
+        MENUITEM "&Importuj...\tCtrl+I",        ID_FILE_IMPORT
         MENUITEM "&Eksportuj...\tCtrl+E",       ID_FILE_EXPORT
         MENUITEM SEPARATOR
         MENUITEM "Za&koñcz\tAlt+F4",            ID_FILE_EXIT
@@ -64,10 +66,10 @@ BEGIN
     END
     POPUP "&Opcje"
     BEGIN
-        MENUITEM "Preferencje...",              ID_OPTIONS_PREFERENCES
+        MENUITEM "&Preferencje...",             ID_OPTIONS_PREFERENCES
         MENUITEM SEPARATOR
-        MENUITEM "Po³¹czenie...",               ID_OPTIONS_CONNECTION
-        MENUITEM "U¿ytkownik...",               ID_OPTIONS_CREDENTIALS
+        MENUITEM "Po³¹&czenie...",              ID_OPTIONS_CONNECTION
+        MENUITEM "&U¿ytkownik...",              ID_OPTIONS_CREDENTIALS
 
     END
     POPUP "Pomo&c"

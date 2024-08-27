@@ -17,22 +17,24 @@
 #define ID_ACC_CTRLA                        208
 #define ID_ACC_CTRLS                        209
 #define ID_ACC_CTRLD                        210
-#define ID_ACC_CTRLE                        211
+#define ID_ACC_CTRLI                        211
+#define ID_ACC_CTRLE                        212
 
 #define IDR_MENU1                           300
 #define ID_FILE_NEW                         301
 #define ID_FILE_OPEN                        302
 #define ID_FILE_RELOAD                      303
 #define ID_FILE_DELETE                      304
-#define ID_FILE_EXPORT                      305
-#define ID_FILE_EXIT                        306
-#define ID_EDIT_SELECTALL                   307
-#define ID_OPTIONS_PREFERENCES              308
-#define ID_OPTIONS_CONNECTION               309
-#define ID_OPTIONS_CREDENTIALS              310
-#define ID_HELP_HELP                        311
-#define ID_HELP_HOWTO                       312
-#define ID_HELP_ABOUT                       313
+#define ID_FILE_IMPORT                      305
+#define ID_FILE_EXPORT                      306
+#define ID_FILE_EXIT                        307
+#define ID_EDIT_SELECTALL                   308
+#define ID_OPTIONS_PREFERENCES              309
+#define ID_OPTIONS_CONNECTION               310
+#define ID_OPTIONS_CREDENTIALS              311
+#define ID_HELP_HELP                        312
+#define ID_HELP_HOWTO                       313
+#define ID_HELP_ABOUT                       314
 
 #define IDD_DIALOG1                         400
 #define IDC_BUTTON1                         401
