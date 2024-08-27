@@ -647,6 +647,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
                         EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), false);
                         EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), false);
+                        noteCount=0;
                     }
                     main_UnlockAllButtons(hwnd);
                     if(count==0) {
