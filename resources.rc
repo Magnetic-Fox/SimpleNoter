@@ -308,6 +308,50 @@ BEGIN
     EDITTEXT        IDC_EDIT11,7,71,186,12,ES_PASSWORD | ES_AUTOHSCROLL
 END
 
+// Place left for IDD_DIALOG9
+
+IDD_DIALOG10 DIALOG DISCARDABLE  0, 0, 200, 260
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Eksportowanie notatek"
+FONT 10, "System"
+BEGIN
+    DEFPUSHBUTTON   "&Eksportuj",IDC_EXPORT,93,239,50,14
+    PUSHBUTTON      "&Zamknij",IDCANCEL,143,239,50,14
+    EDITTEXT        IDC_EDIT13,11,17,178,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "&Przegl¹daj...",IDC_BUTTON9,129,30,60,14
+    GROUPBOX        "Miejsce docelowe",IDC_STATIC,7,7,186,52
+    CONTROL         "Zignoruj nazwê pliku (u¿yj jako œcie¿ki do folderu)",
+                    IDC_CHECK12,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,46,
+                    178,10
+    GROUPBOX        "Opcje zapisu",IDC_STATIC,7,59,186,69
+    RADIOBUTTON     "Eksportuj do jednego pliku",IDC_RADIO5,11,69,178,10,WS_TABSTOP
+    RADIOBUTTON     "Eksportuj do osobnych plików",IDC_RADIO6,11,80,178,10,WS_TABSTOP
+    RADIOBUTTON     "Numeruj zgodnie z ID notatek",IDC_RADIO7,21,91,168,10,WS_TABSTOP
+    RADIOBUTTON     "Numeruj rozpoczynaj¹c od:",IDC_RADIO8,21,102,103,10,WS_TABSTOP
+    EDITTEXT        IDC_EDIT14,127,101,62,12,ES_AUTOHSCROLL
+    CONTROL         "Do³¹cz prefiks:",IDC_CHECK13,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,31,114,66,10
+    EDITTEXT        IDC_EDIT15,127,113,62,12,ES_AUTOHSCROLL
+    GROUPBOX        "Opcje eksportu",IDC_STATIC,7,129,186,79
+    CONTROL         "Do³¹cz tytu³ w pierwszej linijce",IDC_CHECK14,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,11,139,178,10
+    CONTROL         "Pozostaw jedn¹ linijkê odstêpu przed treœci¹",
+                    IDC_CHECK15,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,150,
+                    168,10
+    CONTROL         "Do³¹cz dodatkowe informacje o notatce na koñcu",
+                    IDC_CHECK16,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,161,
+                    178,10
+    CONTROL         "Odseparuj od treœci",IDC_CHECK17,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,21,172,168,10
+    CONTROL         "Separuj notatki w pliku",IDC_CHECK18,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,11,183,178,10
+    CONTROL         "Kontynuuj eksport w przypadku b³êdów",IDC_CHECK19,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,194,178,10
+    GROUPBOX        "Postêp",IDC_STATIC,7,208,186,27
+    LTEXT           "",IDC_STATIC,11,218,178,10,WS_BORDER
+    LTEXT           "",IDC_STATIC16,12,219,100,8,WS_BORDER
+END
+
 STRINGTABLE DISCARDABLE
 BEGIN
     IDS_HELPFILE                        "SNOTER07.HLP"

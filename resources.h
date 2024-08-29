@@ -118,6 +118,28 @@
 #define IDC_EDIT10                          1202
 #define IDC_EDIT11                          1203
 
+// place left for IDD_DIALOG9
+
+#define IDD_DIALOG10                        1400
+#define IDC_EXPORT                          1401
+#define IDC_BUTTON9                         1402
+#define IDC_CHECK12                         1403
+#define IDC_RADIO5                          1404
+#define IDC_RADIO6                          1405
+#define IDC_RADIO7                          1406
+#define IDC_RADIO8                          1407
+#define IDC_EDIT13                          1408
+#define IDC_EDIT14                          1409
+#define IDC_CHECK13                         1410
+#define IDC_EDIT15                          1411
+#define IDC_CHECK14                         1412
+#define IDC_CHECK15                         1413
+#define IDC_CHECK16                         1414
+#define IDC_CHECK17                         1415
+#define IDC_CHECK18                         1416
+#define IDC_CHECK19                         1417
+#define IDC_STATIC16                        1418
+
 #define IDS_HELPFILE                        3000
 #define IDS_APPNAME                         3001
 #define IDS_USER_AGENT                      3002
