@@ -78,6 +78,8 @@ BOOL CALLBACK UserRegDlgProc    (HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK PassConfirmDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK PassChangeDlgProc (HWND, UINT, WPARAM, LPARAM);
 
+BOOL CALLBACK NotesExpDlgProc   (HWND, UINT, WPARAM, LPARAM);
+
 //////////////////////////////////////
 //
 //  EDIT WINDOW
@@ -544,7 +546,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     break;
                 case ID_FILE_EXPORT:
                     if((SendMessage(GetDlgItem(hwnd,ID_LISTBOX),LB_GETSELCOUNT,0,0)>0) && IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
-                        // TODO: Export section
+                        MakeDialogBox(hwnd,IDD_DIALOG10,NotesExpDlgProc);
                     }
                     break;
                 case ID_FILE_EXIT:
@@ -2188,6 +2190,40 @@ BOOL CALLBACK PassChangeDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
                 break;
             }
             editsChanged2=false;
+            EndDialog(hwnd,IDCANCEL);
+            break;
+        default:
+            return FALSE;
+    }
+    return TRUE;
+}
+
+//////////////////////////////////////
+//
+//  NOTES IMPORT DIALOG PROCEDURE (TODO)
+//
+//////////////////////////////////////
+
+
+
+//////////////////////////////////////
+//
+//  NOTES EXPORT DIALOG PROCEDURE
+//
+//////////////////////////////////////
+
+BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    switch(msg) {
+        case WM_INITDIALOG:
+            break;
+        case WM_COMMAND:
+            switch(wParam) {
+                case IDCANCEL:
+                    EndDialog(hwnd,IDCANCEL);
+                    break;
+            }
+            break;
+        case WM_CLOSE:
             EndDialog(hwnd,IDCANCEL);
             break;
         default:
