@@ -30,6 +30,7 @@
 
 // Windows types
 HBRUSH                    g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
+HBRUSH                    g_hBrush2= CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
 HWND                      g_hwnd;
 HINSTANCE                 g_hInstance=NULL, hCodePageLib=NULL;
 HGLOBAL                   hCodePageDefinition=NULL;
@@ -239,6 +240,7 @@ ATOM registerEditWindowClass(WNDCLASS *wc) {
 void freeGlobalResources(void) {
     WSACleanup();
     DeleteObject(g_hBrush);
+    DeleteObject(g_hBrush2);
     unloadCodePage(hCodePageLib,hCodePageDefinition);
     return;
 }
@@ -2215,6 +2217,38 @@ BOOL CALLBACK PassChangeDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch(msg) {
         case WM_INITDIALOG:
+            CheckDlgButton(hwnd, IDC_CHECK14, BST_CHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK15, BST_CHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK16, BST_CHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK17, BST_CHECKED);
+            EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
+            EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
+            EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),false);
+            EnableWindow(GetDlgItem(hwnd,IDC_CHECK18),false);
+            if(SendMessage(GetDlgItem(GetParent(hwnd),ID_LISTBOX),LB_GETSELCOUNT, 0, 0)>1) {
+                CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO6);
+                CheckRadioButton(hwnd, IDC_RADIO7, IDC_RADIO8, IDC_RADIO7);
+                CheckDlgButton(hwnd, IDC_CHECK12, BST_CHECKED);
+            }
+            else {
+                CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO5);
+                EnableWindow(GetDlgItem(hwnd,IDC_CHECK12),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_RADIO6),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_RADIO7),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_RADIO8),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_CHECK19),false);
+            }
+            break;
+        case WM_CTLCOLOR:
+            switch(HIWORD(lParam)) {
+                case CTLCOLOR_STATIC:
+                    if(LOWORD(lParam)==GetDlgItem(hwnd,IDC_STATIC16)) {
+                        SetBkMode((HDC)wParam, TRANSPARENT);
+                        SetTextColor((HDC)wParam,GetSysColor(COLOR_CAPTIONTEXT));
+                        return g_hBrush2;
+                    }
+                    break;
+            }
             break;
         case WM_COMMAND:
             switch(wParam) {
