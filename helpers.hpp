@@ -49,6 +49,7 @@ void inline storeConnectionSettingsReference(NOTER_CONNECTION_SETTINGS*);
 void inline storeCredentialsReference(NOTER_CREDENTIALS*);
 void inline storeGlobalHWNDReference(HWND*);
 void inline storeWindowMemoryReference(WINDOWMEMORY*);
+void inline setProgress(HWND, int, unsigned int, unsigned short int);
 
 void inline lockExitButton(HWND hwnd) {
     EnableWindow(GetDlgItem(hwnd,ID_BUTTON4),false);
@@ -225,6 +226,11 @@ void inline storeGlobalHWNDReference(HWND *g_hwnd) {
 
 void inline storeWindowMemoryReference(WINDOWMEMORY *winMem) {
     wMem=winMem;
+    return;
+}
+
+void inline setProgress(HWND dlgHwnd, int dlgItem, unsigned int maxWidth, unsigned short int progress) {
+    SetWindowPos(GetDlgItem(dlgHwnd,dlgItem),NULL,0,0,(unsigned int)(maxWidth*(progress/100.0)),16,SWP_NOMOVE | SWP_NOZORDER);
     return;
 }
 
