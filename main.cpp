@@ -2244,8 +2244,6 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             switch(HIWORD(lParam)) {
                 case CTLCOLOR_STATIC:
                     if(LOWORD(lParam)==GetDlgItem(hwnd,IDC_STATIC16)) {
-                        SetBkMode((HDC)wParam, TRANSPARENT);
-                        SetTextColor((HDC)wParam,GetSysColor(COLOR_CAPTIONTEXT));
                         return g_hBrush2;
                     }
                     break;
