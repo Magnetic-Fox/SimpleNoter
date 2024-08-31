@@ -2217,17 +2217,18 @@ BOOL CALLBACK PassChangeDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch(msg) {
         case WM_INITDIALOG:
+            setProgress(hwnd,IDC_STATIC16,IDC_STATIC16_MAXWIDTH,0);
             CheckDlgButton(hwnd, IDC_CHECK14, BST_CHECKED);
             CheckDlgButton(hwnd, IDC_CHECK15, BST_CHECKED);
             CheckDlgButton(hwnd, IDC_CHECK16, BST_CHECKED);
             CheckDlgButton(hwnd, IDC_CHECK17, BST_CHECKED);
+            CheckRadioButton(hwnd, IDC_RADIO7, IDC_RADIO8, IDC_RADIO7);
             EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
             EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
             EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),false);
             EnableWindow(GetDlgItem(hwnd,IDC_CHECK18),false);
             if(SendMessage(GetDlgItem(GetParent(hwnd),ID_LISTBOX),LB_GETSELCOUNT, 0, 0)>1) {
                 CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO6);
-                CheckRadioButton(hwnd, IDC_RADIO7, IDC_RADIO8, IDC_RADIO7);
                 CheckDlgButton(hwnd, IDC_CHECK12, BST_CHECKED);
             }
             else {
