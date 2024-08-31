@@ -2252,6 +2252,71 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             break;
         case WM_COMMAND:
             switch(wParam) {
+                case IDC_RADIO5:
+                    EnableWindow(GetDlgItem(hwnd,IDC_RADIO7),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_RADIO8),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
+                    if(SendMessage(GetDlgItem(GetParent(hwnd),ID_LISTBOX),LB_GETSELCOUNT, 0, 0)>1) {
+                        EnableWindow(GetDlgItem(hwnd,IDC_CHECK18),true);
+                    }
+                    else {
+                        EnableWindow(GetDlgItem(hwnd,IDC_CHECK18),false);
+                    }
+                    CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO5);
+                    break;
+                case IDC_RADIO6:
+                    EnableWindow(GetDlgItem(hwnd,IDC_RADIO7),true);
+                    EnableWindow(GetDlgItem(hwnd,IDC_RADIO8),true);
+                    if(IsDlgButtonChecked(hwnd,IDC_RADIO8)) {
+                        EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),true);
+                        EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),true);
+                        if(IsDlgButtonChecked(hwnd,IDC_CHECK13)) {
+                            EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),true);
+                        }
+                        else {
+                            EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
+                        }
+                    }
+                    else {
+                        EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
+                        EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),false);
+                    }
+                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK18),false);
+                    CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO6);
+                    break;
+                case IDC_RADIO7:
+                    CheckRadioButton(hwnd, IDC_RADIO7, IDC_RADIO8, IDC_RADIO7);
+                    EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
+                    break;
+                case IDC_RADIO8:
+                    CheckRadioButton(hwnd, IDC_RADIO7, IDC_RADIO8, IDC_RADIO8);
+                    EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),true);
+                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),true);
+                    if(IsDlgButtonChecked(hwnd,IDC_CHECK13)) {
+                        EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),true);
+                    }
+                    else {
+                        EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
+                    }
+                    break;
+                case IDC_CHECK13:
+                    if(IsDlgButtonChecked(hwnd,IDC_CHECK13)) {
+                        EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),true);
+                    }
+                    else {
+                        EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
+                    }
+                    break;
+                case IDC_BUTTON9:
+                    // TODO: save file window part
+                    break;
+                case IDC_EXPORT:
+                    // TODO: export part
+                    break;
                 case IDCANCEL:
                     EndDialog(hwnd,IDCANCEL);
                     break;
