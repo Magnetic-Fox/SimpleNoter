@@ -31,6 +31,7 @@
 // Windows types
 HBRUSH                    g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
 HBRUSH                    g_hBrush2= CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
+HBRUSH                    g_hBrush3= CreateSolidBrush(GetSysColor(COLOR_WINDOW));
 HWND                      g_hwnd;
 HINSTANCE                 g_hInstance=NULL, hCodePageLib=NULL;
 HGLOBAL                   hCodePageDefinition=NULL;
@@ -241,6 +242,7 @@ void freeGlobalResources(void) {
     WSACleanup();
     DeleteObject(g_hBrush);
     DeleteObject(g_hBrush2);
+    DeleteObject(g_hBrush3);
     unloadCodePage(hCodePageLib,hCodePageDefinition);
     return;
 }
@@ -2246,6 +2248,10 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     if(LOWORD(lParam)==GetDlgItem(hwnd,IDC_STATIC16)) {
                         return g_hBrush2;
                     }
+                    break;
+                case CTLCOLOR_EDIT:
+                    SetBkMode((HDC)wParam, TRANSPARENT);
+                    return g_hBrush3;
                     break;
             }
             break;
