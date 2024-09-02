@@ -4,7 +4,7 @@
 #include <windows.h>
 
 #define IDI_ICON1                           100
-#define IDI_ICON2                           102
+#define IDI_ICON2                           101
 
 #define IDR_ACCELERATORS                    200
 #define ID_ACC_TAB                          201
