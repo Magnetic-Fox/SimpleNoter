@@ -348,7 +348,7 @@ BEGIN
     CONTROL         "Kontynuuj eksport w przypadku b³êdów",IDC_CHECK19,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,194,178,10
     GROUPBOX        "Postêp",IDC_STATIC,7,208,186,27
-    LTEXT           "",IDC_STATIC,11,218,178,10,WS_BORDER
+    LTEXT           "",IDC_STATIC17,11,218,178,10,WS_BORDER
     LTEXT           "",IDC_STATIC16,12,219,100,8
 END
 

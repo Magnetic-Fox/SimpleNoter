@@ -139,7 +139,7 @@
 #define IDC_CHECK18                         1416
 #define IDC_CHECK19                         1417
 #define IDC_STATIC16                        1418
-#define IDC_STATIC16_MAXWIDTH               352
+#define IDC_STATIC17                        1419
 
 #define IDS_HELPFILE                        3000
 #define IDS_APPNAME                         3001
