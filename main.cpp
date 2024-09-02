@@ -29,30 +29,30 @@
 //////////////////////////////////////
 
 // Windows types
-HBRUSH                    g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
-HBRUSH                    g_hBrush2= CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
-HBRUSH                    g_hBrush3= CreateSolidBrush(GetSysColor(COLOR_WINDOW));
-HWND                      g_hwnd;
-HINSTANCE                 g_hInstance=NULL, hCodePageLib=NULL;
-HGLOBAL                   hCodePageDefinition=NULL;
-MSG                       *g_Msg;
+HBRUSH                      g_hBrush = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
+HBRUSH                      g_hBrush2= CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
+HBRUSH                      g_hBrush3= CreateSolidBrush(GetSysColor(COLOR_WINDOW));
+HWND                        g_hwnd;
+HINSTANCE                   g_hInstance=NULL, hCodePageLib=NULL;
+HGLOBAL                     hCodePageDefinition=NULL;
+MSG                         *g_Msg;
 
 // Own types
-WINDOWMEMORY              winMem;
-RAWCODEPAGE               rawCodePage;
-CODEPAGE                  mappedCodePage;
-NOTER_CONNECTION_SETTINGS connectionSettings;
-NOTER_CREDENTIALS         credentials, tempCredentials, *auxCredentials;
-MAINSETTINGS              mainSettings;
-NOTE_SUMMARY              *notes=NULL;
-LIBRARIES                 libraries;
+WINDOWMEMORY                winMem;
+RAWCODEPAGE                 rawCodePage;
+CODEPAGE                    mappedCodePage;
+NOTER_CONNECTION_SETTINGS   connectionSettings;
+NOTER_CREDENTIALS           credentials, tempCredentials, *auxCredentials;
+MAINSETTINGS                mainSettings;
+NOTE_SUMMARY                *notes=NULL;
+LIBRARIES                   libraries;
 
 // Standard types
-long int                  noteCount=0;
-long int                  mainLastResult=0;
-unsigned int              ctlRegs=0;
-bool                      check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged;
-char                      buffer[65536];
+long int                    noteCount=0;
+long int                    mainLastResult=0;
+unsigned int                ctlRegs=0;
+bool                        check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged;
+char                        buffer[65536];
 
 //////////////////////////////////////
 //
@@ -2219,7 +2219,7 @@ BOOL CALLBACK PassChangeDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch(msg) {
         case WM_INITDIALOG:
-            setProgress(hwnd,IDC_STATIC16,IDC_STATIC16_MAXWIDTH,0);
+            setProgress(hwnd,IDC_STATIC16,IDC_STATIC17,0);
             CheckDlgButton(hwnd, IDC_CHECK14, BST_CHECKED);
             CheckDlgButton(hwnd, IDC_CHECK15, BST_CHECKED);
             CheckDlgButton(hwnd, IDC_CHECK16, BST_CHECKED);
