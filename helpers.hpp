@@ -49,7 +49,7 @@ void inline storeConnectionSettingsReference(NOTER_CONNECTION_SETTINGS*);
 void inline storeCredentialsReference(NOTER_CREDENTIALS*);
 void inline storeGlobalHWNDReference(HWND*);
 void inline storeWindowMemoryReference(WINDOWMEMORY*);
-void inline setProgress(HWND, int, unsigned int, unsigned short int);
+void inline setProgress(HWND, int, int, unsigned short int);
 
 void inline lockExitButton(HWND hwnd) {
     EnableWindow(GetDlgItem(hwnd,ID_BUTTON4),false);
@@ -229,8 +229,11 @@ void inline storeWindowMemoryReference(WINDOWMEMORY *winMem) {
     return;
 }
 
-void inline setProgress(HWND dlgHwnd, int dlgItem, unsigned int maxWidth, unsigned short int progress) {
-    SetWindowPos(GetDlgItem(dlgHwnd,dlgItem),NULL,0,0,(unsigned int)(maxWidth*(progress/100.0)),16,SWP_NOMOVE | SWP_NOZORDER);
+void inline setProgress(HWND dlgHwnd, int dlgItem, int dlgItemRelative, unsigned short int progress) {
+    RECT rect={0}, rect2={0};
+    GetWindowRect(GetDlgItem(dlgHwnd,dlgItemRelative),&rect);
+    GetWindowRect(GetDlgItem(dlgHwnd,dlgItem),&rect2);
+    SetWindowPos(GetDlgItem(dlgHwnd,dlgItem),NULL,0,0,(unsigned int)((rect.right-rect.left-(2*(rect2.left-rect.left)))*(progress/100.0)),16,SWP_NOMOVE | SWP_NOZORDER);
     return;
 }
 
