@@ -287,19 +287,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     if(wsInit() == SOCKET_ERROR) {
         MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_WINSOCK_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
         freeGlobalResources();
-        return 1;
+        return FALSE;
     }
 
     if(!loadAndPrepareCodePage(mainSettings,libraries,hCodePageLib,hCodePageDefinition,rawCodePage,mappedCodePage)) {
         MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_CODEPAGE_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
         freeGlobalResources();
-        return 1;
+        return FALSE;
     }
 
     if((!registerMainWindowClass(&wc)) || (!registerEditWindowClass(&wc2))) {
         MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_WNDCLASS_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
         freeGlobalResources();
-        return 1;
+        return FALSE;
     }
     
     hwnd = CreateWindow(NOTER_MAINWINDOW, getStringFromTable(IDS_APPNAME), WS_OVERLAPPEDWINDOW,
@@ -309,7 +309,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     if(hwnd == NULL) {
         MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_WND_CREATE_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
         freeGlobalResources();
-        return 1;
+        return FALSE;
     }
     else {
         g_hwnd=hwnd;
@@ -319,7 +319,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     if(!hAccel) {
         MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_ACCELERATORS_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
         freeGlobalResources();
-        return 1;
+        return FALSE;
     }
 
     if(mainSettings.savePosSizes) {
