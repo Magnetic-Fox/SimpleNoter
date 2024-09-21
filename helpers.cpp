@@ -79,7 +79,7 @@ unsigned int getSelection(HWND listHwnd, unsigned int *&selected) {
 }
 
 void setSelection(HWND listHwnd, unsigned int *&selected, unsigned int itemsInBuffer) {
-    for(unsigned int x=0; x<itemsInBuffer; ++x) {
+    for(long int x=itemsInBuffer-1; x>=0; --x) {
         SendMessage(listHwnd, LB_SETSEL, TRUE, selected[x]);
     }
     return;
