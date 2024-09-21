@@ -87,9 +87,10 @@ void setSelection(HWND listHwnd, unsigned int *&selected, unsigned int itemsInBu
 }
 
 void selectIndexes(HWND listHwnd, unsigned int *&nowId, unsigned int itemsInBuffer, NOTE_SUMMARY *&notes, unsigned int noteCount) {
-    for(unsigned int y=0; y<itemsInBuffer; ++y) {
+    // same as above
+    for(unsigned int y=itemsInBuffer; y>0; --y) {
         for(unsigned int x=0; x<noteCount; ++x) {
-            if(nowId[y]==notes[x].id) {
+            if(nowId[y-1]==notes[x].id) { // another correction (y-1)
                 SendMessage(listHwnd, LB_SETSEL, TRUE, x);
                 break;
             }
