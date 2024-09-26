@@ -819,10 +819,9 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                             else {
                                 if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
                                     if(count==1) {
-                                        // using LB_GETCURSEL is a bit ugly on multi-selection lists, but if it works as it should...
-                                        index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
-                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[index].id).c_str());
-                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[index].lastModified.c_str());
+                                        getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
+                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[selection[0]].id).c_str());
+                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[selection[0]].lastModified.c_str());
                                     }
                                     else {
                                         SetWindowText(GetDlgItem(hwnd,ID_STATIC3),getStringFromTable(IDS_MULTIPLE_CHOSEN));
