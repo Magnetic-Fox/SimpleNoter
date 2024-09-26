@@ -768,6 +768,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     if(MessageBox(hwnd,(char*)tempString.c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDYES) {
                         main_LockAllButtons(hwnd);
                         for(unsigned int x=0; x<count; ++x) {
+                            SetWindowText(GetDlgItem(hwnd,ID_STATIC5),getStringFromTable(IDS_STRING_REMOVING_NOTE));
                             SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_SETSEL, FALSE, selection[x]);
                             mainLastResult=noter_deleteNote(connectionSettings,credentials,notes[selection[x]].id,buffer);
                             if(mainLastResult==INFO_NOTE_DELETED) {
@@ -794,10 +795,10 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         else {
                             SetWindowText(GetDlgItem(hwnd,ID_STATIC5),getStringFromTable(IDS_STRING_NOT_ALL_NOTES_REMOVED));
                             selectIndexes(GetDlgItem(hwnd,ID_LISTBOX),selection,count,notes,noteCount);
-                            if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0)>0) {
-                                EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), true);
-                                EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), true);
-                            }
+                        }
+                        if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0)>0) {
+                            EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), true);
+                            EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), true);
                         }
                     }
                     freeSelectionBuffer(selection);
