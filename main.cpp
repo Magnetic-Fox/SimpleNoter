@@ -816,10 +816,17 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                                 EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), false);
                             }
                             else {
-                                index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
                                 if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
-                                    SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[index].id).c_str());
-                                    SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[index].lastModified.c_str());
+                                    if(count==1) {
+                                        // using LB_GETCURSEL is a bit ugly on multi-selection lists, but if it works as it should...
+                                        index=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCURSEL, 0, 0);
+                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[index].id).c_str());
+                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[index].lastModified.c_str());
+                                    }
+                                    else {
+                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC3),getStringFromTable(IDS_MULTIPLE_CHOSEN));
+                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC4),getStringFromTable(IDS_MULTIPLE_CHOSEN));
+                                    }
                                     EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), true);
                                     EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), true);
                                 }
