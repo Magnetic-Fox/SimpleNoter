@@ -462,6 +462,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 //////////////////////////////////////
 
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    // Local variables
     std::string tempString="";
     long int index;
     long int result;
@@ -472,7 +473,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
     unsigned int *selection=NULL;
     bool atLeastOneDeleted;
     MINMAXINFO *lpMMI;
-    
+    // Switch section
     switch(msg) {
         case WM_CTLCOLOR:
             switch(HIWORD(lParam)) {
@@ -843,14 +844,12 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
         case WM_SIZE:
             width= LOWORD(lParam);
             height=HIWORD(lParam);
-
             if(width<240) {
                 width=240;
             }
             if(height<240) {
                 height=240;
             }
-
             if(mainSettings.use3DLists) {
                 SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,width,height-88,      SWP_NOZORDER | SWP_NOMOVE);
             }
@@ -863,7 +862,6 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             SetWindowPos(GetDlgItem(hwnd,ID_STATIC3),NULL,137,height-57,width-146,16,   SWP_NOZORDER);
             SetWindowPos(GetDlgItem(hwnd,ID_STATIC4),NULL,137,height-40,width-146,16,   SWP_NOZORDER);
             SetWindowPos(GetDlgItem(hwnd,ID_STATIC5),NULL,0,height-16,width,16,         SWP_NOZORDER);
-
             break;
         case WM_GETMINMAXINFO:
             lpMMI=(MINMAXINFO*)lParam;
@@ -897,7 +895,6 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     DestroyWindow(hwnd);
                 }
             }
-            
             break;
         case WM_DESTROY:
             if(Ctl3dEnabled() && (!Ctl3dUnregister(g_hInstance))) {
@@ -923,6 +920,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 //////////////////////////////////////
 
 LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    // Local variables
     unsigned long int width;
     unsigned long int height;
     unsigned long int sel;
@@ -930,7 +928,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
     int x, y, size_x, size_y;
     unsigned int state;
     MINMAXINFO *lpMMI;
-    
+    // Switch section
     switch(msg) {
         case WM_CTLCOLOR:
             switch(HIWORD(lParam)) {
@@ -1237,14 +1235,12 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
         case WM_SIZE:
             width= LOWORD(lParam);
             height=HIWORD(lParam);
-
             if(width<240) {
                 width=240;
             }
             if(height<240) {
                 height=240;
             }
-
             SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC1),  NULL,0,0,width,16,              SWP_NOZORDER | SWP_NOMOVE);
             SetWindowPos(GetDlgItem(hwnd,ID_EDIT_EDITBOX1), NULL,0,0,width,24,              SWP_NOZORDER | SWP_NOMOVE);
             SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC2),  NULL,0,0,width,16,              SWP_NOZORDER | SWP_NOMOVE);
@@ -1254,7 +1250,6 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             SetWindowPos(GetDlgItem(hwnd,ID_EDIT_BUTTON3),  NULL,192,height-37,0,0,         SWP_NOZORDER | SWP_NOSIZE);
             SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC3),  NULL,288,height-37,width-288,21,SWP_NOZORDER);
             SetWindowPos(GetDlgItem(hwnd,ID_EDIT_STATIC4),  NULL,0,height-16,width,16,      SWP_NOZORDER);
-            
             break;
         case WM_GETMINMAXINFO:
             lpMMI=(MINMAXINFO*)lParam;
@@ -1310,9 +1305,11 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 //////////////////////////////////////
 
 BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    // Local variables
     NOTE tempNote;
     long int result;
     bool addUpTest=false;
+    // Switch section
     switch(msg) {
         case WM_INITDIALOG:
             addUpTest=IsWindowEnabled(GetDlgItem(GetParent(hwnd),ID_EDIT_BUTTON1));
@@ -1382,7 +1379,9 @@ BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 //////////////////////////////////////
 
 BOOL CALLBACK AboutDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    // Local variables
     NOTE tempNote;
+    // Switch section
     switch(msg) {
         case WM_INITDIALOG:
             SetWindowText(GetDlgItem(hwnd,IDC_STATIC7),getStringFromTable(IDS_APPNAME));
@@ -1409,10 +1408,12 @@ BOOL CALLBACK AboutDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 //////////////////////////////////////
 
 BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    // Local variables
     bool enabled;
     std::string iniFile;
     LIB_ITER lIt;
     unsigned int counter, counter2, selectedIndex, selectedIndex2;
+    // Switch section
     switch(msg) {
         case WM_INITDIALOG:
             check3DChanged=false;
@@ -1599,10 +1600,12 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 //////////////////////////////////////
 
 BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    // Local variables
     NOTER_SERVER_INFO serverInfo;
     NOTER_CONNECTION_SETTINGS tempConnectionSettings;
     char* ipAddress=NULL;
     std::string iniFile;
+    // Switch section
     switch(msg) {
         case WM_INITDIALOG:
             if(noter_connectionSettingsAvailable(connectionSettings)) {
@@ -1739,9 +1742,11 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 //////////////////////////////////////
 
 BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    // Local variables
     USER_INFO userInfo;
     long int result;
     std::string tempString, iniFile;
+    // Switch section
     switch(msg) {
         case WM_INITDIALOG:
             if(noter_connectionSettingsAvailable(connectionSettings)) {
@@ -1974,9 +1979,11 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 //////////////////////////////////////
 
 BOOL CALLBACK UserRegDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    // Local variables
     NOTER_CREDENTIALS tempCredentials;
     std::string tempUserName, tempPassword, tempSecPassword, tempString;
     long int result;
+    // Switch section
     switch(msg) {
         case WM_INITDIALOG:
             EnableWindow(GetDlgItem(hwnd,IDOK),false);
@@ -2062,8 +2069,10 @@ BOOL CALLBACK UserRegDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 //////////////////////////////////////
 
 BOOL CALLBACK PassConfirmDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    // Local variables
     long int result;
     std::string tempSecPassword, tempString;
+    // Switch section
     switch(msg) {
         case WM_INITDIALOG:
             EnableWindow(GetDlgItem(hwnd,IDOK),false);
@@ -2129,8 +2138,10 @@ BOOL CALLBACK PassConfirmDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 //////////////////////////////////////
 
 BOOL CALLBACK PassChangeDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    // Local variables
     std::string tempOldPassword, tempNewPassword, tempSecNewPassword;
     long int result;
+    // Switch section
     switch(msg) {
         case WM_INITDIALOG:
             EnableWindow(GetDlgItem(hwnd,IDOK),false);
@@ -2224,6 +2235,7 @@ BOOL CALLBACK PassChangeDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 //////////////////////////////////////
 
 BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    // Switch section
     switch(msg) {
         case WM_INITDIALOG:
             setProgress(hwnd,IDC_STATIC16,IDC_STATIC17,0);
