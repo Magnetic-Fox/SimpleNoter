@@ -456,4 +456,5 @@ BEGIN
     IDS_STRING_NOT_ALL_NOTES_LOADED     "Nie uda³o siê za³adowaæ wszystkich wybranych notatek."
     IDS_STRING_MSG_WANT_NOTES_REMOVAL   "Czy na pewno chcesz usun¹æ wybrane notatki?"
     IDS_STRING_NOT_ALL_NOTES_REMOVED    "Nie wszystkie notatki zosta³y usuniête."
+    IDS_MULTIPLE_CHOSEN                 "-- wybrano kilka --"
 END
