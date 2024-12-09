@@ -49,8 +49,9 @@ LIBRARIES                   libraries;
 
 // Standard types
 long int                    noteCount=0;
-long int                    mainLastResult=0;
+long int                    mainLastResult=0, *minID, *maxID;
 unsigned int                ctlRegs=0;
+std::string                 *minLM, *maxLM;
 bool                        check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged;
 char                        buffer[65536];
 
@@ -244,6 +245,59 @@ void freeGlobalResources(void) {
     DeleteObject(g_hBrush2);
     DeleteObject(g_hBrush3);
     unloadCodePage(hCodePageLib,hCodePageDefinition);
+    return;
+}
+
+void onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&selection) {
+    count=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0);
+    if(count==0) {
+        SetWindowText(GetDlgItem(hwnd,ID_STATIC3),getStringFromTable(IDS_STRING_NOT_CHOSEN));
+        SetWindowText(GetDlgItem(hwnd,ID_STATIC4),getStringFromTable(IDS_STRING_NOT_CHOSEN));
+        EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), false);
+        EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), false);
+    }
+    else {
+        if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
+            if(count==1) {
+                getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
+                SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[selection[0]].id).c_str());
+                SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[selection[0]].lastModified.c_str());
+            }
+            else {
+                /*
+                SetWindowText(GetDlgItem(hwnd,ID_STATIC3),getStringFromTable(IDS_MULTIPLE_CHOSEN));
+                SetWindowText(GetDlgItem(hwnd,ID_STATIC4),getStringFromTable(IDS_MULTIPLE_CHOSEN));
+                */
+                getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
+                minID=&notes[selection[0]].id;
+                maxID=&notes[selection[0]].id;
+                minLM=&notes[selection[0]].lastModified;
+                maxLM=&notes[selection[0]].lastModified;
+                for(unsigned int x=1; x<count; ++x) {
+                    if(notes[selection[x]].id<*minID) {
+                        minID=&notes[selection[x]].id;
+                    }
+                    if(notes[selection[x]].id>*maxID) {
+                        maxID=&notes[selection[x]].id;
+                    }
+                    if(notes[selection[x]].lastModified<*minLM) {
+                        minLM=&notes[selection[x]].lastModified;
+                    }
+                    if(notes[selection[x]].lastModified>*maxLM) {
+                        maxLM=&notes[selection[x]].lastModified;
+                    }
+                }
+                SetWindowText(GetDlgItem(hwnd,ID_STATIC3),(IntToStr(*maxID)+" - "+IntToStr(*minID)).c_str());
+                SetWindowText(GetDlgItem(hwnd,ID_STATIC4),((*maxLM)+" - "+(*minLM)).c_str());
+            }
+            EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), true);
+            EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), true);
+        }
+    }
+    if(mainLastResult!=0) {
+        mainLastResult=0;
+        SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
+    }
     return;
 }
 
@@ -560,6 +614,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                 case ID_EDIT_SELECTALL:
                     if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX),LB_GETSELCOUNT,0,0)!=noteCount) {
                         SendMessage(GetDlgItem(hwnd,ID_LISTBOX),LB_SETSEL,TRUE,-1);
+                        onSelectionChange(hwnd,count,selection);
                     }
                     break;
                 case ID_OPTIONS_PREFERENCES:
@@ -810,32 +865,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                             SendMessage(hwnd, WM_COMMAND, ID_BUTTON3, 0);
                             break;
                         case LBN_SELCHANGE:
-                            count=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0);
-                            if(count==0) {
-                                SetWindowText(GetDlgItem(hwnd,ID_STATIC3),getStringFromTable(IDS_STRING_NOT_CHOSEN));
-                                SetWindowText(GetDlgItem(hwnd,ID_STATIC4),getStringFromTable(IDS_STRING_NOT_CHOSEN));
-                                EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), false);
-                                EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), false);
-                            }
-                            else {
-                                if(IsWindowEnabled(GetDlgItem(hwnd,ID_BUTTON4))) {
-                                    if(count==1) {
-                                        getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
-                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC3),IntToStr(notes[selection[0]].id).c_str());
-                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[selection[0]].lastModified.c_str());
-                                    }
-                                    else {
-                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC3),getStringFromTable(IDS_MULTIPLE_CHOSEN));
-                                        SetWindowText(GetDlgItem(hwnd,ID_STATIC4),getStringFromTable(IDS_MULTIPLE_CHOSEN));
-                                    }
-                                    EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), true);
-                                    EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), true);
-                                }
-                            }
-                            if(mainLastResult!=0) {
-                                mainLastResult=0;
-                                SetWindowText(GetDlgItem(hwnd,ID_STATIC5),(char*)noter_getAnswerString(mainLastResult).c_str());
-                            }
+                            onSelectionChange(hwnd,count,selection);
                             break;
                     }
                     break;
