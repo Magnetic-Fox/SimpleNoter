@@ -187,24 +187,24 @@ BEGIN
                     WS_TABSTOP
     GROUPBOX        "Opcje startowe i pozosta³e",IDC_STATIC,208,7,201,122
     CONTROL         "Pobierz listê notatek przy starcie programu",
-                    IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    IDC_AUTORELOADCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
                     212,17,189,10
     CONTROL         "Odœwie¿ listê notatek po dodaniu lub aktualizacji",
-                    IDC_CHECK9,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    IDC_REFRESHONADDCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
                     212,28,189,10
-    CONTROL         "Zapamiêtaj pozycjê i rozmiary okienek",IDC_CHECK10,
+    CONTROL         "Zapamiêtaj pozycjê i rozmiary okienek",IDC_SAVEWINPOSCHECK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,212,39,189,10
-    CONTROL         "U¿yj kontrolek 3D",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "U¿yj kontrolek 3D",IDC_USE3DCONTROLSCHECK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,212,50,189,10
-    CONTROL         "Przyciski",IDC_CHECK4,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Przyciski",IDC_BUTTONSCHECK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,220,61,181,10
-    CONTROL         "Listy",IDC_CHECK5,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+    CONTROL         "Listy",IDC_LISTSCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
                     220,72,181,10
-    CONTROL         "Pola edycji",IDC_CHECK6,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Pola edycji",IDC_EDITSCHECK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,220,83,181,10
-    CONTROL         "Listy rozsuwane",IDC_CHECK7,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Listy rozsuwane",IDC_COMBOSCHECK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,220,94,181,10
-    CONTROL         "Dialogi",IDC_CHECK8,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Dialogi",IDC_DIALOGSCHECK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,220,105,181,10
     CONTROL         "Poka¿ ID i daty notatek przy wielokrotnym wyborze",
                     IDC_CHECK20,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,212,
@@ -227,7 +227,7 @@ BEGIN
     EDITTEXT        IDC_EDIT2,50,34,138,12,ES_AUTOHSCROLL
     LTEXT           "Udzia³:",IDC_STATIC,11,49,26,8
     EDITTEXT        IDC_EDIT3,50,48,138,12,ES_AUTOHSCROLL
-    CONTROL         "Oczekuj &kompresji",IDC_CHECK11,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Oczekuj &kompresji",IDC_COMPRESSIONCHECK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,11,64,125,10
     PUSHBUTTON      "&Testuj",IDC_TESTBUTTON,138,62,50,14
     GROUPBOX        "Informacje o serwerze",IDC_STATIC,7,85,186,60
@@ -324,7 +324,7 @@ BEGIN
     PUSHBUTTON      "&Przegl¹daj...",IDC_BROWSEBUTTON,129,30,60,14
     GROUPBOX        "Miejsce docelowe",IDC_STATIC,7,7,186,52
     CONTROL         "Zignoruj nazwê pliku (u¿yj jako œcie¿ki do folderu)",
-                    IDC_CHECK12,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,46,
+                    IDC_IGNOREFILENAMECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,46,
                     178,10
     GROUPBOX        "Opcje zapisu",IDC_STATIC,7,59,186,69
     RADIOBUTTON     "Eksportuj do jednego pliku",IDC_RADIO5,11,69,178,10,WS_TABSTOP
@@ -332,23 +332,23 @@ BEGIN
     RADIOBUTTON     "Numeruj zgodnie z ID notatek",IDC_RADIO7,21,91,168,10,WS_TABSTOP
     RADIOBUTTON     "Numeruj rozpoczynaj¹c od:",IDC_RADIO8,21,102,103,10,WS_TABSTOP
     EDITTEXT        IDC_EDIT14,127,101,62,12,ES_AUTOHSCROLL
-    CONTROL         "Do³¹cz prefiks:",IDC_CHECK13,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Do³¹cz prefiks:",IDC_ADDPREFIXCHECK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,31,114,66,10
     EDITTEXT        IDC_EDIT15,127,113,62,12,ES_AUTOHSCROLL
     GROUPBOX        "Opcje eksportu",IDC_STATIC,7,129,186,79
-    CONTROL         "Do³¹cz tytu³ w pierwszej linijce",IDC_CHECK14,"Button",
+    CONTROL         "Do³¹cz tytu³ w pierwszej linijce",IDC_FIRSTLINESUBJECTCHECK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,11,139,178,10
     CONTROL         "Pozostaw jedn¹ linijkê odstêpu przed treœci¹",
-                    IDC_CHECK15,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,150,
+                    IDC_ONELINEGAPCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,150,
                     168,10
     CONTROL         "Do³¹cz dodatkowe informacje o notatce na koñcu",
-                    IDC_CHECK16,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,161,
+                    IDC_ADDINFOATENDCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,161,
                     178,10
-    CONTROL         "Odseparuj od treœci",IDC_CHECK17,"Button",
+    CONTROL         "Odseparuj od treœci",IDC_SEPARATEINFOCHECK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,21,172,168,10
-    CONTROL         "Separuj notatki w pliku",IDC_CHECK18,"Button",
+    CONTROL         "Separuj notatki w pliku",IDC_SEPARATENOTESINFILESCHECK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,11,183,178,10
-    CONTROL         "Kontynuuj eksport w przypadku b³êdów",IDC_CHECK19,
+    CONTROL         "Kontynuuj eksport w przypadku b³êdów",IDC_CONTINUEONERRORSCHECK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,194,178,10
     GROUPBOX        "Postêp",IDC_STATIC,7,208,186,27
     LTEXT           "",IDC_STATIC17,11,218,178,10,WS_BORDER

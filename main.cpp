@@ -253,8 +253,8 @@ void onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&selection)
     if(count==0) {
         SetWindowText(GetDlgItem(hwnd,IDC_NOTEID),getStringFromTable(IDS_STRING_NOT_CHOSEN));
         SetWindowText(GetDlgItem(hwnd,IDC_NOTELASTMOD),getStringFromTable(IDS_STRING_NOT_CHOSEN));
-        EnableWindow(GetDlgItem(hwnd,IDB_OPEN), false);
-        EnableWindow(GetDlgItem(hwnd,IDB_DELETE), false);
+        EnableWindow(GetDlgItem(hwnd,IDB_OPEN),     false);
+        EnableWindow(GetDlgItem(hwnd,IDB_DELETE),   false);
     }
     else {
         if(IsWindowEnabled(GetDlgItem(hwnd,IDB_EXIT))) {
@@ -292,8 +292,8 @@ void onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&selection)
                     SetWindowText(GetDlgItem(hwnd,IDC_NOTELASTMOD),getStringFromTable(IDS_STRING_MULTIPLE_CHOSEN));
                 }
             }
-            EnableWindow(GetDlgItem(hwnd,IDB_OPEN), true);
-            EnableWindow(GetDlgItem(hwnd,IDB_DELETE), true);
+            EnableWindow(GetDlgItem(hwnd,IDB_OPEN),     true);
+            EnableWindow(GetDlgItem(hwnd,IDB_DELETE),   true);
         }
     }
     if(mainLastResult!=0) {
@@ -690,8 +690,8 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     else {
                         SetWindowText(GetDlgItem(hwnd,IDC_NOTEID),getStringFromTable(IDS_STRING_NOT_CHOSEN));
                         SetWindowText(GetDlgItem(hwnd,IDC_NOTELASTMOD),getStringFromTable(IDS_STRING_NOT_CHOSEN));
-                        EnableWindow(GetDlgItem(hwnd,IDB_OPEN), false);
-                        EnableWindow(GetDlgItem(hwnd,IDB_DELETE), false);
+                        EnableWindow(GetDlgItem(hwnd,IDB_OPEN),     false);
+                        EnableWindow(GetDlgItem(hwnd,IDB_DELETE),   false);
                     }
                     if(noteCount>=0) {
                         mainLastResult=INFO_LIST_SUCCESSFUL;
@@ -709,14 +709,14 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     else {
                         mainLastResult=noteCount;
                         SetWindowText(GetDlgItem(hwnd,IDC_STATUS),(char*)noter_getAnswerString(mainLastResult).c_str());
-                        EnableWindow(GetDlgItem(hwnd,IDB_OPEN), false);
-                        EnableWindow(GetDlgItem(hwnd,IDB_DELETE), false);
+                        EnableWindow(GetDlgItem(hwnd,IDB_OPEN),     false);
+                        EnableWindow(GetDlgItem(hwnd,IDB_DELETE),   false);
                         noteCount=0;
                     }
                     main_UnlockAllButtons(hwnd);
                     if(count==0) {
-                        EnableWindow(GetDlgItem(hwnd,IDB_OPEN), false);
-                        EnableWindow(GetDlgItem(hwnd,IDB_DELETE), false);
+                        EnableWindow(GetDlgItem(hwnd,IDB_OPEN),     false);
+                        EnableWindow(GetDlgItem(hwnd,IDB_DELETE),   false);
                     }
                     freeSelectionBuffer(selection);
                     break;
@@ -855,8 +855,8 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                             selectIndexes(GetDlgItem(hwnd,ID_LISTBOX),selection,count,notes,noteCount);
                         }
                         if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0)>0) {
-                            EnableWindow(GetDlgItem(hwnd,IDB_OPEN), true);
-                            EnableWindow(GetDlgItem(hwnd,IDB_DELETE), true);
+                            EnableWindow(GetDlgItem(hwnd,IDB_OPEN),     true);
+                            EnableWindow(GetDlgItem(hwnd,IDB_DELETE),   true);
                         }
                     }
                     freeSelectionBuffer(selection);
@@ -980,16 +980,16 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                 EnableMenuItem(GetMenu(hwnd),   ID_FILE_PROPERTIES, MF_GRAYED);
                 EnableMenuItem(GetMenu(hwnd),   ID_FILE_TONEWNOTE,  MF_GRAYED);
                 ModifyMenu(GetMenu(hwnd),       ID_FILE_ADDUP,      MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_ADD));
-                EnableMenuItem(GetMenu(hwnd),   ID_FILE_ADDUP,      IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_ADDUP)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_FILE_ADDUP,      IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_ADDUP))        ? MF_ENABLED : MF_GRAYED);
             }
             else {
-                EnableMenuItem(GetMenu(hwnd),   ID_FILE_PROPERTIES, IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_PROPERTIES)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_FILE_PROPERTIES, IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_PROPERTIES))   ? MF_ENABLED : MF_GRAYED);
                 EnableMenuItem(GetMenu(hwnd),   ID_FILE_TONEWNOTE,  MF_ENABLED);
                 ModifyMenu(GetMenu(hwnd),       ID_FILE_ADDUP,      MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_UPDATE));
-                EnableMenuItem(GetMenu(hwnd),   ID_FILE_ADDUP,      IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_ADDUP)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_FILE_ADDUP,      IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_ADDUP))        ? MF_ENABLED : MF_GRAYED);
             }
             if((GetFocus()==GetDlgItem(hwnd,IDE_EDIT_SUBJECT)) || (GetFocus()==GetDlgItem(hwnd,IDE_EDIT_ENTRY))) {
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_UNDO,       SendMessage(GetFocus(), EM_CANUNDO, 0, 0) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_UNDO,       SendMessage(GetFocus(), EM_CANUNDO, 0, 0)               ? MF_ENABLED : MF_GRAYED);
                 sel=SendMessage(GetFocus(),     EM_GETSEL,          0, 0);
                 EnableMenuItem(GetMenu(hwnd),   ID_EDIT_CUT,        (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
                 EnableMenuItem(GetMenu(hwnd),   ID_EDIT_COPY,       (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
@@ -1356,7 +1356,7 @@ BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC4),(char*)toCodePage(mappedCodePage,(char*)tempNote.userAgent.c_str()).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC5),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastModified.c_str()).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC6),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastUserAgent.c_str()).c_str());
-                EnableWindow(GetDlgItem(hwnd,IDC_LOCKBUTTON), !tempNote.locked);
+                EnableWindow(GetDlgItem(hwnd,IDC_LOCKBUTTON),   !tempNote.locked);
                 EnableWindow(GetDlgItem(hwnd,IDC_UNLOCKBUTTON),  tempNote.locked);
             }
             else {
@@ -1501,22 +1501,22 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                 CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO4);
                 EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),true);
             }
-            CheckDlgButton(hwnd, IDC_CHECK2,    mainSettings.autoReload     ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK9,    mainSettings.autoRefresh    ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK10,   mainSettings.savePosSizes   ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK3,    mainSettings.use3DControls  ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK4,    mainSettings.use3DButtons   ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK5,    mainSettings.use3DLists     ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK6,    mainSettings.use3DEdits     ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK7,    mainSettings.use3DCombos    ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK8,    mainSettings.use3DDialogs   ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK20,   mainSettings.showMultiIDnLM ? BST_CHECKED : BST_UNCHECKED);
-            enabled=IsDlgButtonChecked(hwnd,    IDC_CHECK3);
-            EnableWindow(GetDlgItem(hwnd,IDC_CHECK4),enabled);
-            EnableWindow(GetDlgItem(hwnd,IDC_CHECK5),enabled);
-            EnableWindow(GetDlgItem(hwnd,IDC_CHECK6),enabled);
-            EnableWindow(GetDlgItem(hwnd,IDC_CHECK7),enabled);
-            EnableWindow(GetDlgItem(hwnd,IDC_CHECK8),enabled);
+            CheckDlgButton(hwnd, IDC_AUTORELOADCHECK,   mainSettings.autoReload     ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_REFRESHONADDCHECK, mainSettings.autoRefresh    ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_SAVEWINPOSCHECK,   mainSettings.savePosSizes   ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_USE3DCONTROLSCHECK,mainSettings.use3DControls  ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_BUTTONSCHECK,      mainSettings.use3DButtons   ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_LISTSCHECK,        mainSettings.use3DLists     ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_EDITSCHECK,        mainSettings.use3DEdits     ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_COMBOSCHECK,       mainSettings.use3DCombos    ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_DIALOGSCHECK,      mainSettings.use3DDialogs   ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK20,           mainSettings.showMultiIDnLM ? BST_CHECKED : BST_UNCHECKED);
+            enabled=IsDlgButtonChecked(hwnd,            IDC_USE3DCONTROLSCHECK);
+            EnableWindow(GetDlgItem(hwnd,IDC_BUTTONSCHECK), enabled);
+            EnableWindow(GetDlgItem(hwnd,IDC_LISTSCHECK),   enabled);
+            EnableWindow(GetDlgItem(hwnd,IDC_EDITSCHECK),   enabled);
+            EnableWindow(GetDlgItem(hwnd,IDC_COMBOSCHECK),  enabled);
+            EnableWindow(GetDlgItem(hwnd,IDC_DIALOGSCHECK), enabled);
             break;
         case WM_COMMAND:
             switch(wParam) {
@@ -1527,9 +1527,9 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                     mainSettings.editWindowSystem=IsDlgButtonChecked(hwnd, IDC_RADIO3);
                     mainSettings.mainWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_COMBO1), CB_GETCURSEL, 0, 0);
                     mainSettings.editWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_COMBO2), CB_GETCURSEL, 0, 0);
-                    mainSettings.autoReload= IsDlgButtonChecked(hwnd, IDC_CHECK2);
-                    mainSettings.autoRefresh=IsDlgButtonChecked(hwnd, IDC_CHECK9);
-                    if((mainSettings.savePosSizes==false) && (IsDlgButtonChecked(hwnd, IDC_CHECK10))) {
+                    mainSettings.autoReload= IsDlgButtonChecked(hwnd, IDC_AUTORELOADCHECK);
+                    mainSettings.autoRefresh=IsDlgButtonChecked(hwnd, IDC_REFRESHONADDCHECK);
+                    if((mainSettings.savePosSizes==false) && (IsDlgButtonChecked(hwnd, IDC_SAVEWINPOSCHECK))) {
                         mainSettings.mainWindowX=       CW_USEDEFAULT;
                         mainSettings.mainWindowY=       CW_USEDEFAULT;
                         mainSettings.mainWindowSizeX=   CW_USEDEFAULT;
@@ -1539,13 +1539,13 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                         mainSettings.editWindowSizeX=   CW_USEDEFAULT;
                         mainSettings.editWindowSizeY=   CW_USEDEFAULT;
                     }
-                    mainSettings.savePosSizes=  IsDlgButtonChecked(hwnd, IDC_CHECK10);
-                    mainSettings.use3DControls= IsDlgButtonChecked(hwnd, IDC_CHECK3);
-                    mainSettings.use3DButtons=  IsDlgButtonChecked(hwnd, IDC_CHECK4);
-                    mainSettings.use3DLists=    IsDlgButtonChecked(hwnd, IDC_CHECK5);
-                    mainSettings.use3DEdits=    IsDlgButtonChecked(hwnd, IDC_CHECK6);
-                    mainSettings.use3DCombos=   IsDlgButtonChecked(hwnd, IDC_CHECK7);
-                    mainSettings.use3DDialogs=  IsDlgButtonChecked(hwnd, IDC_CHECK8);
+                    mainSettings.savePosSizes=  IsDlgButtonChecked(hwnd, IDC_SAVEWINPOSCHECK);
+                    mainSettings.use3DControls= IsDlgButtonChecked(hwnd, IDC_USE3DCONTROLSCHECK);
+                    mainSettings.use3DButtons=  IsDlgButtonChecked(hwnd, IDC_BUTTONSCHECK);
+                    mainSettings.use3DLists=    IsDlgButtonChecked(hwnd, IDC_LISTSCHECK);
+                    mainSettings.use3DEdits=    IsDlgButtonChecked(hwnd, IDC_EDITSCHECK);
+                    mainSettings.use3DCombos=   IsDlgButtonChecked(hwnd, IDC_COMBOSCHECK);
+                    mainSettings.use3DDialogs=  IsDlgButtonChecked(hwnd, IDC_DIALOGSCHECK);
                     mainSettings.showMultiIDnLM=IsDlgButtonChecked(hwnd, IDC_CHECK20);
                     counter=0;
                     counter2=0;
@@ -1600,20 +1600,20 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                     CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO4);
                     EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),true);
                     break;
-                case IDC_CHECK3:
+                case IDC_USE3DCONTROLSCHECK:
                     check3DChanged=true;
-                    enabled=IsDlgButtonChecked(hwnd, IDC_CHECK3);
-                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK4),enabled);
-                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK5),enabled);
-                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK6),enabled);
-                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK7),enabled);
-                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK8),enabled);
+                    enabled=IsDlgButtonChecked(hwnd, IDC_USE3DCONTROLSCHECK);
+                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTONSCHECK), enabled);
+                    EnableWindow(GetDlgItem(hwnd,IDC_LISTSCHECK),   enabled);
+                    EnableWindow(GetDlgItem(hwnd,IDC_EDITSCHECK),   enabled);
+                    EnableWindow(GetDlgItem(hwnd,IDC_COMBOSCHECK),  enabled);
+                    EnableWindow(GetDlgItem(hwnd,IDC_DIALOGSCHECK), enabled);
                     break;
-                case IDC_CHECK4:
-                case IDC_CHECK5:
-                case IDC_CHECK6:
-                case IDC_CHECK7:
-                case IDC_CHECK8:
+                case IDC_BUTTONSCHECK:
+                case IDC_LISTSCHECK:
+                case IDC_EDITSCHECK:
+                case IDC_COMBOSCHECK:
+                case IDC_DIALOGSCHECK:
                     check3DChanged=true;
                     break;
             }
@@ -1646,7 +1646,7 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 SetWindowText(GetDlgItem(hwnd,IDC_EDIT1),(char*)connectionSettings.serverAddress.c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_EDIT2),(char*)IntToStr(connectionSettings.port).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_EDIT3),(char*)connectionSettings.share.c_str());
-                CheckDlgButton(hwnd,IDC_CHECK11,connectionSettings.requestCompression ? BST_CHECKED : BST_UNCHECKED);
+                CheckDlgButton(hwnd,IDC_COMPRESSIONCHECK,connectionSettings.requestCompression ? BST_CHECKED : BST_UNCHECKED);
                 connection_LockAllButtons(hwnd);
                 serverInfo=noter_getServerInfo(connectionSettings,buffer);
                 connection_UnlockAllButtons(hwnd);
@@ -1677,7 +1677,7 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             connectionSettings.port=StrToInt(buffer);
                             GetWindowText(GetDlgItem(hwnd,IDC_EDIT3),buffer,65535);
                             connectionSettings.share=buffer;
-                            connectionSettings.requestCompression=IsDlgButtonChecked(hwnd, IDC_CHECK11);
+                            connectionSettings.requestCompression=IsDlgButtonChecked(hwnd, IDC_COMPRESSIONCHECK);
                             GetModuleFileName(g_hInstance,buffer,32767);
                             iniFile=getDefaultIniFile(buffer);
                             saveConnectionSettings(connectionSettings,(char*)iniFile.c_str());
@@ -1694,7 +1694,7 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     }
                     EndDialog(hwnd,IDCANCEL);
                     break;
-                case IDC_CHECK11:
+                case IDC_COMPRESSIONCHECK:
                     editsChanged=true;  // yeah, a bit ugly...
                     break;
                 case IDC_TESTBUTTON:
@@ -1790,26 +1790,26 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),(char*)userInfo.lastChanged.c_str());
                         SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),(char*)userInfo.lastUserAgent.c_str());
                         EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),  true);
-                        EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),  true);
+                        EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON), true);
                     }
                     else {
                         EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),  false);
-                        EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),  false);
+                        EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON), false);
                     }
                 }
                 else {
-                    EnableWindow(GetDlgItem(hwnd,IDOK),         false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),  false);
+                    EnableWindow(GetDlgItem(hwnd,IDOK),                 false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),      false);
                     EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),  false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),  false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON), false);
                 }
             }
             else {
-                EnableWindow(GetDlgItem(hwnd,IDOK),         false);
-                EnableWindow(GetDlgItem(hwnd,IDC_REGISTERBUTTON),  false);
-                EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),  false);
+                EnableWindow(GetDlgItem(hwnd,IDOK),                 false);
+                EnableWindow(GetDlgItem(hwnd,IDC_REGISTERBUTTON),   false);
+                EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),      false);
                 EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),  false);
-                EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),  false);
+                EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON), false);
             }
             editsChanged=false;
             editsChanged2=false;
@@ -1878,7 +1878,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                 if(editsChanged) {
                                     useTestCredentials=true;
                                 }
-                                EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),true);
+                                EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON), true);
                                 EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),true);
                                 if(lParam!=IDC_REGISTERBUTTON) {
                                     MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_LOGIN_SUCCESSFUL),getStringFromTable(IDS_STRING_INFORMATION,1),MB_ICONINFORMATION | MB_OK);
@@ -1891,7 +1891,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                 EnableWindow( GetDlgItem(hwnd,IDC_ACCDELETEBUTTON), false);
-                                EnableWindow( GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON), false);
+                                EnableWindow( GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),false);
                                 MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
                             }
                         }
@@ -1928,7 +1928,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                     SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                     SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                     EnableWindow( GetDlgItem(hwnd,IDC_ACCDELETEBUTTON), false);
-                                    EnableWindow( GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON), false);
+                                    EnableWindow( GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),false);
                                 }
                                 else {
                                     credentials.username="";
@@ -1976,12 +1976,12 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         case EN_CHANGE:
                             editsChanged=true;
                             if(GetWindowTextLength(GetDlgItem(hwnd,wParam))==0) {
-                                EnableWindow(GetDlgItem(hwnd,IDOK),       false);
+                                EnableWindow(GetDlgItem(hwnd,IDOK),false);
                                 EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),false);
                             }
                             else {
                                 if(GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT4))>0 && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT5))>0) {
-                                    EnableWindow(GetDlgItem(hwnd,IDOK),       true);
+                                    EnableWindow(GetDlgItem(hwnd,IDOK),true);
                                     EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),true);
                                 }
                             }
@@ -2136,12 +2136,8 @@ BOOL CALLBACK PassConfirmDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                 case IDC_EDIT12:
                     switch(HIWORD(lParam)) {
                         case EN_CHANGE:
-                            if(GetWindowTextLength(GetDlgItem(hwnd,wParam))==0) {
-                                EnableWindow(GetDlgItem(hwnd,IDOK),false);
-                            }
-                            else {
-                                EnableWindow(GetDlgItem(hwnd,IDOK),true);
-                            }
+                            EnableWindow(GetDlgItem(hwnd,IDOK),(GetWindowTextLength(GetDlgItem(hwnd,wParam))!=0));
+                            break;
                     }
                     break;
             }
@@ -2266,26 +2262,26 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     switch(msg) {
         case WM_INITDIALOG:
             setProgress(hwnd,IDC_STATIC16,IDC_STATIC17,0);
-            CheckDlgButton(hwnd, IDC_CHECK14, BST_CHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK15, BST_CHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK16, BST_CHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK17, BST_CHECKED);
+            CheckDlgButton(hwnd, IDC_FIRSTLINESUBJECTCHECK, BST_CHECKED);
+            CheckDlgButton(hwnd, IDC_ONELINEGAPCHECK, BST_CHECKED);
+            CheckDlgButton(hwnd, IDC_ADDINFOATENDCHECK, BST_CHECKED);
+            CheckDlgButton(hwnd, IDC_SEPARATEINFOCHECK, BST_CHECKED);
             CheckRadioButton(hwnd, IDC_RADIO7, IDC_RADIO8, IDC_RADIO7);
             EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
             EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
-            EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),false);
-            EnableWindow(GetDlgItem(hwnd,IDC_CHECK18),false);
+            EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),false);
+            EnableWindow(GetDlgItem(hwnd,IDC_SEPARATENOTESINFILESCHECK),false);
             if(SendMessage(GetDlgItem(GetParent(hwnd),ID_LISTBOX),LB_GETSELCOUNT, 0, 0)>1) {
                 CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO6);
-                CheckDlgButton(hwnd, IDC_CHECK12, BST_CHECKED);
+                CheckDlgButton(hwnd, IDC_IGNOREFILENAMECHECK, BST_CHECKED);
             }
             else {
                 CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO5);
-                EnableWindow(GetDlgItem(hwnd,IDC_CHECK12),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_IGNOREFILENAMECHECK),false);
                 EnableWindow(GetDlgItem(hwnd,IDC_RADIO6),false);
                 EnableWindow(GetDlgItem(hwnd,IDC_RADIO7),false);
                 EnableWindow(GetDlgItem(hwnd,IDC_RADIO8),false);
-                EnableWindow(GetDlgItem(hwnd,IDC_CHECK19),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_CONTINUEONERRORSCHECK),false);
             }
             break;
         case WM_CTLCOLOR:
@@ -2306,14 +2302,14 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case IDC_RADIO5:
                     EnableWindow(GetDlgItem(hwnd,IDC_RADIO7),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_RADIO8),false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
                     if(SendMessage(GetDlgItem(GetParent(hwnd),ID_LISTBOX),LB_GETSELCOUNT, 0, 0)>1) {
-                        EnableWindow(GetDlgItem(hwnd,IDC_CHECK18),true);
+                        EnableWindow(GetDlgItem(hwnd,IDC_SEPARATENOTESINFILESCHECK),true);
                     }
                     else {
-                        EnableWindow(GetDlgItem(hwnd,IDC_CHECK18),false);
+                        EnableWindow(GetDlgItem(hwnd,IDC_SEPARATENOTESINFILESCHECK),false);
                     }
                     CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO5);
                     break;
@@ -2322,45 +2318,36 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     EnableWindow(GetDlgItem(hwnd,IDC_RADIO8),true);
                     if(IsDlgButtonChecked(hwnd,IDC_RADIO8)) {
                         EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),true);
-                        EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),true);
-                        if(IsDlgButtonChecked(hwnd,IDC_CHECK13)) {
-                            EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),true);
-                        }
-                        else {
-                            EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
-                        }
+                        EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),true);
+                        EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),IsDlgButtonChecked(hwnd,IDC_ADDPREFIXCHECK));
                     }
                     else {
                         EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
-                        EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),false);
+                        EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),false);
                     }
-                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK18),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_SEPARATENOTESINFILESCHECK),false);
                     CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO6);
                     break;
                 case IDC_RADIO7:
                     CheckRadioButton(hwnd, IDC_RADIO7, IDC_RADIO8, IDC_RADIO7);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
                     break;
                 case IDC_RADIO8:
                     CheckRadioButton(hwnd, IDC_RADIO7, IDC_RADIO8, IDC_RADIO8);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),true);
-                    EnableWindow(GetDlgItem(hwnd,IDC_CHECK13),true);
-                    if(IsDlgButtonChecked(hwnd,IDC_CHECK13)) {
-                        EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),true);
-                    }
-                    else {
-                        EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
-                    }
+                    EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),true);
+                    EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),IsDlgButtonChecked(hwnd,IDC_ADDPREFIXCHECK));
                     break;
-                case IDC_CHECK13:
-                    if(IsDlgButtonChecked(hwnd,IDC_CHECK13)) {
-                        EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),true);
-                    }
-                    else {
-                        EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
-                    }
+                case IDC_ADDPREFIXCHECK:
+                    EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),IsDlgButtonChecked(hwnd,IDC_ADDPREFIXCHECK));
+                    break;
+                case IDC_FIRSTLINESUBJECTCHECK:
+                    EnableWindow(GetDlgItem(hwnd,IDC_ONELINEGAPCHECK),IsDlgButtonChecked(hwnd,IDC_FIRSTLINESUBJECTCHECK));
+                    break;
+                case IDC_ADDINFOATENDCHECK:
+                    EnableWindow(GetDlgItem(hwnd,IDC_SEPARATEINFOCHECK),IsDlgButtonChecked(hwnd,IDC_ADDINFOATENDCHECK));
                     break;
                 case IDC_BROWSEBUTTON:
                     // TODO: save file window part
