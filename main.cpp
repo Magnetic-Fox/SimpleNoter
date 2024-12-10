@@ -545,7 +545,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             }
             break;
         case WM_INITMENU:
-            count=SendMessage(GetDlgItem(hwnd,ID_LISTBOX),      LB_GETSELCOUNT, 0, 0);
+            count=(unsigned int)SendMessage(GetDlgItem(hwnd,ID_LISTBOX),      LB_GETSELCOUNT, 0, 0);
             EnableMenuItem(GetMenu(hwnd),ID_FILE_RELOAD,        IsWindowEnabled(GetDlgItem(hwnd,IDB_DOWNLOAD))                                                          ? MF_ENABLED : MF_GRAYED);
             EnableMenuItem(GetMenu(hwnd),ID_FILE_OPEN,          IsWindowEnabled(GetDlgItem(hwnd,IDB_OPEN))                                                              ? MF_ENABLED : MF_GRAYED);
             EnableMenuItem(GetMenu(hwnd),ID_FILE_EXIT,          IsWindowEnabled(GetDlgItem(hwnd,IDB_EXIT))                                                              ? MF_ENABLED : MF_GRAYED);
