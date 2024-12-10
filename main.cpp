@@ -1350,12 +1350,12 @@ BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             properties_UnlockAllButtons(hwnd);
             EnableWindow(GetDlgItem(GetParent(hwnd),IDB_EDIT_ADDUP),addUpTest);
             if(result>=0) {
-                SetWindowText(GetDlgItem(hwnd,IDC_STATIC1),(char*)toCodePage(mappedCodePage,(char*)tempNote.subject.c_str()).c_str());
-                SetWindowText(GetDlgItem(hwnd,IDC_STATIC2),(char*)IntToStr(tempNote.id).c_str());
-                SetWindowText(GetDlgItem(hwnd,IDC_STATIC3),(char*)toCodePage(mappedCodePage,(char*)tempNote.dateAdded.c_str()).c_str());
-                SetWindowText(GetDlgItem(hwnd,IDC_STATIC4),(char*)toCodePage(mappedCodePage,(char*)tempNote.userAgent.c_str()).c_str());
-                SetWindowText(GetDlgItem(hwnd,IDC_STATIC5),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastModified.c_str()).c_str());
-                SetWindowText(GetDlgItem(hwnd,IDC_STATIC6),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastUserAgent.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_NOTENAMESTATIC),(char*)toCodePage(mappedCodePage,(char*)tempNote.subject.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_NOTEIDSTATIC),(char*)IntToStr(tempNote.id).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_NOTEADDDATESTATIC),(char*)toCodePage(mappedCodePage,(char*)tempNote.dateAdded.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_NOTEADDEDUSINGSTATIC),(char*)toCodePage(mappedCodePage,(char*)tempNote.userAgent.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_NOTELASTMODSTATIC),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastModified.c_str()).c_str());
+                SetWindowText(GetDlgItem(hwnd,IDC_NOTELASTMODUSINGSTATIC),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastUserAgent.c_str()).c_str());
                 EnableWindow(GetDlgItem(hwnd,IDC_LOCKBUTTON),   !tempNote.locked);
                 EnableWindow(GetDlgItem(hwnd,IDC_UNLOCKBUTTON),  tempNote.locked);
             }
@@ -1416,7 +1416,7 @@ BOOL CALLBACK AboutDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Switch section
     switch(msg) {
         case WM_INITDIALOG:
-            SetWindowText(GetDlgItem(hwnd,IDC_STATIC7),getStringFromTable(IDS_APPNAME));
+            SetWindowText(GetDlgItem(hwnd,IDC_APPNAMESTATIC),getStringFromTable(IDS_APPNAME));
             break;
         case WM_COMMAND:
             switch(wParam) {
@@ -1449,7 +1449,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
     switch(msg) {
         case WM_INITDIALOG:
             check3DChanged=false;
-            SetWindowText(GetDlgItem(hwnd,IDC_STATIC18),((std::string)(getStringFromTable(IDS_STRING_BUILD_DATE))+__DATE__+", "+__TIME__).c_str());
+            SetWindowText(GetDlgItem(hwnd,IDC_BUILDINFOSTATIC),((std::string)(getStringFromTable(IDS_STRING_BUILD_DATE))+__DATE__+", "+__TIME__).c_str());
             SendMessage(GetDlgItem(hwnd, IDC_MAINWINDISPCOMBO), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_NORMAL_WINDOW));
             SendMessage(GetDlgItem(hwnd, IDC_MAINWINDISPCOMBO), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MINIMIZED_WINDOW));
             SendMessage(GetDlgItem(hwnd, IDC_MAINWINDISPCOMBO), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MAXIMIZED_WINDOW));
@@ -1651,9 +1651,9 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 serverInfo=noter_getServerInfo(connectionSettings,buffer);
                 connection_UnlockAllButtons(hwnd);
                 if(serverInfo.version==MATCH_VERSION) {
-                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC8), (char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
-                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC9), (char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
-                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(mappedCodePage,(char*)serverInfo.version.c_str()).c_str());
+                    SetWindowText(GetDlgItem(hwnd,IDC_SERVERNAMESTATIC), (char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
+                    SetWindowText(GetDlgItem(hwnd,IDC_SERVERTIMEZONESTATIC), (char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
+                    SetWindowText(GetDlgItem(hwnd,IDC_SERVERVERSIONSTATIC),(char*)toCodePage(mappedCodePage,(char*)serverInfo.version.c_str()).c_str());
                 }
             }
             else {
@@ -1714,15 +1714,15 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         serverInfo=noter_getServerInfo(tempConnectionSettings,buffer);
                         connection_UnlockAllButtons(hwnd);
                         if(noter_checkServerVersion(serverInfo)) {
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8), (char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9), (char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),(char*)toCodePage(mappedCodePage,(char*)serverInfo.version.c_str()).c_str());
+                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERNAMESTATIC), (char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
+                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERTIMEZONESTATIC), (char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
+                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERVERSIONSTATIC),(char*)toCodePage(mappedCodePage,(char*)serverInfo.version.c_str()).c_str());
                             MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_CONN_ESTABLISHED),getStringFromTable(IDS_STRING_INFORMATION,1),MB_ICONINFORMATION | MB_OK);
                         }
                         else {
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC8), getStringFromTable(IDS_STRING_NOT_CONNECTED));
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC9), getStringFromTable(IDS_STRING_NOT_CONNECTED));
-                            SetWindowText(GetDlgItem(hwnd,IDC_STATIC10),getStringFromTable(IDS_STRING_NOT_CONNECTED));
+                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERNAMESTATIC), getStringFromTable(IDS_STRING_NOT_CONNECTED));
+                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERTIMEZONESTATIC), getStringFromTable(IDS_STRING_NOT_CONNECTED));
+                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERVERSIONSTATIC),getStringFromTable(IDS_STRING_NOT_CONNECTED));
                             MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_CONNECTION_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
                         }
                     }
@@ -1784,11 +1784,11 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                     result=noter_getUserInfo(connectionSettings,credentials,buffer,userInfo);
                     credentials_UnlockAllButtons(hwnd);
                     if(result>=0) {
-                        SetWindowText(GetDlgItem(hwnd,IDC_STATIC11),(char*)IntToStr(userInfo.ID).c_str());
-                        SetWindowText(GetDlgItem(hwnd,IDC_STATIC12),(char*)userInfo.dateRegistered.c_str());
-                        SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),(char*)userInfo.userAgent.c_str());
-                        SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),(char*)userInfo.lastChanged.c_str());
-                        SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),(char*)userInfo.lastUserAgent.c_str());
+                        SetWindowText(GetDlgItem(hwnd,IDC_USERIDSTATIC),(char*)IntToStr(userInfo.ID).c_str());
+                        SetWindowText(GetDlgItem(hwnd,IDC_USERREGDATESTATIC),(char*)userInfo.dateRegistered.c_str());
+                        SetWindowText(GetDlgItem(hwnd,IDC_USERREGUSINGSTATIC),(char*)userInfo.userAgent.c_str());
+                        SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODSTATIC),(char*)userInfo.lastChanged.c_str());
+                        SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODUSINGSTATIC),(char*)userInfo.lastUserAgent.c_str());
                         EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),  true);
                         EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON), true);
                     }
@@ -1870,11 +1870,11 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                             result=noter_getUserInfo(connectionSettings,tempCredentials,buffer,userInfo);
                             credentials_UnlockAllButtons(hwnd);
                             if(result>=0) {
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC11),(char*)IntToStr(userInfo.ID).c_str());
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC12),(char*)userInfo.dateRegistered.c_str());
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),(char*)userInfo.userAgent.c_str());
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),(char*)userInfo.lastChanged.c_str());
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),(char*)userInfo.lastUserAgent.c_str());
+                                SetWindowText(GetDlgItem(hwnd,IDC_USERIDSTATIC),(char*)IntToStr(userInfo.ID).c_str());
+                                SetWindowText(GetDlgItem(hwnd,IDC_USERREGDATESTATIC),(char*)userInfo.dateRegistered.c_str());
+                                SetWindowText(GetDlgItem(hwnd,IDC_USERREGUSINGSTATIC),(char*)userInfo.userAgent.c_str());
+                                SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODSTATIC),(char*)userInfo.lastChanged.c_str());
+                                SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODUSINGSTATIC),(char*)userInfo.lastUserAgent.c_str());
                                 if(editsChanged) {
                                     useTestCredentials=true;
                                 }
@@ -1885,11 +1885,11 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                 }
                             }
                             else {
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC11),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC12),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                SetWindowText(GetDlgItem(hwnd,IDC_USERIDSTATIC),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                SetWindowText(GetDlgItem(hwnd,IDC_USERREGDATESTATIC),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                SetWindowText(GetDlgItem(hwnd,IDC_USERREGUSINGSTATIC),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODSTATIC),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODUSINGSTATIC),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                 EnableWindow( GetDlgItem(hwnd,IDC_ACCDELETEBUTTON), false);
                                 EnableWindow( GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),false);
                                 MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
@@ -1922,11 +1922,11 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                 if(useTestCredentials) {
                                     SetWindowText(GetDlgItem(hwnd,IDC_USERNAMEEDIT),"");
                                     SetWindowText(GetDlgItem(hwnd,IDC_PASSWORDEDIT),"");
-                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC11),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC12),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                    SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                    SetWindowText(GetDlgItem(hwnd,IDC_USERIDSTATIC),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                    SetWindowText(GetDlgItem(hwnd,IDC_USERREGDATESTATIC),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                    SetWindowText(GetDlgItem(hwnd,IDC_USERREGUSINGSTATIC),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                    SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODSTATIC),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                    SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODUSINGSTATIC),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                     EnableWindow( GetDlgItem(hwnd,IDC_ACCDELETEBUTTON), false);
                                     EnableWindow( GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),false);
                                 }
@@ -2261,7 +2261,7 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     // Switch section
     switch(msg) {
         case WM_INITDIALOG:
-            setProgress(hwnd,IDC_STATIC16,IDC_STATIC17,0);
+            setProgress(hwnd,IDC_PROGRESSBARSTATIC,IDC_PROGRESSBARBORDERSTATIC,0);
             CheckDlgButton(hwnd, IDC_FIRSTLINESUBJECTCHECK, BST_CHECKED);
             CheckDlgButton(hwnd, IDC_ONELINEGAPCHECK, BST_CHECKED);
             CheckDlgButton(hwnd, IDC_ADDINFOATENDCHECK, BST_CHECKED);
@@ -2287,7 +2287,7 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         case WM_CTLCOLOR:
             switch(HIWORD(lParam)) {
                 case CTLCOLOR_STATIC:
-                    if(LOWORD(lParam)==GetDlgItem(hwnd,IDC_STATIC16)) {
+                    if(LOWORD(lParam)==GetDlgItem(hwnd,IDC_PROGRESSBARSTATIC)) {
                         return g_hBrush2;
                     }
                     break;

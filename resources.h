@@ -52,21 +52,24 @@
 #define ID_EDIT_CLEAR                       408
 #define ID_EDIT_SELECTALL_2                 409
 
+// Main static
+#define IDC_STATIC                          503
+
 // Note information dialog
 #define IDD_NOTEINFO                        500
 #define IDC_LOCKBUTTON                      501
 #define IDC_UNLOCKBUTTON                    502
-#define IDC_STATIC                          503
-#define IDC_STATIC1                         504
-#define IDC_STATIC2                         505
-#define IDC_STATIC3                         506
-#define IDC_STATIC4                         507
-#define IDC_STATIC5                         508
-#define IDC_STATIC6                         509
-#define IDC_STATIC7                         510
+
+#define IDC_NOTENAMESTATIC                  504
+#define IDC_NOTEIDSTATIC                    505
+#define IDC_NOTEADDDATESTATIC               506
+#define IDC_NOTEADDEDUSINGSTATIC            507
+#define IDC_NOTELASTMODSTATIC               508
+#define IDC_NOTELASTMODUSINGSTATIC          509
 
 // Program information dialog
 #define IDD_APPINFO                         600
+#define IDC_APPNAMESTATIC                   601
 
 // Preferences dialog
 #define IDD_PREFERENCES                     700
@@ -88,7 +91,7 @@
 #define IDC_LANGUAGECOMBO                   716
 #define IDC_CODEPAGECOMBO                   717
 #define IDC_MULTIIDSNLMCHECK                718
-#define IDC_STATIC18                        719
+#define IDC_BUILDINFOSTATIC                 719
 
 // Connection dialog
 #define IDD_CONNECTION                      800
@@ -97,9 +100,9 @@
 #define IDC_PORTEDIT                        803
 #define IDC_SHAREEDIT                       804
 #define IDC_TESTBUTTON                      805
-#define IDC_STATIC8                         806
-#define IDC_STATIC9                         807
-#define IDC_STATIC10                        808
+#define IDC_SERVERNAMESTATIC                806
+#define IDC_SERVERTIMEZONESTATIC            807
+#define IDC_SERVERVERSIONSTATIC             808
 
 // Credentials dialog
 #define IDD_CREDENTIALS                     900
@@ -107,11 +110,11 @@
 #define IDC_REGISTERBUTTON                  902
 #define IDC_PASSWORDEDIT                    903
 #define IDC_TESTBUTTON2                     904
-#define IDC_STATIC11                        905
-#define IDC_STATIC12                        906
-#define IDC_STATIC13                        907
-#define IDC_STATIC14                        908
-#define IDC_STATIC15                        909
+#define IDC_USERIDSTATIC                    905
+#define IDC_USERREGDATESTATIC               906
+#define IDC_USERREGUSINGSTATIC              907
+#define IDC_USERLASTMODSTATIC               908
+#define IDC_USERLASTMODUSINGSTATIC          909
 #define IDC_ACCDELETEBUTTON                 910
 #define IDC_PASSCHANGEBUTTON                911
 
@@ -153,8 +156,8 @@
 #define IDC_SEPARATEINFOCHECK               1415
 #define IDC_SEPARATENOTESINFILESCHECK       1416
 #define IDC_CONTINUEONERRORSCHECK           1417
-#define IDC_STATIC16                        1418
-#define IDC_STATIC17                        1419
+#define IDC_PROGRESSBARSTATIC               1418
+#define IDC_PROGRESSBARBORDERSTATIC         1419
 
 // String table constants
 #define IDS_HELPFILE                        3000
