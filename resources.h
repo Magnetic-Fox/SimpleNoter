@@ -3,8 +3,8 @@
 
 #include <windows.h>
 
-#define IDI_ICON1                           100
-#define IDI_ICON2                           101
+#define IDI_MAINICON                        100
+#define IDI_EDITICON                        101
 
 #define IDR_ACCELERATORS                    200
 #define ID_ACC_TAB                          201
@@ -36,31 +36,30 @@
 #define ID_HELP_HOWTO                       313
 #define ID_HELP_ABOUT                       314
 
-#define IDD_DIALOG1                         400
-#define IDC_BUTTON1                         401
-#define IDC_BUTTON2                         402
-#define IDC_STATIC                          403
-#define IDC_STATIC1                         404
-#define IDC_STATIC2                         405
-#define IDC_STATIC3                         406
-#define IDC_STATIC4                         407
-#define IDC_STATIC5                         408
-#define IDC_STATIC6                         409
-#define IDC_STATIC7                         410
-#define IDC_STATIC8                         411
+#define IDR_MENU2                           400
+#define ID_FILE_ADDUP                       401
+#define ID_FILE_PROPERTIES                  402
+#define ID_FILE_TONEWNOTE                   403
+#define ID_EDIT_UNDO                        404
+#define ID_EDIT_CUT                         405
+#define ID_EDIT_COPY                        406
+#define ID_EDIT_PASTE                       407
+#define ID_EDIT_CLEAR                       408
+#define ID_EDIT_SELECTALL_2                 409
 
-#define IDD_DIALOG2                         500
+#define IDD_DIALOG1                         500
+#define IDC_BUTTON1                         501
+#define IDC_BUTTON2                         502
+#define IDC_STATIC                          503
+#define IDC_STATIC1                         504
+#define IDC_STATIC2                         505
+#define IDC_STATIC3                         506
+#define IDC_STATIC4                         507
+#define IDC_STATIC5                         508
+#define IDC_STATIC6                         509
+#define IDC_STATIC7                         510
 
-#define IDR_MENU2                           600
-#define ID_FILE_ADDUP                       601
-#define ID_FILE_PROPERTIES                  602
-#define ID_FILE_TONEWNOTE                   603
-#define ID_EDIT_UNDO                        604
-#define ID_EDIT_CUT                         605
-#define ID_EDIT_COPY                        606
-#define ID_EDIT_PASTE                       607
-#define ID_EDIT_CLEAR                       608
-#define ID_EDIT_SELECTALL                   609
+#define IDD_DIALOG2                         600
 
 #define IDD_DIALOG3                         700
 #define IDC_RADIO1                          701
@@ -82,6 +81,7 @@
 #define IDC_COMBO3                          717
 #define IDC_COMBO4                          718
 #define IDC_CHECK20                         719
+#define IDC_STATIC18                        720
 
 #define IDD_DIALOG4                         800
 #define IDC_EDIT1                           801

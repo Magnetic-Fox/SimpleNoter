@@ -26,8 +26,8 @@ BEGIN
     END
 END
 
-IDI_ICON1 ICON DISCARDABLE "noter16.ico"
-IDI_ICON2 ICON DISCARDABLE "note.ico"
+IDI_MAINICON ICON DISCARDABLE "noter16.ico"
+IDI_EDITICON ICON DISCARDABLE "note.ico"
 
 IDR_ACCELERATORS ACCELERATORS DISCARDABLE
 BEGIN
@@ -101,7 +101,7 @@ BEGIN
         MENUITEM "Wkl&ej\tCtrl+V",              ID_EDIT_PASTE
         MENUITEM "&Usuñ\tDel",                  ID_EDIT_CLEAR
         MENUITEM SEPARATOR
-        MENUITEM "Zaznacz wszystko\tCtrl+A",    ID_EDIT_SELECTALL
+        MENUITEM "Zaznacz wszystko\tCtrl+A",    ID_EDIT_SELECTALL_2
     END
     POPUP "Pomo&c"
     BEGIN
@@ -118,7 +118,7 @@ CAPTION "W³aœciwoœci notatki"
 FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,115,126,50,14
-    ICON            IDI_ICON2,IDC_STATIC,7,7,20,20
+    ICON            IDI_EDITICON,IDC_STATIC,7,7,20,20
     LTEXT           "?",IDC_STATIC1,28,11,245,8
     LTEXT           "ID:",IDC_STATIC,28,30,54,8
     LTEXT           "Data dodania:",IDC_STATIC,28,40,46,8
@@ -140,7 +140,7 @@ CAPTION "Informacje o programie"
 FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,153,7,50,14
-    ICON            IDI_ICON1,IDC_STATIC,7,7,20,20
+    ICON            IDI_MAINICON,IDC_STATIC,7,7,20,20
     LTEXT           "SimpleNoter",IDC_STATIC7,28,7,110,8
     LTEXT           "wersja 16-bitowa",IDC_STATIC,28,17,110,8
     LTEXT           "Projekt i program:",IDC_STATIC,28,37,157,8
@@ -209,7 +209,7 @@ BEGIN
     CONTROL         "Poka¿ ID i daty notatek przy wielokrotnym wyborze",
                     IDC_CHECK20,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,212,
                     116,189,10
-    CONTROL         "Build info:",IDC_STATIC8,"Static",SS_LEFTNOWORDWRAP | 
+    CONTROL         "Build info:",IDC_STATIC18,"Static",SS_LEFTNOWORDWRAP | 
                     WS_DISABLED | WS_GROUP,7,138,290,8
 END
 

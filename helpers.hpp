@@ -52,42 +52,42 @@ void inline storeWindowMemoryReference(WINDOWMEMORY*);
 void inline setProgress(HWND, int, int, unsigned short int);
 
 void inline lockExitButton(HWND hwnd) {
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON4),false);
+    EnableWindow(GetDlgItem(hwnd,IDB_EXIT),false);
     return;
 }
 
 void inline unlockExitButton(HWND hwnd) {
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON4),true);
+    EnableWindow(GetDlgItem(hwnd,IDB_EXIT),true);
     return;
 }
 
 void inline lockRefreshButton(HWND hwnd) {
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON1),false);
+    EnableWindow(GetDlgItem(hwnd,IDB_DOWNLOAD),false);
     return;
 }
 
 void inline unlockRefreshButton(HWND hwnd) {
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON1),true);
+    EnableWindow(GetDlgItem(hwnd,IDB_DOWNLOAD),true);
     return;
 }
 
 void inline lockOpenButton(HWND hwnd) {
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON3),false);
+    EnableWindow(GetDlgItem(hwnd,IDB_OPEN),false);
     return;
 }
 
 void inline unlockOpenButton(HWND hwnd) {
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON3),true);
+    EnableWindow(GetDlgItem(hwnd,IDB_OPEN),true);
     return;
 }
 
 void inline lockDeleteButton(HWND hwnd) {
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON5),false);
+    EnableWindow(GetDlgItem(hwnd,IDB_DELETE),false);
     return;
 }
 
 void inline unlockDeleteButton(HWND hwnd) {
-    EnableWindow(GetDlgItem(hwnd,ID_BUTTON5),true);
+    EnableWindow(GetDlgItem(hwnd,IDB_DELETE),true);
     return;
 }
 
@@ -115,15 +115,15 @@ void inline main_UnlockAllButtons(HWND hwnd) {
 
 void inline edit_LockAllButtons(HWND g_hwnd, HWND hwnd) {
     main_LockAllButtons(g_hwnd);
-    EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON1),false);
-    EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),false);
+    EnableWindow(GetDlgItem(hwnd,IDB_EDIT_ADDUP),false);
+    EnableWindow(GetDlgItem(hwnd,IDB_EDIT_PROPERTIES),false);
     return;
 }
 
 void inline edit_UnlockAllButtons(HWND hwnd) {
     main_UnlockAllButtons(*gHW);
     if(((*wMem)[hwnd])->note->id!=0) {
-        EnableWindow(GetDlgItem(hwnd,ID_EDIT_BUTTON2),true);
+        EnableWindow(GetDlgItem(hwnd,IDB_EDIT_PROPERTIES),true);
     }
     return;
 }
