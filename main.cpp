@@ -42,14 +42,16 @@ WINDOWMEMORY                winMem;
 RAWCODEPAGE                 rawCodePage;
 CODEPAGE                    mappedCodePage;
 NOTER_CONNECTION_SETTINGS   connectionSettings;
-NOTER_CREDENTIALS           credentials, tempCredentials, *auxCredentials;
+NOTER_CREDENTIALS           credentials, tempCredentials;
+NOTER_CREDENTIALS           *auxCredentials;
 MAINSETTINGS                mainSettings;
 NOTE_SUMMARY                *notes=NULL;
 LIBRARIES                   libraries;
 
 // Standard types
 long int                    noteCount=0;
-long int                    mainLastResult=0, *minID, *maxID;
+long int                    mainLastResult=0;
+long int                    *minID, *maxID;
 unsigned int                ctlRegs=0;
 std::string                 *minLM, *maxLM;
 bool                        check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged;
@@ -1602,7 +1604,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                     break;
                 case IDC_USE3DCONTROLSCHECK:
                     check3DChanged=true;
-                    enabled=IsDlgButtonChecked(hwnd, IDC_USE3DCONTROLSCHECK);
+                    enabled=IsDlgButtonChecked(hwnd, IDC_USE3DCONTROLSCHECK)==1;
                     EnableWindow(GetDlgItem(hwnd,IDC_BUTTONSCHECK), enabled);
                     EnableWindow(GetDlgItem(hwnd,IDC_LISTSCHECK),   enabled);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDITSCHECK),   enabled);
