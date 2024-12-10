@@ -220,7 +220,7 @@ ATOM registerMainWindowClass(WNDCLASS *wc) {
     wc->hIcon=          LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_MAINICON));
     wc->hCursor=        LoadCursor(NULL, IDC_ARROW);
     wc->hbrBackground=  g_hBrush;
-    wc->lpszMenuName=   MAKEINTRESOURCE(IDR_MENU1);
+    wc->lpszMenuName=   MAKEINTRESOURCE(IDR_MENU_MAIN);
     wc->lpszClassName=  NOTER_MAINWINDOW;
     return RegisterClass(wc);
 }
@@ -234,7 +234,7 @@ ATOM registerEditWindowClass(WNDCLASS *wc) {
     wc->hIcon=          LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_EDITICON));
     wc->hCursor=        LoadCursor(NULL, IDC_ARROW);
     wc->hbrBackground=  g_hBrush;
-    wc->lpszMenuName=   MAKEINTRESOURCE(IDR_MENU2);
+    wc->lpszMenuName=   MAKEINTRESOURCE(IDR_MENU_EDIT);
     wc->lpszClassName=  NOTER_EDITWINDOW;
     return RegisterClass(wc);
 }
@@ -607,7 +607,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     break;
                 case ID_FILE_EXPORT:
                     if((SendMessage(GetDlgItem(hwnd,ID_LISTBOX),LB_GETSELCOUNT,0,0)>0) && IsWindowEnabled(GetDlgItem(hwnd,IDB_EXIT))) {
-                        MakeDialogBox(hwnd,IDD_DIALOG10,NotesExpDlgProc);
+                        MakeDialogBox(hwnd,IDD_EXPORT,NotesExpDlgProc);
                     }
                     break;
                 case ID_FILE_EXIT:
@@ -620,7 +620,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     break;
                 case ID_OPTIONS_PREFERENCES:
-                    if((MakeDialogBox(hwnd,IDD_DIALOG3,PreferencesDlgProc)==IDOK) && (codePageChanged)) {
+                    if((MakeDialogBox(hwnd,IDD_PREFERENCES,PreferencesDlgProc)==IDOK) && (codePageChanged)) {
                         if(MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WANT_RELOAD),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDYES) {
                             SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_SETSEL, FALSE, -1);
                             SendMessage(hwnd, WM_COMMAND, IDB_DOWNLOAD, ID_FILE_RELOAD);
@@ -628,7 +628,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     break;
                 case ID_OPTIONS_CONNECTION:
-                    if((MakeDialogBox(hwnd,IDD_DIALOG4,ConnSettDlgProc)==IDOK) && (editsChanged)) {
+                    if((MakeDialogBox(hwnd,IDD_CONNECTION,ConnSettDlgProc)==IDOK) && (editsChanged)) {
                         if((!firstOptions) && (noter_credentialsAvailable(credentials)) && (MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WANT_RELOAD),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDYES)) {
                             SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_SETSEL, FALSE, -1);
                             SendMessage(hwnd, WM_COMMAND, IDB_DOWNLOAD, ID_FILE_RELOAD);
@@ -636,7 +636,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     break;
                 case ID_OPTIONS_CREDENTIALS:
-                    if((MakeDialogBox(hwnd,IDD_DIALOG5,CredsSettDlgProc)==IDOK) && (editsChanged || firstOptions)) {
+                    if((MakeDialogBox(hwnd,IDD_CREDENTIALS,CredsSettDlgProc)==IDOK) && (editsChanged || firstOptions)) {
                         if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETCOUNT, 0, 0)>0) {
                             SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_SETSEL, FALSE, -1);
                             SendMessage(hwnd, WM_COMMAND, IDB_DOWNLOAD, ID_FILE_RELOAD);
@@ -659,7 +659,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     WinHelp(g_hwnd,"",HELP_HELPONHELP,0);
                     break;
                 case ID_HELP_ABOUT:
-                    MakeDialogBox(hwnd,IDD_DIALOG2,AboutDlgProc);
+                    MakeDialogBox(hwnd,IDD_APPINFO,AboutDlgProc);
                     break;
                 // Refresh button
                 case IDB_DOWNLOAD:
@@ -1146,7 +1146,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         winMem[hwnd]->lastResult=0;
                         SetWindowText(GetDlgItem(hwnd,IDC_EDIT_STATUS),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
-                    MakeDialogBox(hwnd,IDD_DIALOG2,AboutDlgProc);
+                    MakeDialogBox(hwnd,IDD_APPINFO,AboutDlgProc);
                     break;
                 case IDE_EDIT_SUBJECT:
                     switch(HIWORD(lParam)) {
@@ -1250,7 +1250,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         winMem[hwnd]->lastResult=0;
                         SetWindowText(GetDlgItem(hwnd,IDC_EDIT_STATUS),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
                     }
-                    MakeDialogBox(hwnd,IDD_DIALOG1,NotePropDlgProc);
+                    MakeDialogBox(hwnd,IDD_NOTEINFO,NotePropDlgProc);
                     break;
                 case IDB_EDIT_CLOSE:
                     if((!IsWindowEnabled(GetDlgItem(g_hwnd,IDB_EXIT))) || (!IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_CLOSE)))) {
@@ -1854,7 +1854,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         break;
                     }
                     auxCredentials=&tempCredentials;
-                    if(MakeDialogBox(hwnd,IDD_DIALOG6,UserRegDlgProc)==IDOK) {
+                    if(MakeDialogBox(hwnd,IDD_REGISTRATION,UserRegDlgProc)==IDOK) {
                         if(editsChanged2) {
                             SetWindowText(GetDlgItem(hwnd,IDC_EDIT4),(char*)tempCredentials.username.c_str());
                             SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),(char*)tempCredentials.password.c_str());
@@ -1925,7 +1925,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                     +auxCredentials->username
                                     +(std::string)getStringFromTable(IDS_STRING_MSG_ACC_DELETE_PART2,1);
                         if(MessageBox(hwnd,(char*)tempString.c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONQUESTION | MB_YESNO)==IDYES) {
-                            if(MakeDialogBox(hwnd,IDD_DIALOG7,PassConfirmDlgProc)==IDOK) {
+                            if(MakeDialogBox(hwnd,IDD_ACCDELETE,PassConfirmDlgProc)==IDOK) {
                                 if(useTestCredentials) {
                                     SetWindowText(GetDlgItem(hwnd,IDC_EDIT4),"");
                                     SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),"");
@@ -1967,7 +1967,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         auxCredentials=&tempCredentials;
                     }
                     if(noter_credentialsAvailable(*auxCredentials)) {
-                        if(MakeDialogBox(hwnd,IDD_DIALOG8,PassChangeDlgProc)==IDOK) {
+                        if(MakeDialogBox(hwnd,IDD_PASSCHANGE,PassChangeDlgProc)==IDOK) {
                             SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),(char*)tempCredentials.password.c_str());
                             useTestCredentials=true;
                             SendMessage(hwnd, WM_COMMAND, IDC_BUTTON6, IDC_BUTTON5);

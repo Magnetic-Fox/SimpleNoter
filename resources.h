@@ -1,11 +1,14 @@
 #ifndef RESOURCES_H
 #define RESOURCES_H
 
+// Windows include
 #include <windows.h>
 
+// Icons
 #define IDI_MAINICON                        100
 #define IDI_EDITICON                        101
 
+// Accelerators
 #define IDR_ACCELERATORS                    200
 #define ID_ACC_TAB                          201
 #define ID_ACC_ALTF4                        202
@@ -20,7 +23,8 @@
 #define ID_ACC_CTRLI                        211
 #define ID_ACC_CTRLE                        212
 
-#define IDR_MENU1                           300
+// Main window menu
+#define IDR_MENU_MAIN                       300
 #define ID_FILE_NEW                         301
 #define ID_FILE_OPEN                        302
 #define ID_FILE_RELOAD                      303
@@ -36,7 +40,8 @@
 #define ID_HELP_HOWTO                       313
 #define ID_HELP_ABOUT                       314
 
-#define IDR_MENU2                           400
+// Edit window menu
+#define IDR_MENU_EDIT                       400
 #define ID_FILE_ADDUP                       401
 #define ID_FILE_PROPERTIES                  402
 #define ID_FILE_TONEWNOTE                   403
@@ -47,7 +52,8 @@
 #define ID_EDIT_CLEAR                       408
 #define ID_EDIT_SELECTALL_2                 409
 
-#define IDD_DIALOG1                         500
+// Note information dialog
+#define IDD_NOTEINFO                        500
 #define IDC_BUTTON1                         501
 #define IDC_BUTTON2                         502
 #define IDC_STATIC                          503
@@ -59,9 +65,11 @@
 #define IDC_STATIC6                         509
 #define IDC_STATIC7                         510
 
-#define IDD_DIALOG2                         600
+// Program information dialog
+#define IDD_APPINFO                         600
 
-#define IDD_DIALOG3                         700
+// Preferences dialog
+#define IDD_PREFERENCES                     700
 #define IDC_RADIO1                          701
 #define IDC_RADIO2                          702
 #define IDC_COMBO1                          703
@@ -83,7 +91,8 @@
 #define IDC_CHECK20                         719
 #define IDC_STATIC18                        720
 
-#define IDD_DIALOG4                         800
+// Connection dialog
+#define IDD_CONNECTION                      800
 #define IDC_EDIT1                           801
 #define IDC_BUTTON3                         802
 #define IDC_EDIT2                           803
@@ -93,7 +102,8 @@
 #define IDC_STATIC9                         807
 #define IDC_STATIC10                        808
 
-#define IDD_DIALOG5                         900
+// Credentials dialog
+#define IDD_CREDENTIALS                     900
 #define IDC_EDIT4                           901
 #define IDC_BUTTON5                         902
 #define IDC_EDIT5                           903
@@ -106,22 +116,27 @@
 #define IDC_BUTTON7                         910
 #define IDC_BUTTON8                         911
 
-#define IDD_DIALOG6                         1000
+// User registration dialog
+#define IDD_REGISTRATION                    1000
 #define IDC_EDIT6                           1001
 #define IDC_EDIT7                           1002
 #define IDC_EDIT8                           1003
 
-#define IDD_DIALOG7                         1100
+// User account delete dialog
+#define IDD_ACCDELETE                       1100
 #define IDC_EDIT12                          1101
 
-#define IDD_DIALOG8                         1200
+// User password change dialog
+#define IDD_PASSCHANGE                      1200
 #define IDC_EDIT9                           1201
 #define IDC_EDIT10                          1202
 #define IDC_EDIT11                          1203
 
-// place left for IDD_DIALOG9
+// Note import dialog
+// place left for IDD_IMPORT
 
-#define IDD_DIALOG10                        1400
+// Note export dialog
+#define IDD_EXPORT                          1400
 #define IDC_EXPORT                          1401
 #define IDC_BUTTON9                         1402
 #define IDC_CHECK12                         1403
@@ -142,6 +157,7 @@
 #define IDC_STATIC16                        1418
 #define IDC_STATIC17                        1419
 
+// String table constants
 #define IDS_HELPFILE                        3000
 #define IDS_APPNAME                         3001
 #define IDS_USER_AGENT                      3002
