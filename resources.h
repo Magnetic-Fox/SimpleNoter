@@ -87,7 +87,7 @@
 #define IDC_SAVEWINPOSCHECK                 715
 #define IDC_LANGUAGECOMBO                   716
 #define IDC_CODEPAGECOMBO                   717
-#define IDC_CHECK20                         718
+#define IDC_MULTIIDSNLMCHECK                718
 #define IDC_STATIC18                        719
 
 // Connection dialog

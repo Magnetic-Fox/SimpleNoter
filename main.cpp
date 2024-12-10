@@ -1510,7 +1510,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
             CheckDlgButton(hwnd, IDC_EDITSCHECK,            mainSettings.use3DEdits     ? BST_CHECKED : BST_UNCHECKED);
             CheckDlgButton(hwnd, IDC_COMBOSCHECK,           mainSettings.use3DCombos    ? BST_CHECKED : BST_UNCHECKED);
             CheckDlgButton(hwnd, IDC_DIALOGSCHECK,          mainSettings.use3DDialogs   ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK20,               mainSettings.showMultiIDnLM ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_MULTIIDSNLMCHECK,      mainSettings.showMultiIDnLM ? BST_CHECKED : BST_UNCHECKED);
             enabled=IsDlgButtonChecked(hwnd,                IDC_USE3DCONTROLSCHECK);
             EnableWindow(GetDlgItem(hwnd,IDC_BUTTONSCHECK), enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_LISTSCHECK),   enabled);
@@ -1546,7 +1546,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                     mainSettings.use3DEdits=    IsDlgButtonChecked(hwnd, IDC_EDITSCHECK);
                     mainSettings.use3DCombos=   IsDlgButtonChecked(hwnd, IDC_COMBOSCHECK);
                     mainSettings.use3DDialogs=  IsDlgButtonChecked(hwnd, IDC_DIALOGSCHECK);
-                    mainSettings.showMultiIDnLM=IsDlgButtonChecked(hwnd, IDC_CHECK20);
+                    mainSettings.showMultiIDnLM=IsDlgButtonChecked(hwnd, IDC_MULTIIDSNLMCHECK);
                     counter=0;
                     counter2=0;
                     selectedIndex2=SendMessage(GetDlgItem(hwnd,IDC_LANGUAGECOMBO), CB_GETCURSEL, 0, 0);
