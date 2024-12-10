@@ -249,7 +249,7 @@ void freeGlobalResources(void) {
 }
 
 void onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&selection) {
-    count=SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0);
+    count=(unsigned int)SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0);
     if(count==0) {
         SetWindowText(GetDlgItem(hwnd,IDC_NOTEID),getStringFromTable(IDS_STRING_NOT_CHOSEN));
         SetWindowText(GetDlgItem(hwnd,IDC_NOTELASTMOD),getStringFromTable(IDS_STRING_NOT_CHOSEN));
@@ -836,7 +836,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                                 }
                             }
                             else {
-                                selection[x]=notes[selection[x]].id;
+                                selection[x]=(unsigned int)notes[selection[x]].id;
                                 ++errorCount;
                             }
                         }
@@ -847,12 +847,12 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         if((errorCount==0) || (errorCount==count)) {
                             SetWindowText(GetDlgItem(hwnd,IDC_STATUS),(char*)noter_getAnswerString(mainLastResult).c_str());
                             if(errorCount>0) {
-                                selectIndexes(GetDlgItem(hwnd,ID_LISTBOX),selection,count,notes,noteCount);
+                                selectIndexes(GetDlgItem(hwnd,ID_LISTBOX),selection,count,notes,(unsigned int)noteCount);
                             }
                         }
                         else {
                             SetWindowText(GetDlgItem(hwnd,IDC_STATUS),getStringFromTable(IDS_STRING_NOT_ALL_NOTES_REMOVED));
-                            selectIndexes(GetDlgItem(hwnd,ID_LISTBOX),selection,count,notes,noteCount);
+                            selectIndexes(GetDlgItem(hwnd,ID_LISTBOX),selection,count,notes,(unsigned int)noteCount);
                         }
                         if(SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0)>0) {
                             EnableWindow(GetDlgItem(hwnd,IDB_OPEN),     true);
@@ -883,17 +883,17 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                 height=240;
             }
             if(mainSettings.use3DLists) {
-                SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,width,height-88,          SWP_NOZORDER | SWP_NOMOVE);
+                SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,(int)width,(int)(height-88),          SWP_NOZORDER | SWP_NOMOVE);
             }
             else {
-                SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,width,height-86,          SWP_NOZORDER | SWP_NOMOVE);
+                SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),NULL,0,0,(int)width,(int)(height-86),          SWP_NOZORDER | SWP_NOMOVE);
             }
-            SetWindowPos(GetDlgItem(hwnd,IDC_GRAYBOX),NULL,0,0,width-400,21,                SWP_NOZORDER | SWP_NOMOVE);
-            SetWindowPos(GetDlgItem(hwnd,IDC_SID),NULL,8,height-57,0,0,                     SWP_NOZORDER | SWP_NOSIZE);
-            SetWindowPos(GetDlgItem(hwnd,IDC_LASTCHANGED),NULL,8,height-40,0,0,             SWP_NOZORDER | SWP_NOSIZE);
-            SetWindowPos(GetDlgItem(hwnd,IDC_NOTEID),NULL,137,height-57,width-146,16,       SWP_NOZORDER);
-            SetWindowPos(GetDlgItem(hwnd,IDC_NOTELASTMOD),NULL,137,height-40,width-146,16,  SWP_NOZORDER);
-            SetWindowPos(GetDlgItem(hwnd,IDC_STATUS),NULL,0,height-16,width,16,             SWP_NOZORDER);
+            SetWindowPos(GetDlgItem(hwnd,IDC_GRAYBOX),NULL,0,0,(int)(width-400),21,                     SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,IDC_SID),NULL,8,(int)(height-57),0,0,                          SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,IDC_LASTCHANGED),NULL,8,(int)(height-40),0,0,                  SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,IDC_NOTEID),NULL,137,(int)(height-57),(int)(width-146),16,     SWP_NOZORDER);
+            SetWindowPos(GetDlgItem(hwnd,IDC_NOTELASTMOD),NULL,137,(int)(height-40),(int)(width-146),16,SWP_NOZORDER);
+            SetWindowPos(GetDlgItem(hwnd,IDC_STATUS),NULL,0,(int)(height-16),(int)width,16,             SWP_NOZORDER);
             break;
         case WM_GETMINMAXINFO:
             lpMMI=(MINMAXINFO*)lParam;
@@ -1273,15 +1273,15 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             if(height<240) {
                 height=240;
             }
-            SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_SUBJECT),     NULL,0,0,width,16,              SWP_NOZORDER | SWP_NOMOVE);
-            SetWindowPos(GetDlgItem(hwnd,IDE_EDIT_SUBJECT),     NULL,0,0,width,24,              SWP_NOZORDER | SWP_NOMOVE);
-            SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_ENTRY),       NULL,0,0,width,16,              SWP_NOZORDER | SWP_NOMOVE);
-            SetWindowPos(GetDlgItem(hwnd,IDE_EDIT_ENTRY),       NULL,0,0,width,height-93,       SWP_NOZORDER | SWP_NOMOVE);
-            SetWindowPos(GetDlgItem(hwnd,IDB_EDIT_ADDUP),       NULL,0,height-37,0,0,           SWP_NOZORDER | SWP_NOSIZE);
-            SetWindowPos(GetDlgItem(hwnd,IDB_EDIT_PROPERTIES),  NULL,96,height-37,0,0,          SWP_NOZORDER | SWP_NOSIZE);
-            SetWindowPos(GetDlgItem(hwnd,IDB_EDIT_CLOSE),       NULL,192,height-37,0,0,         SWP_NOZORDER | SWP_NOSIZE);
-            SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_GRAYBOX),     NULL,288,height-37,width-288,21,SWP_NOZORDER);
-            SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_STATUS),      NULL,0,height-16,width,16,      SWP_NOZORDER);
+            SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_SUBJECT),     NULL,0,0,(int)width,16,                         SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,IDE_EDIT_SUBJECT),     NULL,0,0,(int)width,24,                         SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_ENTRY),       NULL,0,0,(int)width,16,                         SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,IDE_EDIT_ENTRY),       NULL,0,0,(int)width,(int)(height-93),           SWP_NOZORDER | SWP_NOMOVE);
+            SetWindowPos(GetDlgItem(hwnd,IDB_EDIT_ADDUP),       NULL,0,(int)(height-37),0,0,                    SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,IDB_EDIT_PROPERTIES),  NULL,96,(int)(height-37),0,0,                   SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,IDB_EDIT_CLOSE),       NULL,192,(int)(height-37),0,0,                  SWP_NOZORDER | SWP_NOSIZE);
+            SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_GRAYBOX),     NULL,288,(int)(height-37),(int)(width-288),21,  SWP_NOZORDER);
+            SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_STATUS),      NULL,0,(int)(height-16),(int)width,16,          SWP_NOZORDER);
             break;
         case WM_GETMINMAXINFO:
             lpMMI=(MINMAXINFO*)lParam;
@@ -1511,7 +1511,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
             CheckDlgButton(hwnd, IDC_COMBOSCHECK,           mainSettings.use3DCombos    ? BST_CHECKED : BST_UNCHECKED);
             CheckDlgButton(hwnd, IDC_DIALOGSCHECK,          mainSettings.use3DDialogs   ? BST_CHECKED : BST_UNCHECKED);
             CheckDlgButton(hwnd, IDC_MULTIIDSNLMCHECK,      mainSettings.showMultiIDnLM ? BST_CHECKED : BST_UNCHECKED);
-            enabled=IsDlgButtonChecked(hwnd,                IDC_USE3DCONTROLSCHECK);
+            enabled=IsDlgButtonChecked(hwnd,                IDC_USE3DCONTROLSCHECK)==1;
             EnableWindow(GetDlgItem(hwnd,IDC_BUTTONSCHECK), enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_LISTSCHECK),   enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_EDITSCHECK),   enabled);
@@ -1523,12 +1523,12 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                 case IDOK:
                     GetModuleFileName(g_hInstance,buffer,32767);
                     iniFile=getDefaultIniFile(buffer);
-                    mainSettings.mainWindowSystem=IsDlgButtonChecked(hwnd, IDC_SYSDISPRADIO);
-                    mainSettings.editWindowSystem=IsDlgButtonChecked(hwnd, IDC_EDITDISPASMAINRADIO);
-                    mainSettings.mainWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO), CB_GETCURSEL, 0, 0);
-                    mainSettings.editWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO), CB_GETCURSEL, 0, 0);
-                    mainSettings.autoReload= IsDlgButtonChecked(hwnd, IDC_AUTORELOADCHECK);
-                    mainSettings.autoRefresh=IsDlgButtonChecked(hwnd, IDC_REFRESHONADDCHECK);
+                    mainSettings.mainWindowSystem=IsDlgButtonChecked(hwnd, IDC_SYSDISPRADIO)==1;
+                    mainSettings.editWindowSystem=IsDlgButtonChecked(hwnd, IDC_EDITDISPASMAINRADIO)==1;
+                    mainSettings.mainWindowStyle=(unsigned int)SendMessage(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO), CB_GETCURSEL, 0, 0);
+                    mainSettings.editWindowStyle=(unsigned int)SendMessage(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO), CB_GETCURSEL, 0, 0);
+                    mainSettings.autoReload= IsDlgButtonChecked(hwnd, IDC_AUTORELOADCHECK)==1;
+                    mainSettings.autoRefresh=IsDlgButtonChecked(hwnd, IDC_REFRESHONADDCHECK)==1;
                     if((mainSettings.savePosSizes==false) && (IsDlgButtonChecked(hwnd, IDC_SAVEWINPOSCHECK))) {
                         mainSettings.mainWindowX=       CW_USEDEFAULT;
                         mainSettings.mainWindowY=       CW_USEDEFAULT;
@@ -1539,18 +1539,18 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                         mainSettings.editWindowSizeX=   CW_USEDEFAULT;
                         mainSettings.editWindowSizeY=   CW_USEDEFAULT;
                     }
-                    mainSettings.savePosSizes=  IsDlgButtonChecked(hwnd, IDC_SAVEWINPOSCHECK);
-                    mainSettings.use3DControls= IsDlgButtonChecked(hwnd, IDC_USE3DCONTROLSCHECK);
-                    mainSettings.use3DButtons=  IsDlgButtonChecked(hwnd, IDC_BUTTONSCHECK);
-                    mainSettings.use3DLists=    IsDlgButtonChecked(hwnd, IDC_LISTSCHECK);
-                    mainSettings.use3DEdits=    IsDlgButtonChecked(hwnd, IDC_EDITSCHECK);
-                    mainSettings.use3DCombos=   IsDlgButtonChecked(hwnd, IDC_COMBOSCHECK);
-                    mainSettings.use3DDialogs=  IsDlgButtonChecked(hwnd, IDC_DIALOGSCHECK);
-                    mainSettings.showMultiIDnLM=IsDlgButtonChecked(hwnd, IDC_MULTIIDSNLMCHECK);
+                    mainSettings.savePosSizes=  IsDlgButtonChecked(hwnd, IDC_SAVEWINPOSCHECK)==1;
+                    mainSettings.use3DControls= IsDlgButtonChecked(hwnd, IDC_USE3DCONTROLSCHECK)==1;
+                    mainSettings.use3DButtons=  IsDlgButtonChecked(hwnd, IDC_BUTTONSCHECK)==1;
+                    mainSettings.use3DLists=    IsDlgButtonChecked(hwnd, IDC_LISTSCHECK)==1;
+                    mainSettings.use3DEdits=    IsDlgButtonChecked(hwnd, IDC_EDITSCHECK)==1;
+                    mainSettings.use3DCombos=   IsDlgButtonChecked(hwnd, IDC_COMBOSCHECK)==1;
+                    mainSettings.use3DDialogs=  IsDlgButtonChecked(hwnd, IDC_DIALOGSCHECK)==1;
+                    mainSettings.showMultiIDnLM=IsDlgButtonChecked(hwnd, IDC_MULTIIDSNLMCHECK)==1;
                     counter=0;
                     counter2=0;
-                    selectedIndex2=SendMessage(GetDlgItem(hwnd,IDC_LANGUAGECOMBO), CB_GETCURSEL, 0, 0);
-                    selectedIndex= SendMessage(GetDlgItem(hwnd,IDC_CODEPAGECOMBO), CB_GETCURSEL, 0, 0);
+                    selectedIndex2=(unsigned int)SendMessage(GetDlgItem(hwnd,IDC_LANGUAGECOMBO), CB_GETCURSEL, 0, 0);
+                    selectedIndex= (unsigned int)SendMessage(GetDlgItem(hwnd,IDC_CODEPAGECOMBO), CB_GETCURSEL, 0, 0);
                     codePageChanged=false;
                     for(lIt=libraries.begin(); lIt!=libraries.end(); ++lIt) {
                         if(lIt->type==LIB_CODEPAGE) {
@@ -1677,7 +1677,7 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             connectionSettings.port=StrToInt(buffer);
                             GetWindowText(GetDlgItem(hwnd,IDC_SHAREEDIT),buffer,65535);
                             connectionSettings.share=buffer;
-                            connectionSettings.requestCompression=IsDlgButtonChecked(hwnd, IDC_COMPRESSIONCHECK);
+                            connectionSettings.requestCompression=IsDlgButtonChecked(hwnd, IDC_COMPRESSIONCHECK)==1;
                             GetModuleFileName(g_hInstance,buffer,32767);
                             iniFile=getDefaultIniFile(buffer);
                             saveConnectionSettings(connectionSettings,(char*)iniFile.c_str());
@@ -2294,7 +2294,6 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case CTLCOLOR_EDIT:
                     SetBkMode((HDC)wParam, TRANSPARENT);
                     return g_hBrush3;
-                    break;
             }
             break;
         case WM_COMMAND:
