@@ -358,7 +358,7 @@ void freeGlobalResources(void) {
     return;
 }
 
-void onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&selection) {
+void inline onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&selection) {
     count=(unsigned int)SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0);
     if(count==0) {
         SetWindowText(GetDlgItem(hwnd,IDC_NOTEID),getStringFromTable(IDS_STRING_NOT_CHOSEN));
