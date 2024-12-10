@@ -288,8 +288,8 @@ void onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&selection)
                     SetWindowText(GetDlgItem(hwnd,IDC_NOTELASTMOD),((*maxLM)+" - "+(*minLM)).c_str());
                 }
                 else {
-                    SetWindowText(GetDlgItem(hwnd,IDC_NOTEID),getStringFromTable(IDS_MULTIPLE_CHOSEN));
-                    SetWindowText(GetDlgItem(hwnd,IDC_NOTELASTMOD),getStringFromTable(IDS_MULTIPLE_CHOSEN));
+                    SetWindowText(GetDlgItem(hwnd,IDC_NOTEID),getStringFromTable(IDS_STRING_MULTIPLE_CHOSEN));
+                    SetWindowText(GetDlgItem(hwnd,IDC_NOTELASTMOD),getStringFromTable(IDS_STRING_MULTIPLE_CHOSEN));
                 }
             }
             EnableWindow(GetDlgItem(hwnd,IDB_OPEN), true);
