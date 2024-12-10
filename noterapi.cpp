@@ -135,7 +135,7 @@ NOTER_SERVER_INFO noter_getServerInfo(NOTER_CONNECTION_SETTINGS &connectionSetti
     json_value *data;
     NOTER_SERVER_INFO serverInfo;
 
-    recSize=noter_simplyMakeRequest("GET",
+    recSize=noter_simplyMakeRequest(GET_METHOD,
                                     connectionSettings,
                                     NULL,
                                     "",
@@ -166,7 +166,7 @@ long int noter_getNoteList(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_
     json_value *data;
     long int noteCount=0;
 
-    recSize=noter_simplyMakeRequest("POST",
+    recSize=noter_simplyMakeRequest(POST_METHOD,
                                     connectionSettings,
                                     &credentials,
                                     "list",
@@ -199,7 +199,7 @@ long int noter_getNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CRED
     json_value *data;
     long int answerCode=0;
 
-    recSize=noter_simplyMakeRequest("POST",
+    recSize=noter_simplyMakeRequest(POST_METHOD,
                                     connectionSettings,
                                     &credentials,
                                     "retrieve",
@@ -231,7 +231,7 @@ long int noter_getUserInfo(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_
     json_value *data;
     long int answerCode=0;
 
-    recSize=noter_simplyMakeRequest("POST",
+    recSize=noter_simplyMakeRequest(POST_METHOD,
                                     connectionSettings,
                                     &credentials,
                                     "info",
@@ -263,7 +263,7 @@ long int noter_lockNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CRE
     json_value *data;
     long int answerCode=0;
 
-    recSize=noter_simplyMakeRequest("POST",
+    recSize=noter_simplyMakeRequest(POST_METHOD,
                                     connectionSettings,
                                     &credentials,
                                     "lock",
@@ -292,7 +292,7 @@ long int noter_unlockNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_C
     json_value *data;
     long int answerCode=0;
 
-    recSize=noter_simplyMakeRequest("POST",
+    recSize=noter_simplyMakeRequest(POST_METHOD,
                                     connectionSettings,
                                     &credentials,
                                     "unlock",
@@ -321,7 +321,7 @@ long int noter_deleteNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_C
     json_value *data;
     long int answerCode=0;
 
-    recSize=noter_simplyMakeRequest("POST",
+    recSize=noter_simplyMakeRequest(POST_METHOD,
                                     connectionSettings,
                                     &credentials,
                                     "delete",
@@ -351,7 +351,7 @@ long int noter_addNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_CRED
     long int answerCode=0;
     long int newID=0;
 
-    recSize=noter_simplyMakeRequest("POST",
+    recSize=noter_simplyMakeRequest(POST_METHOD,
                                     connectionSettings,
                                     &credentials,
                                     "add",
@@ -389,7 +389,7 @@ long int noter_updateNote(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_C
     json_value *data;
     long int answerCode=0;
 
-    recSize=noter_simplyMakeRequest("POST",
+    recSize=noter_simplyMakeRequest(POST_METHOD,
                                     connectionSettings,
                                     &credentials,
                                     "update",
@@ -418,7 +418,7 @@ long int noter_registerUser(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER
     json_value *data;
     long int answerCode=0;
 
-    recSize=noter_simplyMakeRequest("POST",
+    recSize=noter_simplyMakeRequest(POST_METHOD,
                                     connectionSettings,
                                     &credentials,
                                     "register",
@@ -447,7 +447,7 @@ long int noter_changeUserPassword(NOTER_CONNECTION_SETTINGS &connectionSettings,
     json_value *data;
     long int answerCode=0;
 
-    recSize=noter_simplyMakeRequest("POST",
+    recSize=noter_simplyMakeRequest(POST_METHOD,
                                     connectionSettings,
                                     &credentials,
                                     "change",
@@ -476,7 +476,7 @@ long int noter_removeUser(NOTER_CONNECTION_SETTINGS &connectionSettings, NOTER_C
     json_value *data;
     long int answerCode=0;
 
-    recSize=noter_simplyMakeRequest("POST",
+    recSize=noter_simplyMakeRequest(POST_METHOD,
                                     connectionSettings,
                                     &credentials,
                                     "remove",

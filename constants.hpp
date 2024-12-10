@@ -30,4 +30,7 @@
 #define NOTER_MAINWINDOW    "SimpleNoterMain"
 #define NOTER_EDITWINDOW    "SimpleNoterEdit"
 
+#define GET_METHOD          "GET"
+#define POST_METHOD         "POST"
+
 #endif
