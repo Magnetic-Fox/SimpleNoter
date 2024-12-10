@@ -85,23 +85,23 @@ IDR_MENU_EDIT MENU DISCARDABLE
 BEGIN
     POPUP "&Plik"
     BEGIN
-        MENUITEM "&Dodaj / Aktualizuj\tCtrl+S", ID_FILE_ADDUP
+        MENUITEM "&Dodaj / Aktualizuj\tCtrl+S", ID_EW_FILE_ADDUP
         MENUITEM SEPARATOR
-        MENUITEM "&W³aœciwoœci...",             ID_FILE_PROPERTIES
-        MENUITEM "Do nowej notatki\tCtrl+D",    ID_FILE_TONEWNOTE
+        MENUITEM "&W³aœciwoœci...",             ID_EW_FILE_PROPERTIES
+        MENUITEM "Do nowej notatki\tCtrl+D",    ID_EW_FILE_TONEWNOTE
         MENUITEM SEPARATOR
         MENUITEM "Zamknij\tAlt+F4",             ID_FILE_EXIT
     END
     POPUP "&Edycja"
     BEGIN
-        MENUITEM "&Cofnij\tCtrl+Z",             ID_EDIT_UNDO
+        MENUITEM "&Cofnij\tCtrl+Z",             ID_EW_EDIT_UNDO
         MENUITEM SEPARATOR
-        MENUITEM "&Wytnij\tCtrl+X",             ID_EDIT_CUT
-        MENUITEM "&Kopiuj\tCtrl+C",             ID_EDIT_COPY
-        MENUITEM "Wkl&ej\tCtrl+V",              ID_EDIT_PASTE
-        MENUITEM "&Usuñ\tDel",                  ID_EDIT_CLEAR
+        MENUITEM "&Wytnij\tCtrl+X",             ID_EW_EDIT_CUT
+        MENUITEM "&Kopiuj\tCtrl+C",             ID_EW_EDIT_COPY
+        MENUITEM "Wkl&ej\tCtrl+V",              ID_EW_EDIT_PASTE
+        MENUITEM "&Usuñ\tDel",                  ID_EW_EDIT_CLEAR
         MENUITEM SEPARATOR
-        MENUITEM "Zaznacz wszystko\tCtrl+A",    ID_EDIT_SELECTALL_2
+        MENUITEM "Zaznacz wszystko\tCtrl+A",    ID_EW_EDIT_SELECTALL
     END
     POPUP "Pomo&c"
     BEGIN

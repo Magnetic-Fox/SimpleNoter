@@ -42,15 +42,15 @@
 
 // Edit window menu
 #define IDR_MENU_EDIT                       400
-#define ID_FILE_ADDUP                       401
-#define ID_FILE_PROPERTIES                  402
-#define ID_FILE_TONEWNOTE                   403
-#define ID_EDIT_UNDO                        404
-#define ID_EDIT_CUT                         405
-#define ID_EDIT_COPY                        406
-#define ID_EDIT_PASTE                       407
-#define ID_EDIT_CLEAR                       408
-#define ID_EDIT_SELECTALL_2                 409
+#define ID_EW_FILE_ADDUP                    401
+#define ID_EW_FILE_PROPERTIES               402
+#define ID_EW_FILE_TONEWNOTE                403
+#define ID_EW_EDIT_UNDO                     404
+#define ID_EW_EDIT_CUT                      405
+#define ID_EW_EDIT_COPY                     406
+#define ID_EW_EDIT_PASTE                    407
+#define ID_EW_EDIT_CLEAR                    408
+#define ID_EW_EDIT_SELECTALL                409
 
 // Note information dialog
 #define IDD_NOTEINFO                        500

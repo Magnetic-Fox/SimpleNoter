@@ -977,39 +977,39 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             break;
         case WM_INITMENU:
             if(winMem[hwnd]->note->id==0) {
-                EnableMenuItem(GetMenu(hwnd),   ID_FILE_PROPERTIES, MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),   ID_FILE_TONEWNOTE,  MF_GRAYED);
-                ModifyMenu(GetMenu(hwnd),       ID_FILE_ADDUP,      MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_ADD));
-                EnableMenuItem(GetMenu(hwnd),   ID_FILE_ADDUP,      IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_ADDUP))        ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_FILE_PROPERTIES,  MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_FILE_TONEWNOTE,   MF_GRAYED);
+                ModifyMenu(GetMenu(hwnd),       ID_EW_FILE_ADDUP,       MF_BYCOMMAND | MF_STRING,ID_EW_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_ADD));
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_FILE_ADDUP,       IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_ADDUP))        ? MF_ENABLED : MF_GRAYED);
             }
             else {
-                EnableMenuItem(GetMenu(hwnd),   ID_FILE_PROPERTIES, IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_PROPERTIES))   ? MF_ENABLED : MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),   ID_FILE_TONEWNOTE,  MF_ENABLED);
-                ModifyMenu(GetMenu(hwnd),       ID_FILE_ADDUP,      MF_BYCOMMAND | MF_STRING,ID_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_UPDATE));
-                EnableMenuItem(GetMenu(hwnd),   ID_FILE_ADDUP,      IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_ADDUP))        ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_FILE_PROPERTIES,  IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_PROPERTIES))   ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_FILE_TONEWNOTE,   MF_ENABLED);
+                ModifyMenu(GetMenu(hwnd),       ID_EW_FILE_ADDUP,       MF_BYCOMMAND | MF_STRING,ID_EW_FILE_ADDUP,getStringFromTable(IDS_STRING_MENU_UPDATE));
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_FILE_ADDUP,       IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_ADDUP))        ? MF_ENABLED : MF_GRAYED);
             }
             if((GetFocus()==GetDlgItem(hwnd,IDE_EDIT_SUBJECT)) || (GetFocus()==GetDlgItem(hwnd,IDE_EDIT_ENTRY))) {
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_UNDO,       SendMessage(GetFocus(), EM_CANUNDO, 0, 0)               ? MF_ENABLED : MF_GRAYED);
-                sel=SendMessage(GetFocus(),     EM_GETSEL,          0, 0);
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_CUT,        (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_COPY,       (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_CLEAR,      (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_EDIT_UNDO,        SendMessage(GetFocus(), EM_CANUNDO, 0, 0)               ? MF_ENABLED : MF_GRAYED);
+                sel=SendMessage(GetFocus(),     EM_GETSEL,              0, 0);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_EDIT_CUT,         (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_EDIT_COPY,        (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_EDIT_CLEAR,       (HIWORD(sel)!=LOWORD(sel)) ? MF_ENABLED : MF_GRAYED);
                 if(OpenClipboard(GetFocus())) {
-                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE,     (IsClipboardFormatAvailable(CF_TEXT) || IsClipboardFormatAvailable(CF_OEMTEXT)) ? MF_ENABLED : MF_GRAYED);
+                    EnableMenuItem(GetMenu(hwnd),ID_EW_EDIT_PASTE,      (IsClipboardFormatAvailable(CF_TEXT) || IsClipboardFormatAvailable(CF_OEMTEXT)) ? MF_ENABLED : MF_GRAYED);
                     CloseClipboard();
                 }
                 else {
-                    EnableMenuItem(GetMenu(hwnd),ID_EDIT_PASTE,     MF_GRAYED);
+                    EnableMenuItem(GetMenu(hwnd),ID_EW_EDIT_PASTE,      MF_GRAYED);
                 }
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_SELECTALL_2,((GetWindowTextLength(GetFocus())>0) && (GetWindowTextLength(GetFocus())>(HIWORD(sel)-LOWORD(sel)))) ? MF_ENABLED : MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_EDIT_SELECTALL,   ((GetWindowTextLength(GetFocus())>0) && (GetWindowTextLength(GetFocus())>(HIWORD(sel)-LOWORD(sel)))) ? MF_ENABLED : MF_GRAYED);
             }
             else {
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_UNDO,       MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_CUT,        MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_COPY,       MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_PASTE,      MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_CLEAR,      MF_GRAYED);
-                EnableMenuItem(GetMenu(hwnd),   ID_EDIT_SELECTALL_2,MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_EDIT_UNDO,        MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_EDIT_CUT,         MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_EDIT_COPY,        MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_EDIT_PASTE,       MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_EDIT_CLEAR,       MF_GRAYED);
+                EnableMenuItem(GetMenu(hwnd),   ID_EW_EDIT_SELECTALL,   MF_GRAYED);
             }
             break;
         case WM_COMMAND:
@@ -1029,15 +1029,15 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     break;
                 case ID_ACC_CTRLS:
-                    SendMessage(hwnd, WM_COMMAND, ID_FILE_ADDUP, 0);
+                    SendMessage(hwnd, WM_COMMAND, ID_EW_FILE_ADDUP, 0);
                     break;
                 case ID_ACC_CTRLD:
                     if(winMem[hwnd]->note->id!=0) {
-                        SendMessage(hwnd, WM_COMMAND, ID_FILE_TONEWNOTE, 0);
+                        SendMessage(hwnd, WM_COMMAND, ID_EW_FILE_TONEWNOTE, 0);
                     }
                     break;
                 case ID_ACC_CTRLA:
-                    SendMessage(hwnd, WM_COMMAND, ID_EDIT_SELECTALL_2, 0);
+                    SendMessage(hwnd, WM_COMMAND, ID_EW_EDIT_SELECTALL, 0);
                     break;
                 case ID_ACC_ALTF4:
                     SendMessage(hwnd, WM_COMMAND, IDB_EDIT_CLOSE, 0);
@@ -1045,17 +1045,17 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                 case ID_ACC_F1:
                     SendMessage(hwnd, WM_COMMAND, ID_HELP_HELP, 0);
                     break;
-                case ID_FILE_ADDUP:
+                case ID_EW_FILE_ADDUP:
                     if(IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_ADDUP))) {
                         SendMessage(hwnd, WM_COMMAND, IDB_EDIT_ADDUP, 0);
                     }
                     break;
-                case ID_FILE_PROPERTIES:
+                case ID_EW_FILE_PROPERTIES:
                     if(IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_PROPERTIES))) {
                         SendMessage(hwnd, WM_COMMAND, IDB_EDIT_PROPERTIES, 0);
                     }
                     break;
-                case ID_FILE_TONEWNOTE:
+                case ID_EW_FILE_TONEWNOTE:
                     if(winMem[hwnd]->lastResult!=0) {
                         winMem[hwnd]->lastResult=0;
                         SetWindowText(GetDlgItem(hwnd,IDC_EDIT_STATUS),(char*)noter_getAnswerString(winMem[hwnd]->lastResult).c_str());
@@ -1073,7 +1073,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                 case ID_FILE_EXIT:
                     SendMessage(hwnd, WM_COMMAND, IDB_EDIT_CLOSE, 0);
                     break;
-                case ID_EDIT_UNDO:
+                case ID_EW_EDIT_UNDO:
                     if((GetFocus()==GetDlgItem(hwnd,IDE_EDIT_SUBJECT)) || (GetFocus()==GetDlgItem(hwnd,IDE_EDIT_ENTRY))) {
                         if(winMem[hwnd]->lastResult!=0) {
                             winMem[hwnd]->lastResult=0;
@@ -1082,7 +1082,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         SendMessage(GetFocus(),WM_UNDO,0,0);
                     }
                     break;
-                case ID_EDIT_CUT:
+                case ID_EW_EDIT_CUT:
                     if((GetFocus()==GetDlgItem(hwnd,IDE_EDIT_SUBJECT)) || (GetFocus()==GetDlgItem(hwnd,IDE_EDIT_ENTRY))) {
                         if(winMem[hwnd]->lastResult!=0) {
                             winMem[hwnd]->lastResult=0;
@@ -1091,7 +1091,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         SendMessage(GetFocus(),WM_CUT,0,0);
                     }
                     break;
-                case ID_EDIT_COPY:
+                case ID_EW_EDIT_COPY:
                     if((GetFocus()==GetDlgItem(hwnd,IDE_EDIT_SUBJECT)) || (GetFocus()==GetDlgItem(hwnd,IDE_EDIT_ENTRY))) {
                         if(winMem[hwnd]->lastResult!=0) {
                             winMem[hwnd]->lastResult=0;
@@ -1100,7 +1100,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         SendMessage(GetFocus(),WM_COPY,0,0);
                     }
                     break;
-                case ID_EDIT_PASTE:
+                case ID_EW_EDIT_PASTE:
                     if((GetFocus()==GetDlgItem(hwnd,IDE_EDIT_SUBJECT)) || (GetFocus()==GetDlgItem(hwnd,IDE_EDIT_ENTRY))) {
                         if(winMem[hwnd]->lastResult!=0) {
                             winMem[hwnd]->lastResult=0;
@@ -1109,7 +1109,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         SendMessage(GetFocus(),WM_PASTE,0,0);
                     }
                     break;
-                case ID_EDIT_CLEAR:
+                case ID_EW_EDIT_CLEAR:
                     if((GetFocus()==GetDlgItem(hwnd,IDE_EDIT_SUBJECT)) || (GetFocus()==GetDlgItem(hwnd,IDE_EDIT_ENTRY))) {
                         if(winMem[hwnd]->lastResult!=0) {
                             winMem[hwnd]->lastResult=0;
@@ -1118,7 +1118,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         SendMessage(GetFocus(),WM_CLEAR,0,0);
                     }
                     break;
-                case ID_EDIT_SELECTALL_2:
+                case ID_EW_EDIT_SELECTALL:
                     if((GetFocus()==GetDlgItem(hwnd,IDE_EDIT_SUBJECT)) || (GetFocus()==GetDlgItem(hwnd,IDE_EDIT_ENTRY))) {
                         if(winMem[hwnd]->lastResult!=0) {
                             winMem[hwnd]->lastResult=0;
