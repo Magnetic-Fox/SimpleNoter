@@ -98,7 +98,7 @@ bool noter_checkAndPrepareResponse(HEADERS &heads, char *&buffer, unsigned int &
         if(bufDataSize>0) {
             tempBufDataSize=bufDataSize;
             if(heads["X-BZ-Compressed"]=="yes") {
-                bufDataSize=uncompressDataInPlace((unsigned char*)buffer,bufDataSize,65535);
+                bufDataSize=(unsigned int)uncompressDataInPlace((unsigned char*)buffer,bufDataSize,65535);
             }
             compressionRatio=calculateCompressionRatio(tempBufDataSize,bufDataSize);
             if(bufDataSize>0) {
