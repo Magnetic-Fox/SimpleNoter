@@ -93,9 +93,9 @@
 // Connection dialog
 #define IDD_CONNECTION                      800
 #define IDC_COMPRESSIONCHECK                801
-#define IDC_EDIT1                           802
-#define IDC_EDIT2                           803
-#define IDC_EDIT3                           804
+#define IDC_ADDRESSEDIT                     802
+#define IDC_PORTEDIT                        803
+#define IDC_SHAREEDIT                       804
 #define IDC_TESTBUTTON                      805
 #define IDC_STATIC8                         806
 #define IDC_STATIC9                         807
@@ -103,9 +103,9 @@
 
 // Credentials dialog
 #define IDD_CREDENTIALS                     900
-#define IDC_EDIT4                           901
+#define IDC_USERNAMEEDIT                    901
 #define IDC_REGISTERBUTTON                  902
-#define IDC_EDIT5                           903
+#define IDC_PASSWORDEDIT                    903
 #define IDC_TESTBUTTON2                     904
 #define IDC_STATIC11                        905
 #define IDC_STATIC12                        906
@@ -117,19 +117,19 @@
 
 // User registration dialog
 #define IDD_REGISTRATION                    1000
-#define IDC_EDIT6                           1001
-#define IDC_EDIT7                           1002
-#define IDC_EDIT8                           1003
+#define IDC_REGUSERNAMEEDIT                 1001
+#define IDC_REGPASSWORDEDIT                 1002
+#define IDC_REGPSREPEATEDIT                 1003
 
 // User account delete dialog
 #define IDD_ACCDELETE                       1100
-#define IDC_EDIT12                          1101
+#define IDC_ACCREMPASSWORDEDIT              1101
 
 // User password change dialog
 #define IDD_PASSCHANGE                      1200
-#define IDC_EDIT9                           1201
-#define IDC_EDIT10                          1202
-#define IDC_EDIT11                          1203
+#define IDC_OLDPASSWORDEDIT                 1201
+#define IDC_NEWPASSWORDEDIT                 1202
+#define IDC_NEWPSREPEATEDIT                 1203
 
 // Note import dialog
 // place left for IDD_IMPORT
@@ -143,10 +143,10 @@
 #define IDC_EXPORTTOMANYFILESRADIO          1405
 #define IDC_NUMASIDSRADIO                   1406
 #define IDC_NUMSTARTSFROMRADIO              1407
-#define IDC_EDIT13                          1408
-#define IDC_EDIT14                          1409
+#define IDC_PATHEDIT                        1408
+#define IDC_NUMSTARTSFROMEDIT               1409
 #define IDC_ADDPREFIXCHECK                  1410
-#define IDC_EDIT15                          1411
+#define IDC_ADDPREFIXEDIT                   1411
 #define IDC_FIRSTLINESUBJECTCHECK           1412
 #define IDC_ONELINEGAPCHECK                 1413
 #define IDC_ADDINFOATENDCHECK               1414
