@@ -1356,8 +1356,8 @@ BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC4),(char*)toCodePage(mappedCodePage,(char*)tempNote.userAgent.c_str()).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC5),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastModified.c_str()).c_str());
                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC6),(char*)toCodePage(mappedCodePage,(char*)tempNote.lastUserAgent.c_str()).c_str());
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1), !tempNote.locked);
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),  tempNote.locked);
+                EnableWindow(GetDlgItem(hwnd,IDC_LOCKBUTTON), !tempNote.locked);
+                EnableWindow(GetDlgItem(hwnd,IDC_UNLOCKBUTTON),  tempNote.locked);
             }
             else {
                 MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONHAND | MB_OK);
@@ -1369,25 +1369,25 @@ BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case IDOK:
                     EndDialog(hwnd,IDOK);
                     break;
-                case IDC_BUTTON1:
+                case IDC_LOCKBUTTON:
                     result=noter_lockNote(connectionSettings,credentials,winMem[GetParent(hwnd)]->note->id,buffer);
                     if(result>=0) {
                         winMem[GetParent(hwnd)]->note->locked=true;
                         tempNote.locked=true;
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),false);
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),true);
+                        EnableWindow(GetDlgItem(hwnd,IDC_LOCKBUTTON),false);
+                        EnableWindow(GetDlgItem(hwnd,IDC_UNLOCKBUTTON),true);
                     }
                     else {
                         MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONHAND | MB_OK);
                     }
                     break;
-                case IDC_BUTTON2:
+                case IDC_UNLOCKBUTTON:
                     result=noter_unlockNote(connectionSettings,credentials,winMem[GetParent(hwnd)]->note->id,buffer);
                     if(result>=0) {
                         winMem[GetParent(hwnd)]->note->locked=false;
                         tempNote.locked=false;
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),true);
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),false);
+                        EnableWindow(GetDlgItem(hwnd,IDC_LOCKBUTTON),true);
+                        EnableWindow(GetDlgItem(hwnd,IDC_UNLOCKBUTTON),false);
                     }
                     else {
                         MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONHAND | MB_OK);
@@ -1658,8 +1658,7 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             }
             else {
                 EnableWindow(GetDlgItem(hwnd,IDOK),false);
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),false);
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON),false);
             }
             editsChanged=false;
             break;
@@ -1698,8 +1697,8 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 case IDC_CHECK11:
                     editsChanged=true;  // yeah, a bit ugly...
                     break;
-                case IDC_BUTTON4:
-                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON4))) {
+                case IDC_TESTBUTTON:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_TESTBUTTON))) {
                         break;
                     }
                     unsigned int test=0;
@@ -1738,18 +1737,12 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         case EN_CHANGE:
                             if(GetWindowTextLength(GetDlgItem(hwnd,wParam))==0) {
                                 EnableWindow(GetDlgItem(hwnd,IDOK),false);
-                                if(wParam==IDC_EDIT1) {
-                                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),false);
-                                }
-                                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),false);
+                                EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON),false);
                             }
                             else {
-                                if(wParam==IDC_EDIT1) {
-                                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),true);
-                                }
                                 if((GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT1))>0) && (GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT2))>0) && (GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT3))>0)) {
                                     EnableWindow(GetDlgItem(hwnd,IDOK),true);
-                                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),true);
+                                    EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON),true);
                                 }
                             }
                             editsChanged=true;
@@ -1796,27 +1789,27 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),(char*)userInfo.userAgent.c_str());
                         SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),(char*)userInfo.lastChanged.c_str());
                         SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),(char*)userInfo.lastUserAgent.c_str());
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),  true);
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),  true);
+                        EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),  true);
+                        EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),  true);
                     }
                     else {
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),  false);
-                        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),  false);
+                        EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),  false);
+                        EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),  false);
                     }
                 }
                 else {
                     EnableWindow(GetDlgItem(hwnd,IDOK),         false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),  false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),  false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),  false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),  false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),  false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),  false);
                 }
             }
             else {
                 EnableWindow(GetDlgItem(hwnd,IDOK),         false);
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON5),  false);
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),  false);
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),  false);
-                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),  false);
+                EnableWindow(GetDlgItem(hwnd,IDC_REGISTERBUTTON),  false);
+                EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),  false);
+                EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),  false);
+                EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),  false);
             }
             editsChanged=false;
             editsChanged2=false;
@@ -1849,8 +1842,8 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                     }
                     EndDialog(hwnd,IDCANCEL);
                     break;
-                case IDC_BUTTON5:
-                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON5))) {
+                case IDC_REGISTERBUTTON:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_REGISTERBUTTON))) {
                         break;
                     }
                     auxCredentials=&tempCredentials;
@@ -1859,12 +1852,12 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                             SetWindowText(GetDlgItem(hwnd,IDC_EDIT4),(char*)tempCredentials.username.c_str());
                             SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),(char*)tempCredentials.password.c_str());
                             useTestCredentials=true;
-                            SendMessage(hwnd, WM_COMMAND, IDC_BUTTON6, IDC_BUTTON5);
+                            SendMessage(hwnd, WM_COMMAND, IDC_TESTBUTTON2, IDC_REGISTERBUTTON);
                         }
                     }
                     break;
-                case IDC_BUTTON6:
-                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON6))) {
+                case IDC_TESTBUTTON2:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_TESTBUTTON2))) {
                         break;
                     }
                     if(noter_connectionSettingsAvailable(connectionSettings)) {
@@ -1885,9 +1878,9 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                 if(editsChanged) {
                                     useTestCredentials=true;
                                 }
-                                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),true);
-                                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),true);
-                                if(lParam!=IDC_BUTTON5) {
+                                EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),true);
+                                EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),true);
+                                if(lParam!=IDC_REGISTERBUTTON) {
                                     MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_LOGIN_SUCCESSFUL),getStringFromTable(IDS_STRING_INFORMATION,1),MB_ICONINFORMATION | MB_OK);
                                 }
                             }
@@ -1897,8 +1890,8 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                 SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                EnableWindow( GetDlgItem(hwnd,IDC_BUTTON7), false);
-                                EnableWindow( GetDlgItem(hwnd,IDC_BUTTON8), false);
+                                EnableWindow( GetDlgItem(hwnd,IDC_ACCDELETEBUTTON), false);
+                                EnableWindow( GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON), false);
                                 MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
                             }
                         }
@@ -1910,8 +1903,8 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_NO_CONN_SETTINGS),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
-                case IDC_BUTTON7:
-                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON7))) {
+                case IDC_ACCDELETEBUTTON:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON))) {
                         break;
                     }
                     if(useTestCredentials) {
@@ -1934,8 +1927,8 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                     SetWindowText(GetDlgItem(hwnd,IDC_STATIC13),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                     SetWindowText(GetDlgItem(hwnd,IDC_STATIC14),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
                                     SetWindowText(GetDlgItem(hwnd,IDC_STATIC15),getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                    EnableWindow( GetDlgItem(hwnd,IDC_BUTTON7), false);
-                                    EnableWindow( GetDlgItem(hwnd,IDC_BUTTON8), false);
+                                    EnableWindow( GetDlgItem(hwnd,IDC_ACCDELETEBUTTON), false);
+                                    EnableWindow( GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON), false);
                                 }
                                 else {
                                     credentials.username="";
@@ -1955,8 +1948,8 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         MessageBox(hwnd,getStringFromTable(IDS_STRING_NO_CREDENTIALS),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
                     }
                     break;
-                case IDC_BUTTON8:
-                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_BUTTON8))) {
+                case IDC_PASSCHANGEBUTTON:
+                    if(!IsWindowEnabled(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON))) {
                         break;
                     }
                     if(useTestCredentials) {
@@ -1970,7 +1963,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         if(MakeDialogBox(hwnd,IDD_PASSCHANGE,PassChangeDlgProc)==IDOK) {
                             SetWindowText(GetDlgItem(hwnd,IDC_EDIT5),(char*)tempCredentials.password.c_str());
                             useTestCredentials=true;
-                            SendMessage(hwnd, WM_COMMAND, IDC_BUTTON6, IDC_BUTTON5);
+                            SendMessage(hwnd, WM_COMMAND, IDC_TESTBUTTON2, IDC_REGISTERBUTTON);
                         }
                     }
                     else {
@@ -1984,12 +1977,12 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                             editsChanged=true;
                             if(GetWindowTextLength(GetDlgItem(hwnd,wParam))==0) {
                                 EnableWindow(GetDlgItem(hwnd,IDOK),       false);
-                                EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),false);
+                                EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),false);
                             }
                             else {
                                 if(GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT4))>0 && GetWindowTextLength(GetDlgItem(hwnd,IDC_EDIT5))>0) {
                                     EnableWindow(GetDlgItem(hwnd,IDOK),       true);
-                                    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),true);
+                                    EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),true);
                                 }
                             }
                             break;
@@ -2369,7 +2362,7 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
                     }
                     break;
-                case IDC_BUTTON9:
+                case IDC_BROWSEBUTTON:
                     // TODO: save file window part
                     break;
                 case IDC_EXPORT:

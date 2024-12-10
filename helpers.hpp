@@ -129,8 +129,8 @@ void inline edit_UnlockAllButtons(HWND hwnd) {
 }
 
 void inline properties_LockAllButtons(HWND g_hwnd, HWND hwnd) {
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON1),false);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON2),false);
+    EnableWindow(GetDlgItem(hwnd,IDC_LOCKBUTTON),false);
+    EnableWindow(GetDlgItem(hwnd,IDC_UNLOCKBUTTON),false);
     edit_LockAllButtons(g_hwnd, GetParent(hwnd));
     return;
 }
@@ -142,8 +142,7 @@ void inline properties_UnlockAllButtons(HWND hwnd) {
 
 void inline connection_LockAllButtons(HWND hwnd) {
     main_LockAllButtons(GetParent(hwnd));
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),false);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),false);
+    EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON),false);
     EnableWindow(GetDlgItem(hwnd,IDOK),false);
     EnableWindow(GetDlgItem(hwnd,IDCANCEL),false);
     return;
@@ -151,8 +150,7 @@ void inline connection_LockAllButtons(HWND hwnd) {
 
 void inline connection_UnlockAllButtons(HWND hwnd) {
     main_UnlockAllButtons(GetParent(hwnd));
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON3),true);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON4),true);
+    EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON),true);
     EnableWindow(GetDlgItem(hwnd,IDOK),true);
     EnableWindow(GetDlgItem(hwnd,IDCANCEL),true);
     return;
@@ -160,10 +158,10 @@ void inline connection_UnlockAllButtons(HWND hwnd) {
 
 void inline credentials_LockAllButtons(HWND hwnd) {
     main_LockAllButtons(GetParent(hwnd));
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON5),false);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),false);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON7),false);
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON8),false);
+    EnableWindow(GetDlgItem(hwnd,IDC_REGISTERBUTTON),false);
+    EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),false);
+    EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),false);
+    EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),false);
     EnableWindow(GetDlgItem(hwnd,IDOK),false);
     EnableWindow(GetDlgItem(hwnd,IDCANCEL),false);
     return;
@@ -172,9 +170,9 @@ void inline credentials_LockAllButtons(HWND hwnd) {
 void inline credentials_UnlockAllButtons(HWND hwnd) {
     main_UnlockAllButtons(GetParent(hwnd));
     if(noter_connectionSettingsAvailable(*conn)) {
-        EnableWindow(GetDlgItem(hwnd,IDC_BUTTON5),true);
+        EnableWindow(GetDlgItem(hwnd,IDC_REGISTERBUTTON),true);
     }
-    EnableWindow(GetDlgItem(hwnd,IDC_BUTTON6),true);
+    EnableWindow(GetDlgItem(hwnd,IDC_TESTBUTTON2),true);
     EnableWindow(GetDlgItem(hwnd,IDOK),true);
     EnableWindow(GetDlgItem(hwnd,IDCANCEL),true);
     return;

@@ -54,8 +54,8 @@
 
 // Note information dialog
 #define IDD_NOTEINFO                        500
-#define IDC_BUTTON1                         501
-#define IDC_BUTTON2                         502
+#define IDC_LOCKBUTTON                      501
+#define IDC_UNLOCKBUTTON                    502
 #define IDC_STATIC                          503
 #define IDC_STATIC1                         504
 #define IDC_STATIC2                         505
@@ -94,27 +94,26 @@
 // Connection dialog
 #define IDD_CONNECTION                      800
 #define IDC_EDIT1                           801
-#define IDC_BUTTON3                         802
-#define IDC_EDIT2                           803
-#define IDC_EDIT3                           804
-#define IDC_BUTTON4                         805
-#define IDC_STATIC8                         806
-#define IDC_STATIC9                         807
-#define IDC_STATIC10                        808
+#define IDC_EDIT2                           802
+#define IDC_EDIT3                           803
+#define IDC_TESTBUTTON                      804
+#define IDC_STATIC8                         805
+#define IDC_STATIC9                         806
+#define IDC_STATIC10                        807
 
 // Credentials dialog
 #define IDD_CREDENTIALS                     900
 #define IDC_EDIT4                           901
-#define IDC_BUTTON5                         902
+#define IDC_REGISTERBUTTON                  902
 #define IDC_EDIT5                           903
-#define IDC_BUTTON6                         904
+#define IDC_TESTBUTTON2                     904
 #define IDC_STATIC11                        905
 #define IDC_STATIC12                        906
 #define IDC_STATIC13                        907
 #define IDC_STATIC14                        908
 #define IDC_STATIC15                        909
-#define IDC_BUTTON7                         910
-#define IDC_BUTTON8                         911
+#define IDC_ACCDELETEBUTTON                 910
+#define IDC_PASSCHANGEBUTTON                911
 
 // User registration dialog
 #define IDD_REGISTRATION                    1000
@@ -138,7 +137,7 @@
 // Note export dialog
 #define IDD_EXPORT                          1400
 #define IDC_EXPORT                          1401
-#define IDC_BUTTON9                         1402
+#define IDC_BROWSEBUTTON                    1402
 #define IDC_CHECK12                         1403
 #define IDC_RADIO5                          1404
 #define IDC_RADIO6                          1405
