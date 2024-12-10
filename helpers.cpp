@@ -63,10 +63,10 @@ unsigned int getSelection(HWND listHwnd, unsigned int *&selected) {
             selSize=0;
         }
         else {
-            selSize=selCount;
+            selSize=(unsigned int)selCount;
         }
     }
-    unsigned int itemsInBuffer=SendMessage(listHwnd, LB_GETSELITEMS, selSize, (LPARAM)selected);
+    unsigned int itemsInBuffer=(unsigned int)SendMessage(listHwnd, LB_GETSELITEMS, selSize, (LPARAM)selected);
     if(selCount==0) {
         return 0;
     }
