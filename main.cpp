@@ -264,31 +264,33 @@ void onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&selection)
                 SetWindowText(GetDlgItem(hwnd,ID_STATIC4),notes[selection[0]].lastModified.c_str());
             }
             else {
-                /*
-                SetWindowText(GetDlgItem(hwnd,ID_STATIC3),getStringFromTable(IDS_MULTIPLE_CHOSEN));
-                SetWindowText(GetDlgItem(hwnd,ID_STATIC4),getStringFromTable(IDS_MULTIPLE_CHOSEN));
-                */
-                getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
-                minID=&notes[selection[0]].id;
-                maxID=&notes[selection[0]].id;
-                minLM=&notes[selection[0]].lastModified;
-                maxLM=&notes[selection[0]].lastModified;
-                for(unsigned int x=1; x<count; ++x) {
-                    if(notes[selection[x]].id<*minID) {
-                        minID=&notes[selection[x]].id;
+                if(mainSettings.showMultiIDnLM) {
+                    getSelection(GetDlgItem(hwnd,ID_LISTBOX),selection);
+                    minID=&notes[selection[0]].id;
+                    maxID=&notes[selection[0]].id;
+                    minLM=&notes[selection[0]].lastModified;
+                    maxLM=&notes[selection[0]].lastModified;
+                    for(unsigned int x=1; x<count; ++x) {
+                        if(notes[selection[x]].id<*minID) {
+                            minID=&notes[selection[x]].id;
+                        }
+                        if(notes[selection[x]].id>*maxID) {
+                            maxID=&notes[selection[x]].id;
+                        }
+                        if(notes[selection[x]].lastModified<*minLM) {
+                            minLM=&notes[selection[x]].lastModified;
+                        }
+                        if(notes[selection[x]].lastModified>*maxLM) {
+                            maxLM=&notes[selection[x]].lastModified;
+                        }
                     }
-                    if(notes[selection[x]].id>*maxID) {
-                        maxID=&notes[selection[x]].id;
-                    }
-                    if(notes[selection[x]].lastModified<*minLM) {
-                        minLM=&notes[selection[x]].lastModified;
-                    }
-                    if(notes[selection[x]].lastModified>*maxLM) {
-                        maxLM=&notes[selection[x]].lastModified;
-                    }
+                    SetWindowText(GetDlgItem(hwnd,ID_STATIC3),(IntToStr(*maxID)+" - "+IntToStr(*minID)).c_str());
+                    SetWindowText(GetDlgItem(hwnd,ID_STATIC4),((*maxLM)+" - "+(*minLM)).c_str());
                 }
-                SetWindowText(GetDlgItem(hwnd,ID_STATIC3),(IntToStr(*maxID)+" - "+IntToStr(*minID)).c_str());
-                SetWindowText(GetDlgItem(hwnd,ID_STATIC4),((*maxLM)+" - "+(*minLM)).c_str());
+                else {
+                    SetWindowText(GetDlgItem(hwnd,ID_STATIC3),getStringFromTable(IDS_MULTIPLE_CHOSEN));
+                    SetWindowText(GetDlgItem(hwnd,ID_STATIC4),getStringFromTable(IDS_MULTIPLE_CHOSEN));
+                }
             }
             EnableWindow(GetDlgItem(hwnd,ID_BUTTON3), true);
             EnableWindow(GetDlgItem(hwnd,ID_BUTTON5), true);
@@ -1508,6 +1510,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
             CheckDlgButton(hwnd, IDC_CHECK6,    mainSettings.use3DEdits     ? BST_CHECKED : BST_UNCHECKED);
             CheckDlgButton(hwnd, IDC_CHECK7,    mainSettings.use3DCombos    ? BST_CHECKED : BST_UNCHECKED);
             CheckDlgButton(hwnd, IDC_CHECK8,    mainSettings.use3DDialogs   ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK20,   mainSettings.showMultiIDnLM ? BST_CHECKED : BST_UNCHECKED);
             enabled=IsDlgButtonChecked(hwnd,    IDC_CHECK3);
             EnableWindow(GetDlgItem(hwnd,IDC_CHECK4),enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_CHECK5),enabled);
@@ -1543,6 +1546,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                     mainSettings.use3DEdits=    IsDlgButtonChecked(hwnd, IDC_CHECK6);
                     mainSettings.use3DCombos=   IsDlgButtonChecked(hwnd, IDC_CHECK7);
                     mainSettings.use3DDialogs=  IsDlgButtonChecked(hwnd, IDC_CHECK8);
+                    mainSettings.showMultiIDnLM=IsDlgButtonChecked(hwnd, IDC_CHECK20);
                     counter=0;
                     counter2=0;
                     selectedIndex2=SendMessage(GetDlgItem(hwnd,IDC_COMBO3), CB_GETCURSEL, 0, 0);

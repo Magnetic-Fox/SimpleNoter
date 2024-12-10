@@ -55,6 +55,7 @@ MAINSETTINGS getMainSettings(char* iniFile, LIBRARIES *libraries) {
     mainSettings.use3DEdits=(GetPrivateProfileInt("Settings","Use3DEdits",0,iniFile)==1);
     mainSettings.use3DCombos=(GetPrivateProfileInt("Settings","Use3DCombos",0,iniFile)==1);
     mainSettings.use3DDialogs=(GetPrivateProfileInt("Settings","Use3DDialogs",0,iniFile)==1);
+    mainSettings.showMultiIDnLM=(GetPrivateProfileInt("Settings","ShowMultiIDnLM",0,iniFile)==1);
 
     mainSettings.mainWindowX=GetPrivateProfileInt("WindowSettings","MainWindowX",CW_USEDEFAULT,iniFile);
     mainSettings.mainWindowY=GetPrivateProfileInt("WindowSettings","MainWindowY",CW_USEDEFAULT,iniFile);
@@ -91,6 +92,7 @@ void saveMainSettings(MAINSETTINGS &mainSettings, char* iniFile) {  // really ma
     WritePrivateProfileString("Settings","Use3DEdits",(char*)IntToStr(mainSettings.use3DEdits).c_str(),iniFile);
     WritePrivateProfileString("Settings","Use3DCombos",(char*)IntToStr(mainSettings.use3DCombos).c_str(),iniFile);
     WritePrivateProfileString("Settings","Use3DDialogs",(char*)IntToStr(mainSettings.use3DDialogs).c_str(),iniFile);
+    WritePrivateProfileString("Settings","ShowMultiIDnLM",(char*)IntToStr(mainSettings.showMultiIDnLM).c_str(),iniFile);
     WritePrivateProfileString("Regional","CodePage",(char*)mainSettings.selectedCodePage.c_str(),iniFile);
     return;
 }

@@ -206,6 +206,9 @@ BEGIN
                     WS_TABSTOP,220,94,181,10
     CONTROL         "Dialogi",IDC_CHECK8,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,220,105,181,10
+    CONTROL         "Poka¿ ID i daty notatek przy wielokrotnym wyborze",
+                    IDC_CHECK20,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,212,
+                    116,189,10
     CONTROL         "Build info:",IDC_STATIC8,"Static",SS_LEFTNOWORDWRAP | 
                     WS_DISABLED | WS_GROUP,7,138,290,8
 END

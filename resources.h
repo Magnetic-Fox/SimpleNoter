@@ -81,6 +81,7 @@
 #define IDC_CHECK11                         716
 #define IDC_COMBO3                          717
 #define IDC_COMBO4                          718
+#define IDC_CHECK20                         719
 
 #define IDD_DIALOG4                         800
 #define IDC_EDIT1                           801
