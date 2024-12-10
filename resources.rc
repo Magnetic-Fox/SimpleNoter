@@ -118,13 +118,13 @@ CAPTION "W³aœciwoœci notatki"
 FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,115,126,50,14
-    ICON            IDI_EDITICON,IDC_STATIC,7,7,20,20
+    ICON            IDI_EDITICON,IDC_EDITICONSTATIC,7,7,20,20
     LTEXT           "?",IDC_NOTENAMESTATIC,28,11,245,8
-    LTEXT           "ID:",IDC_STATIC,28,30,54,8
-    LTEXT           "Data dodania:",IDC_STATIC,28,40,46,8
-    LTEXT           "   program:",IDC_STATIC,28,50,54,8
-    LTEXT           "Ostatnia edycja:",IDC_STATIC,28,60,54,8
-    LTEXT           "   program:",IDC_STATIC,28,70,54,8
+    LTEXT           "ID:",IDC_NOTEIDLABELSTATIC,28,30,54,8
+    LTEXT           "Data dodania:",IDC_NOTEADDDATELABELSTATIC,28,40,46,8
+    LTEXT           "   program:",IDC_NOTEADDEDUSINGLABELSTATIC,28,50,54,8
+    LTEXT           "Ostatnia edycja:",IDC_NOTELASTMODLABELSTATIC,28,60,54,8
+    LTEXT           "   program:",IDC_NOTELASTMODUSINGLABELSTATIC,28,70,54,8
     LTEXT           "?",IDC_NOTEIDSTATIC,90,30,183,8
     LTEXT           "?",IDC_NOTEADDDATESTATIC,90,40,183,8
     LTEXT           "?",IDC_NOTEADDEDUSINGSTATIC,90,50,183,8
@@ -140,23 +140,23 @@ CAPTION "Informacje o programie"
 FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,153,7,50,14
-    ICON            IDI_MAINICON,IDC_STATIC,7,7,20,20
+    ICON            IDI_MAINICON,IDC_MAINICONSTATIC,7,7,20,20
     LTEXT           "SimpleNoter",IDC_APPNAMESTATIC,28,7,110,8
-    LTEXT           "wersja 16-bitowa",IDC_STATIC,28,17,110,8
-    LTEXT           "Projekt i program:",IDC_STATIC,28,37,157,8
-    LTEXT           "Bart³omiej ""Magnetic-Fox"" Wêgrzyn",IDC_STATIC,28,47,
+    LTEXT           "wersja 16-bitowa",IDC_SIXTEENVERSIONSTATIC,28,17,110,8
+    LTEXT           "Projekt i program:",IDC_PROJECTSTATIC,28,37,157,8
+    LTEXT           "Bart³omiej ""Magnetic-Fox"" Wêgrzyn",IDC_AUTHORSTATIC,28,47,
                     157,8
     LTEXT           "W oprogramowaniu wykorzystano\nnastêpuj¹ce biblioteki:",
-                    IDC_STATIC,28,67,157,16
+                    IDC_LIBSUSEDSTATIC,28,67,157,16
     LTEXT           "json-parser ©2012-2021 the json-parser authors",
-                    IDC_STATIC,36,85,167,8
-    LTEXT           "utf8_decode.c ©2005 JSON.org",IDC_STATIC,36,95,149,8
-    LTEXT           "utf8_encode.cpp © Ondøej Hruška",IDC_STATIC,36,105,149,
+                    IDC_JSONPARSERSTATIC,36,85,167,8
+    LTEXT           "utf8_decode.c ©2005 JSON.org",IDC_UTF8DECODESTATIC,36,95,149,8
+    LTEXT           "utf8_encode.cpp © Ondøej Hruška",IDC_UTF8ENCODESTATIC,36,105,149,
                     8
     LTEXT           "bzip2.c ©1996, 1997 Julian Seward\n    with patch ©2024 Magnetic-Fox",
-                    IDC_STATIC,36,115,149,16
+                    IDC_BZIP2STATIC,36,115,149,16
     LTEXT           "©2021-2024 Bart³omiej ""Magnetic-Fox"" Wêgrzyn",
-                    IDC_STATIC,28,143,175,8
+                    IDC_AUTHORCOPYRIGHTSTATIC,28,143,175,8
 END
 
 IDD_PREFERENCES DIALOG DISCARDABLE  0, 0, 416, 153
@@ -166,26 +166,26 @@ FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,309,132,50,14
     PUSHBUTTON      "&Anuluj",IDCANCEL,359,132,50,14
-    GROUPBOX        "G³ówne okno",IDC_STATIC,7,7,201,40
+    GROUPBOX        "G³ówne okno",IDC_MAINWINDOWSTATIC,7,7,201,40
     RADIOBUTTON     "Wyœwietl zgodnie z ustawieniami systemowymi",IDC_SYSDISPRADIO,
                     11,17,189,10,WS_TABSTOP
     RADIOBUTTON     "Wyœwietl jako:",IDC_MAINDISPASRADIO,11,28,64,10,WS_TABSTOP
     COMBOBOX        IDC_MAINWINDISPCOMBO,78,27,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Okno edycji",IDC_STATIC,7,47,201,40
+    GROUPBOX        "Okno edycji",IDC_EDITWINDOWSTATIC,7,47,201,40
     RADIOBUTTON     "Wyœwietl tak, jak g³ówne okno",IDC_EDITDISPASMAINRADIO,11,57,189,10,
                     WS_TABSTOP
     RADIOBUTTON     "Wyœwietl jako:",IDC_EDITDISPASRADIO,11,68,64,10,WS_TABSTOP
     COMBOBOX        IDC_EDITWINDISPCOMBO,78,67,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Ustawienia regionalne",IDC_STATIC,7,87,201,42
-    LTEXT           "Jêzyk:",IDC_STATIC,11,99,64,8
+    GROUPBOX        "Ustawienia regionalne",IDC_REGIONALSTATIC,7,87,201,42
+    LTEXT           "Jêzyk:",IDC_LANGUAGESTATIC,11,99,64,8
     COMBOBOX        IDC_LANGUAGECOMBO,78,97,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    LTEXT           "Strona kodowa:",IDC_STATIC,11,112,64,8
+    LTEXT           "Strona kodowa:",IDC_CODEPAGESTATIC,11,112,64,8
     COMBOBOX        IDC_CODEPAGECOMBO,78,110,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Opcje startowe i pozosta³e",IDC_STATIC,208,7,201,122
+    GROUPBOX        "Opcje startowe i pozosta³e",IDC_MISCSTATIC,208,7,201,122
     CONTROL         "Pobierz listê notatek przy starcie programu",
                     IDC_AUTORELOADCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
                     212,17,189,10
@@ -220,20 +220,20 @@ FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,93,149,50,14
     PUSHBUTTON      "&Anuluj",IDCANCEL,143,149,50,14
-    GROUPBOX        "Dane po³¹czenia",IDC_STATIC,7,7,186,78
-    LTEXT           "Adres:",IDC_STATIC,11,21,22,8
+    GROUPBOX        "Dane po³¹czenia",IDC_CONNECTIONSETTINGSSTATIC,7,7,186,78
+    LTEXT           "Adres:",IDC_ADDRESSSTATIC,11,21,22,8
     EDITTEXT        IDC_ADDRESSEDIT,50,20,138,12,ES_AUTOHSCROLL
-    LTEXT           "Port:",IDC_STATIC,11,35,16,8
+    LTEXT           "Port:",IDC_PORTSTATIC,11,35,16,8
     EDITTEXT        IDC_PORTEDIT,50,34,138,12,ES_AUTOHSCROLL
-    LTEXT           "Udzia³:",IDC_STATIC,11,49,26,8
+    LTEXT           "Udzia³:",IDC_SHARESTATIC,11,49,26,8
     EDITTEXT        IDC_SHAREEDIT,50,48,138,12,ES_AUTOHSCROLL
     CONTROL         "Oczekuj &kompresji",IDC_COMPRESSIONCHECK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,11,64,125,10
     PUSHBUTTON      "&Testuj",IDC_TESTBUTTON,138,62,50,14
-    GROUPBOX        "Informacje o serwerze",IDC_STATIC,7,85,186,60
-    LTEXT           "Nazwa:",IDC_STATIC,11,99,25,8
-    LTEXT           "Strefa czasowa:",IDC_STATIC,11,113,53,8
-    LTEXT           "Wersja:",IDC_STATIC,11,127,27,8
+    GROUPBOX        "Informacje o serwerze",IDC_SERVERINFOSTATIC,7,85,186,60
+    LTEXT           "Nazwa:",IDC_SERVERNAMELABELSTATIC,11,99,25,8
+    LTEXT           "Strefa czasowa:",IDC_SERVERTIMEZONELABELSTATIC,11,113,53,8
+    LTEXT           "Wersja:",IDC_SERVERVERSIONLABELSTATIC,11,127,27,8
     LTEXT           "-- nie po³¹czono --",IDC_SERVERNAMESTATIC,70,99,118,8
     LTEXT           "-- nie po³¹czono --",IDC_SERVERTIMEZONESTATIC,70,113,118,8
     LTEXT           "-- nie po³¹czono --",IDC_SERVERVERSIONSTATIC,70,127,118,8
@@ -246,19 +246,19 @@ FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,93,183,50,14
     PUSHBUTTON      "&Anuluj",IDCANCEL,143,183,50,14
-    GROUPBOX        "Dane logowania",IDC_STATIC,7,7,186,65
-    LTEXT           "Nazwa u¿ytkownika:",IDC_STATIC,11,21,70,8
+    GROUPBOX        "Dane logowania",IDC_CREDENTIALSSTATIC,7,7,186,65
+    LTEXT           "Nazwa u¿ytkownika:",IDC_USERNAMESTATIC,11,21,70,8
     EDITTEXT        IDC_USERNAMEEDIT,84,20,90,12,ES_AUTOHSCROLL
     PUSHBUTTON      "R",IDC_REGISTERBUTTON,176,20,12,12
-    LTEXT           "Has³o:",IDC_STATIC,11,35,70,8
+    LTEXT           "Has³o:",IDC_PASSWORDSTATIC,11,35,70,8
     EDITTEXT        IDC_PASSWORDEDIT,84,34,104,12,ES_PASSWORD | ES_AUTOHSCROLL
     PUSHBUTTON      "&Testuj",IDC_TESTBUTTON2,138,48,50,14
-    GROUPBOX        "Informacje o u¿ytkowniku",IDC_STATIC,7,72,186,106
-    LTEXT           "ID:",IDC_STATIC,11,86,10,8
-    LTEXT           "Data rejestracji:",IDC_STATIC,11,100,53,8
-    LTEXT           "...u¿yto do tego:",IDC_STATIC,11,114,53,8
-    LTEXT           "Ostatnie zmiany:",IDC_STATIC,11,128,56,8
-    LTEXT           "...u¿yto do tego:",IDC_STATIC,11,142,53,8
+    GROUPBOX        "Informacje o u¿ytkowniku",IDC_USERINFOSTATIC,7,72,186,106
+    LTEXT           "ID:",IDC_USERIDLABELSTATIC,11,86,10,8
+    LTEXT           "Data rejestracji:",IDC_USERREGDATELABELSTATIC,11,100,53,8
+    LTEXT           "...u¿yto do tego:",IDC_USERREGUSINGLABELSTATIC,11,114,53,8
+    LTEXT           "Ostatnie zmiany:",IDC_USERLASTMODLABELSTATIC,11,128,56,8
+    LTEXT           "...u¿yto do tego:",IDC_USERLASTMODUSINGLABELSTATIC,11,142,53,8
     LTEXT           "-- nie zalogowano --",IDC_USERIDSTATIC,74,86,114,8
     LTEXT           "-- nie zalogowano --",IDC_USERREGDATESTATIC,74,100,114,8
     LTEXT           "-- nie zalogowano --",IDC_USERREGUSINGSTATIC,74,114,114,8
@@ -275,14 +275,14 @@ FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&Zarejestruj",IDOK,93,109,50,14
     PUSHBUTTON      "&Anuluj",IDCANCEL,143,109,50,14
-    LTEXT           "Nazwa u¿ytkownika:",IDC_STATIC,7,7,67,8
+    LTEXT           "Nazwa u¿ytkownika:",IDC_REGUSERNAMESTATIC,7,7,67,8
     EDITTEXT        IDC_REGUSERNAMEEDIT,7,17,186,12,ES_AUTOHSCROLL
-    LTEXT           "Has³o:",IDC_STATIC,7,34,24,8
+    LTEXT           "Has³o:",IDC_REGPASSWORDSTATIC,7,34,24,8
     EDITTEXT        IDC_REGPASSWORDEDIT,7,44,186,12,ES_PASSWORD | ES_AUTOHSCROLL
-    LTEXT           "Powtórz has³o:",IDC_STATIC,7,61,51,8
+    LTEXT           "Powtórz has³o:",IDC_REGPSREPEATSTATIC,7,61,51,8
     EDITTEXT        IDC_REGPSREPEATEDIT,7,71,186,12,ES_PASSWORD | ES_AUTOHSCROLL
     LTEXT           "Pamiêtaj, rejestruj¹c siê w serwisie, akceptujesz regulamin wybranego us³ugodawcy.",
-                    IDC_STATIC,7,87,186,18
+                    IDC_TERMSSTATIC,7,87,186,18
 END
 
 IDD_ACCDELETE DIALOG DISCARDABLE  0, 0, 200, 60
@@ -292,7 +292,7 @@ FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&Usuñ konto",IDOK,93,39,50,14
     PUSHBUTTON      "&Anuluj",IDCANCEL,143,39,50,14
-    LTEXT           "Has³o:",IDC_STATIC,7,7,24,8
+    LTEXT           "Has³o:",IDC_ACCREMPASSWORDSTATIC,7,7,24,8
     EDITTEXT        IDC_ACCREMPASSWORDEDIT,7,17,186,12,ES_PASSWORD | ES_AUTOHSCROLL
 END
 
@@ -303,11 +303,11 @@ FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&Zmieñ has³o",IDOK,93,89,50,14
     PUSHBUTTON      "&Anuluj",IDCANCEL,143,89,50,14
-    LTEXT           "Obecne has³o:",IDC_STATIC,7,7,49,8
+    LTEXT           "Obecne has³o:",IDC_OLDPASSWORDSTATIC,7,7,49,8
     EDITTEXT        IDC_OLDPASSWORDEDIT,7,17,186,12,ES_PASSWORD | ES_AUTOHSCROLL
-    LTEXT           "Nowe has³o:",IDC_STATIC,7,34,43,8
+    LTEXT           "Nowe has³o:",IDC_NEWPASSWORDSTATIC,7,34,43,8
     EDITTEXT        IDC_NEWPASSWORDEDIT,7,44,186,12,ES_PASSWORD | ES_AUTOHSCROLL
-    LTEXT           "Powtórz nowe has³o:",IDC_STATIC,7,61,70,8
+    LTEXT           "Powtórz nowe has³o:",IDC_NEWPSREPEATSTATIC,7,61,70,8
     EDITTEXT        IDC_NEWPSREPEATEDIT,7,71,186,12,ES_PASSWORD | ES_AUTOHSCROLL
 END
 
@@ -320,13 +320,13 @@ FONT 10, "System"
 BEGIN
     DEFPUSHBUTTON   "&Eksportuj",IDC_EXPORT,93,239,50,14
     PUSHBUTTON      "&Zamknij",IDCANCEL,143,239,50,14
-    GROUPBOX        "Miejsce docelowe",IDC_STATIC,7,7,186,52
+    GROUPBOX        "Miejsce docelowe",IDC_PATHSTATIC,7,7,186,52
     EDITTEXT        IDC_PATHEDIT,11,17,178,12,ES_AUTOHSCROLL
     PUSHBUTTON      "&Przegl¹daj...",IDC_BROWSEBUTTON,129,30,60,14
     CONTROL         "Zignoruj nazwê pliku (u¿yj jako œcie¿ki do folderu)",
                     IDC_IGNOREFILENAMECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,46,
                     178,10
-    GROUPBOX        "Opcje zapisu",IDC_STATIC,7,59,186,69
+    GROUPBOX        "Opcje zapisu",IDC_SAVESETTINGSSTATIC,7,59,186,69
     RADIOBUTTON     "Eksportuj do jednego pliku",IDC_EXPORTTOONEFILERADIO,11,69,178,10,WS_TABSTOP
     RADIOBUTTON     "Eksportuj do osobnych plików",IDC_EXPORTTOMANYFILESRADIO,11,80,178,10,WS_TABSTOP
     RADIOBUTTON     "Numeruj zgodnie z ID notatek",IDC_NUMASIDSRADIO,21,91,168,10,WS_TABSTOP
@@ -335,7 +335,7 @@ BEGIN
     CONTROL         "Do³¹cz prefiks:",IDC_ADDPREFIXCHECK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,31,114,66,10
     EDITTEXT        IDC_ADDPREFIXEDIT,127,113,62,12,ES_AUTOHSCROLL
-    GROUPBOX        "Opcje eksportu",IDC_STATIC,7,129,186,79
+    GROUPBOX        "Opcje eksportu",IDC_EXPORTSETTINGSSTATIC,7,129,186,79
     CONTROL         "Do³¹cz tytu³ w pierwszej linijce",IDC_FIRSTLINESUBJECTCHECK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,11,139,178,10
     CONTROL         "Pozostaw jedn¹ linijkê odstêpu przed treœci¹",
@@ -350,7 +350,7 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,11,183,178,10
     CONTROL         "Kontynuuj eksport w przypadku b³êdów",IDC_CONTINUEONERRORSCHECK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,194,178,10
-    GROUPBOX        "Postêp",IDC_STATIC,7,208,186,27
+    GROUPBOX        "Postêp",IDC_PROGRESSSTATIC,7,208,186,27
     LTEXT           "",IDC_PROGRESSBARBORDERSTATIC,11,218,178,10,WS_BORDER
     LTEXT           "",IDC_PROGRESSBARSTATIC,12,219,100,8
 END

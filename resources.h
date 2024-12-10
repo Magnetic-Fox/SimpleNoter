@@ -52,24 +52,36 @@
 #define ID_EDIT_CLEAR                       408
 #define ID_EDIT_SELECTALL_2                 409
 
-// Main static
-#define IDC_STATIC                          503
-
 // Note information dialog
 #define IDD_NOTEINFO                        500
-#define IDC_LOCKBUTTON                      501
-#define IDC_UNLOCKBUTTON                    502
-
-#define IDC_NOTENAMESTATIC                  504
-#define IDC_NOTEIDSTATIC                    505
-#define IDC_NOTEADDDATESTATIC               506
-#define IDC_NOTEADDEDUSINGSTATIC            507
-#define IDC_NOTELASTMODSTATIC               508
-#define IDC_NOTELASTMODUSINGSTATIC          509
+#define IDC_EDITICONSTATIC                  501
+#define IDC_LOCKBUTTON                      502
+#define IDC_UNLOCKBUTTON                    503
+#define IDC_NOTEIDLABELSTATIC               504
+#define IDC_NOTEADDDATELABELSTATIC          505
+#define IDC_NOTEADDEDUSINGLABELSTATIC       506
+#define IDC_NOTELASTMODLABELSTATIC          507
+#define IDC_NOTELASTMODUSINGLABELSTATIC     508
+#define IDC_NOTENAMESTATIC                  509
+#define IDC_NOTEIDSTATIC                    510
+#define IDC_NOTEADDDATESTATIC               511
+#define IDC_NOTEADDEDUSINGSTATIC            512
+#define IDC_NOTELASTMODSTATIC               513
+#define IDC_NOTELASTMODUSINGSTATIC          514
 
 // Program information dialog
 #define IDD_APPINFO                         600
-#define IDC_APPNAMESTATIC                   601
+#define IDC_MAINICONSTATIC                  601
+#define IDC_APPNAMESTATIC                   602
+#define IDC_SIXTEENVERSIONSTATIC            603
+#define IDC_PROJECTSTATIC                   604
+#define IDC_AUTHORSTATIC                    605
+#define IDC_LIBSUSEDSTATIC                  606
+#define IDC_JSONPARSERSTATIC                607
+#define IDC_UTF8DECODESTATIC                608
+#define IDC_UTF8ENCODESTATIC                609
+#define IDC_BZIP2STATIC                     610
+#define IDC_AUTHORCOPYRIGHTSTATIC           611
 
 // Preferences dialog
 #define IDD_PREFERENCES                     700
@@ -92,6 +104,12 @@
 #define IDC_CODEPAGECOMBO                   717
 #define IDC_MULTIIDSNLMCHECK                718
 #define IDC_BUILDINFOSTATIC                 719
+#define IDC_MAINWINDOWSTATIC                720
+#define IDC_EDITWINDOWSTATIC                721
+#define IDC_REGIONALSTATIC                  722
+#define IDC_LANGUAGESTATIC                  723
+#define IDC_CODEPAGESTATIC                  724
+#define IDC_MISCSTATIC                      725
 
 // Connection dialog
 #define IDD_CONNECTION                      800
@@ -103,6 +121,14 @@
 #define IDC_SERVERNAMESTATIC                806
 #define IDC_SERVERTIMEZONESTATIC            807
 #define IDC_SERVERVERSIONSTATIC             808
+#define IDC_CONNECTIONSETTINGSSTATIC        809
+#define IDC_ADDRESSSTATIC                   810
+#define IDC_PORTSTATIC                      811
+#define IDC_SHARESTATIC                     812
+#define IDC_SERVERINFOSTATIC                813
+#define IDC_SERVERNAMELABELSTATIC           814
+#define IDC_SERVERTIMEZONELABELSTATIC       815
+#define IDC_SERVERVERSIONLABELSTATIC        816
 
 // Credentials dialog
 #define IDD_CREDENTIALS                     900
@@ -117,22 +143,39 @@
 #define IDC_USERLASTMODUSINGSTATIC          909
 #define IDC_ACCDELETEBUTTON                 910
 #define IDC_PASSCHANGEBUTTON                911
+#define IDC_CREDENTIALSSTATIC               912
+#define IDC_USERNAMESTATIC                  913
+#define IDC_PASSWORDSTATIC                  914
+#define IDC_USERINFOSTATIC                  915
+#define IDC_USERIDLABELSTATIC               916
+#define IDC_USERREGDATELABELSTATIC          917
+#define IDC_USERREGUSINGLABELSTATIC         918
+#define IDC_USERLASTMODLABELSTATIC          919
+#define IDC_USERLASTMODUSINGLABELSTATIC     920
 
 // User registration dialog
 #define IDD_REGISTRATION                    1000
 #define IDC_REGUSERNAMEEDIT                 1001
 #define IDC_REGPASSWORDEDIT                 1002
 #define IDC_REGPSREPEATEDIT                 1003
+#define IDC_REGUSERNAMESTATIC               1004
+#define IDC_REGPASSWORDSTATIC               1005
+#define IDC_REGPSREPEATSTATIC               1006
+#define IDC_TERMSSTATIC                     1007
 
 // User account delete dialog
 #define IDD_ACCDELETE                       1100
-#define IDC_ACCREMPASSWORDEDIT              1101
+#define IDC_ACCREMPASSWORDSTATIC            1101
+#define IDC_ACCREMPASSWORDEDIT              1102
 
 // User password change dialog
 #define IDD_PASSCHANGE                      1200
 #define IDC_OLDPASSWORDEDIT                 1201
 #define IDC_NEWPASSWORDEDIT                 1202
 #define IDC_NEWPSREPEATEDIT                 1203
+#define IDC_OLDPASSWORDSTATIC               1204
+#define IDC_NEWPASSWORDSTATIC               1205
+#define IDC_NEWPSREPEATSTATIC               1206
 
 // Note import dialog
 // place left for IDD_IMPORT
@@ -158,6 +201,10 @@
 #define IDC_CONTINUEONERRORSCHECK           1417
 #define IDC_PROGRESSBARSTATIC               1418
 #define IDC_PROGRESSBARBORDERSTATIC         1419
+#define IDC_PATHSTATIC                      1420
+#define IDC_SAVESETTINGSSTATIC              1421
+#define IDC_EXPORTSETTINGSSTATIC            1422
+#define IDC_PROGRESSSTATIC                  1423
 
 // String table constants
 #define IDS_HELPFILE                        3000
