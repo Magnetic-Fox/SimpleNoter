@@ -47,7 +47,7 @@ std::string toCodePage(CODEPAGE &codepage, char* input) {
                 temp=temp+(char)one;
             }
             else {
-                char test=(char)codepage[one];
+                char test=(char)codepage[(unsigned int)one];
                 if(test<0x20) {
                     if(!((test==0x0D) || (test==0x0A))) {
                         test='?';
