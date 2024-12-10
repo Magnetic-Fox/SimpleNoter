@@ -59,7 +59,8 @@ int dec(char *in, char *out) {
 std::string base64_decode(char* input) {
     std::string tempString="";
     unsigned long int x=0;
-    char temp[4], temp2[4];
+    char temp[4];
+    char temp2[4];
     if(input==NULL) {
         return tempString;
     }
@@ -82,7 +83,8 @@ std::string base64_decode(char* input) {
 std::string base64_encode(char* input) {
     std::string tempString="";
     unsigned long int x=0;
-    char temp[3], temp2[5];
+    char temp[3];
+    char temp2[5];
     if(input==NULL) {
         return tempString;
     }
@@ -99,7 +101,7 @@ std::string base64_encode(char* input) {
         ++x;
     }
     if(x%3>0) {
-        enc(temp,temp2,x%3);
+        enc(temp,temp2,(int)(x%3));
     }
     else {
         enc(temp,temp2,3);
