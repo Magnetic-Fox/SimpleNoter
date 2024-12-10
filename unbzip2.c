@@ -1289,7 +1289,6 @@ Bool uncompressStream(UChar *zStream, UChar *stream) {
     UInt32      storedBlockCRC, storedCombinedCRC;
     UInt32      computedBlockCRC, computedCombinedCRC;
     Int32       currBlockNo;
-    IntNative   retVal;
     srcBufferPos=0;
     bsSetStream ( zStream, False );
     /*--
