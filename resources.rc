@@ -9,15 +9,15 @@ BEGIN
     BEGIN
         BLOCK "041504e2"
         BEGIN
-            VALUE "CompanyName", "Magnetic-Fox\0"
-            VALUE "FileVersion", "0.79\0"
-            VALUE "FileDescription", "Simple Noter\0"
-            VALUE "InternalName", "SNotr079.exe\0"
-            VALUE "LegalCopyright", "©2021-2024 Magnetic-Fox\0"
-            VALUE "LegalTrademarks", "Noter™\0"
-            VALUE "OriginalFilename", "SimpleNoter.exe\0"
-            VALUE "ProductName", "Simple Noter v0.79\0"
-            VALUE "ProductVersion", "0.79\0"
+            VALUE "CompanyName",        "Magnetic-Fox\0"
+            VALUE "FileVersion",        "0.79\0"
+            VALUE "FileDescription",    "Simple Noter\0"
+            VALUE "InternalName",       "SNotr079.exe\0"
+            VALUE "LegalCopyright",     "©2021-2024 Magnetic-Fox\0"
+            VALUE "LegalTrademarks",    "Noter™\0"
+            VALUE "OriginalFilename",   "SimpleNoter.exe\0"
+            VALUE "ProductName",        "Simple Noter v0.79\0"
+            VALUE "ProductVersion",     "0.79\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -144,15 +144,15 @@ BEGIN
     LTEXT           "SimpleNoter",IDC_APPNAMESTATIC,28,7,110,8
     LTEXT           "wersja 16-bitowa",IDC_SIXTEENVERSIONSTATIC,28,17,110,8
     LTEXT           "Projekt i program:",IDC_PROJECTSTATIC,28,37,157,8
-    LTEXT           "Bart³omiej ""Magnetic-Fox"" Wêgrzyn",IDC_AUTHORSTATIC,28,47,
-                    157,8
+    LTEXT           "Bart³omiej ""Magnetic-Fox"" Wêgrzyn",IDC_AUTHORSTATIC,
+                    28,47,157,8
     LTEXT           "W oprogramowaniu wykorzystano\nnastêpuj¹ce biblioteki:",
                     IDC_LIBSUSEDSTATIC,28,67,157,16
     LTEXT           "json-parser ©2012-2021 the json-parser authors",
                     IDC_JSONPARSERSTATIC,36,85,167,8
     LTEXT           "utf8_decode.c ©2005 JSON.org",IDC_UTF8DECODESTATIC,36,95,149,8
-    LTEXT           "utf8_encode.cpp © Ondøej Hruška",IDC_UTF8ENCODESTATIC,36,105,149,
-                    8
+    LTEXT           "utf8_encode.cpp © Ondøej Hruška",IDC_UTF8ENCODESTATIC,
+                    36,105,149,8
     LTEXT           "bzip2.c ©1996, 1997 Julian Seward\n    with patch ©2024 Magnetic-Fox",
                     IDC_BZIP2STATIC,36,115,149,16
     LTEXT           "©2021-2024 Bart³omiej ""Magnetic-Fox"" Wêgrzyn",
@@ -207,8 +207,8 @@ BEGIN
     CONTROL         "Dialogi",IDC_DIALOGSCHECK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,220,105,181,10
     CONTROL         "Poka¿ ID i daty notatek przy wielokrotnym wyborze",
-                    IDC_MULTIIDSNLMCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,212,
-                    116,189,10
+                    IDC_MULTIIDSNLMCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    212,116,189,10
     CONTROL         "Build info:",IDC_BUILDINFOSTATIC,"Static",SS_LEFTNOWORDWRAP | 
                     WS_DISABLED | WS_GROUP,7,138,290,8
 END
@@ -324,8 +324,8 @@ BEGIN
     EDITTEXT        IDC_PATHEDIT,11,17,178,12,ES_AUTOHSCROLL
     PUSHBUTTON      "&Przegl¹daj...",IDC_BROWSEBUTTON,129,30,60,14
     CONTROL         "Zignoruj nazwê pliku (u¿yj jako œcie¿ki do folderu)",
-                    IDC_IGNOREFILENAMECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,46,
-                    178,10
+                    IDC_IGNOREFILENAMECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    11,46,178,10
     GROUPBOX        "Opcje zapisu",IDC_SAVESETTINGSSTATIC,7,59,186,69
     RADIOBUTTON     "Eksportuj do jednego pliku",IDC_EXPORTTOONEFILERADIO,11,69,178,10,WS_TABSTOP
     RADIOBUTTON     "Eksportuj do osobnych plików",IDC_EXPORTTOMANYFILESRADIO,11,80,178,10,WS_TABSTOP
@@ -339,11 +339,11 @@ BEGIN
     CONTROL         "Do³¹cz tytu³ w pierwszej linijce",IDC_FIRSTLINESUBJECTCHECK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,11,139,178,10
     CONTROL         "Pozostaw jedn¹ linijkê odstêpu przed treœci¹",
-                    IDC_ONELINEGAPCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,150,
-                    168,10
+                    IDC_ONELINEGAPCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    21,150,168,10
     CONTROL         "Do³¹cz dodatkowe informacje o notatce na koñcu",
-                    IDC_ADDINFOATENDCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,161,
-                    178,10
+                    IDC_ADDINFOATENDCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    11,161,178,10
     CONTROL         "Odseparuj od treœci",IDC_SEPARATEINFOCHECK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,21,172,168,10
     CONTROL         "Separuj notatki w pliku",IDC_SEPARATENOTESINFILESCHECK,"Button",
