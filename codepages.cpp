@@ -4,7 +4,7 @@ static long int the_index = 0;
 static long int the_length = 0;
 static long int the_char = 0;
 static long int the_byte = 0;
-static char* the_input;
+static char     *the_input;
 
 static bool decodeWarning = false;
 
