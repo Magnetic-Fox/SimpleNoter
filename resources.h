@@ -72,10 +72,10 @@
 #define IDD_PREFERENCES                     700
 #define IDC_RADIO1                          701
 #define IDC_RADIO2                          702
-#define IDC_COMBO1                          703
+#define IDC_MAINWINDISPCOMBO                703
 #define IDC_RADIO3                          704
 #define IDC_RADIO4                          705
-#define IDC_COMBO2                          706
+#define IDC_EDITWINDISPCOMBO                706
 #define IDC_AUTORELOADCHECK                 707
 #define IDC_USE3DCONTROLSCHECK              708
 #define IDC_BUTTONSCHECK                    709
@@ -85,8 +85,8 @@
 #define IDC_DIALOGSCHECK                    713
 #define IDC_REFRESHONADDCHECK               714
 #define IDC_SAVEWINPOSCHECK                 715
-#define IDC_COMBO3                          716
-#define IDC_COMBO4                          717
+#define IDC_LANGUAGECOMBO                   716
+#define IDC_CODEPAGECOMBO                   717
 #define IDC_CHECK20                         718
 #define IDC_STATIC18                        719
 

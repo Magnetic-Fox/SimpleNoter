@@ -170,20 +170,20 @@ BEGIN
     RADIOBUTTON     "Wyœwietl zgodnie z ustawieniami systemowymi",IDC_RADIO1,
                     11,17,189,10,WS_TABSTOP
     RADIOBUTTON     "Wyœwietl jako:",IDC_RADIO2,11,28,64,10,WS_TABSTOP
-    COMBOBOX        IDC_COMBO1,78,27,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_MAINWINDISPCOMBO,78,27,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     GROUPBOX        "Okno edycji",IDC_STATIC,7,47,201,40
     RADIOBUTTON     "Wyœwietl tak, jak g³ówne okno",IDC_RADIO3,11,57,189,10,
                     WS_TABSTOP
     RADIOBUTTON     "Wyœwietl jako:",IDC_RADIO4,11,68,64,10,WS_TABSTOP
-    COMBOBOX        IDC_COMBO2,78,67,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_EDITWINDISPCOMBO,78,67,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     GROUPBOX        "Ustawienia regionalne",IDC_STATIC,7,87,201,42
     LTEXT           "Jêzyk:",IDC_STATIC,11,99,64,8
-    COMBOBOX        IDC_COMBO3,78,97,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_LANGUAGECOMBO,78,97,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     LTEXT           "Strona kodowa:",IDC_STATIC,11,112,64,8
-    COMBOBOX        IDC_COMBO4,78,110,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_CODEPAGECOMBO,78,110,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     GROUPBOX        "Opcje startowe i pozosta³e",IDC_STATIC,208,7,201,122
     CONTROL         "Pobierz listê notatek przy starcie programu",

@@ -1450,15 +1450,15 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
         case WM_INITDIALOG:
             check3DChanged=false;
             SetWindowText(GetDlgItem(hwnd,IDC_STATIC18),((std::string)(getStringFromTable(IDS_STRING_BUILD_DATE))+__DATE__+", "+__TIME__).c_str());
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_NORMAL_WINDOW));
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MINIMIZED_WINDOW));
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MAXIMIZED_WINDOW));
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_NORMAL_WINDOW));
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MINIMIZED_WINDOW));
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MAXIMIZED_WINDOW));
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO3), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_BUILTIN_LANGUAGE));
+            SendMessage(GetDlgItem(hwnd, IDC_MAINWINDISPCOMBO), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_NORMAL_WINDOW));
+            SendMessage(GetDlgItem(hwnd, IDC_MAINWINDISPCOMBO), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MINIMIZED_WINDOW));
+            SendMessage(GetDlgItem(hwnd, IDC_MAINWINDISPCOMBO), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MAXIMIZED_WINDOW));
+            SendMessage(GetDlgItem(hwnd, IDC_EDITWINDISPCOMBO), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_NORMAL_WINDOW));
+            SendMessage(GetDlgItem(hwnd, IDC_EDITWINDISPCOMBO), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MINIMIZED_WINDOW));
+            SendMessage(GetDlgItem(hwnd, IDC_EDITWINDISPCOMBO), CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_MAXIMIZED_WINDOW));
+            SendMessage(GetDlgItem(hwnd, IDC_LANGUAGECOMBO),    CB_ADDSTRING, 0, (LPARAM)getStringFromTable(IDS_STRING_BUILTIN_LANGUAGE));
             // begin temporary part
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO3), CB_SETCURSEL, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_LANGUAGECOMBO), CB_SETCURSEL, 0, 0);
             // end temporary part
             counter=0;
             counter2=0;
@@ -1466,52 +1466,52 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
             selectedIndex2=0;
             for(lIt=libraries.begin(); lIt!=libraries.end(); ++lIt) {
                 if(lIt->type==LIB_CODEPAGE) {
-                    SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_ADDSTRING, 0, (LPARAM)(char*)((lIt->relatedInfo)+" ["+(lIt->filename)+"]").c_str());
+                    SendMessage(GetDlgItem(hwnd, IDC_CODEPAGECOMBO), CB_ADDSTRING, 0, (LPARAM)(char*)((lIt->relatedInfo)+" ["+(lIt->filename)+"]").c_str());
                     if(lIt->filename==mainSettings.selectedCodePage) {
                         selectedIndex=counter;
                     }
                     ++counter;
                 }
                 else if(lIt->type==LIB_STRINGTABLE) {
-                    SendMessage(GetDlgItem(hwnd, IDC_COMBO3), CB_ADDSTRING, 0, (LPARAM)(char*)((lIt->relatedInfo)+" ["+(lIt->filename)+"]").c_str());
+                    SendMessage(GetDlgItem(hwnd, IDC_LANGUAGECOMBO), CB_ADDSTRING, 0, (LPARAM)(char*)((lIt->relatedInfo)+" ["+(lIt->filename)+"]").c_str());
                     // part to do
                     ++counter2;
                 }
             }
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO4), CB_SETCURSEL, selectedIndex, 0);
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), CB_SETCURSEL, mainSettings.mainWindowStyle, 0);
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), CB_SETCURSEL, mainSettings.editWindowStyle, 0);
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO1), WM_PAINT, 0, 0);
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO2), WM_PAINT, 0, 0);
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO3), WM_PAINT, 0, 0);
-            SendMessage(GetDlgItem(hwnd, IDC_COMBO4), WM_PAINT, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_CODEPAGECOMBO),    CB_SETCURSEL, selectedIndex, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_MAINWINDISPCOMBO), CB_SETCURSEL, mainSettings.mainWindowStyle, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_EDITWINDISPCOMBO), CB_SETCURSEL, mainSettings.editWindowStyle, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_MAINWINDISPCOMBO), WM_PAINT, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_EDITWINDISPCOMBO), WM_PAINT, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_LANGUAGECOMBO),    WM_PAINT, 0, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_CODEPAGECOMBO),    WM_PAINT, 0, 0);
             if(mainSettings.mainWindowSystem) {
                 CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO1);
-                EnableWindow(GetDlgItem(hwnd,IDC_COMBO1),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO),false);
             }
             else {
                 CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO2);
-                EnableWindow(GetDlgItem(hwnd,IDC_COMBO1),true);
+                EnableWindow(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO),true);
             }
             if(mainSettings.editWindowSystem) {
                 CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO3);
-                EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO),false);
             }
             else {
                 CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO4);
-                EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),true);
+                EnableWindow(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO),true);
             }
-            CheckDlgButton(hwnd, IDC_AUTORELOADCHECK,   mainSettings.autoReload     ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_REFRESHONADDCHECK, mainSettings.autoRefresh    ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_SAVEWINPOSCHECK,   mainSettings.savePosSizes   ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_USE3DCONTROLSCHECK,mainSettings.use3DControls  ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_BUTTONSCHECK,      mainSettings.use3DButtons   ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_LISTSCHECK,        mainSettings.use3DLists     ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_EDITSCHECK,        mainSettings.use3DEdits     ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_COMBOSCHECK,       mainSettings.use3DCombos    ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_DIALOGSCHECK,      mainSettings.use3DDialogs   ? BST_CHECKED : BST_UNCHECKED);
-            CheckDlgButton(hwnd, IDC_CHECK20,           mainSettings.showMultiIDnLM ? BST_CHECKED : BST_UNCHECKED);
-            enabled=IsDlgButtonChecked(hwnd,            IDC_USE3DCONTROLSCHECK);
+            CheckDlgButton(hwnd, IDC_AUTORELOADCHECK,       mainSettings.autoReload     ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_REFRESHONADDCHECK,     mainSettings.autoRefresh    ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_SAVEWINPOSCHECK,       mainSettings.savePosSizes   ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_USE3DCONTROLSCHECK,    mainSettings.use3DControls  ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_BUTTONSCHECK,          mainSettings.use3DButtons   ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_LISTSCHECK,            mainSettings.use3DLists     ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_EDITSCHECK,            mainSettings.use3DEdits     ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_COMBOSCHECK,           mainSettings.use3DCombos    ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_DIALOGSCHECK,          mainSettings.use3DDialogs   ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_CHECK20,               mainSettings.showMultiIDnLM ? BST_CHECKED : BST_UNCHECKED);
+            enabled=IsDlgButtonChecked(hwnd,                IDC_USE3DCONTROLSCHECK);
             EnableWindow(GetDlgItem(hwnd,IDC_BUTTONSCHECK), enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_LISTSCHECK),   enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_EDITSCHECK),   enabled);
@@ -1525,8 +1525,8 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                     iniFile=getDefaultIniFile(buffer);
                     mainSettings.mainWindowSystem=IsDlgButtonChecked(hwnd, IDC_RADIO1);
                     mainSettings.editWindowSystem=IsDlgButtonChecked(hwnd, IDC_RADIO3);
-                    mainSettings.mainWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_COMBO1), CB_GETCURSEL, 0, 0);
-                    mainSettings.editWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_COMBO2), CB_GETCURSEL, 0, 0);
+                    mainSettings.mainWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO), CB_GETCURSEL, 0, 0);
+                    mainSettings.editWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO), CB_GETCURSEL, 0, 0);
                     mainSettings.autoReload= IsDlgButtonChecked(hwnd, IDC_AUTORELOADCHECK);
                     mainSettings.autoRefresh=IsDlgButtonChecked(hwnd, IDC_REFRESHONADDCHECK);
                     if((mainSettings.savePosSizes==false) && (IsDlgButtonChecked(hwnd, IDC_SAVEWINPOSCHECK))) {
@@ -1549,8 +1549,8 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                     mainSettings.showMultiIDnLM=IsDlgButtonChecked(hwnd, IDC_CHECK20);
                     counter=0;
                     counter2=0;
-                    selectedIndex2=SendMessage(GetDlgItem(hwnd,IDC_COMBO3), CB_GETCURSEL, 0, 0);
-                    selectedIndex= SendMessage(GetDlgItem(hwnd,IDC_COMBO4), CB_GETCURSEL, 0, 0);
+                    selectedIndex2=SendMessage(GetDlgItem(hwnd,IDC_LANGUAGECOMBO), CB_GETCURSEL, 0, 0);
+                    selectedIndex= SendMessage(GetDlgItem(hwnd,IDC_CODEPAGECOMBO), CB_GETCURSEL, 0, 0);
                     codePageChanged=false;
                     for(lIt=libraries.begin(); lIt!=libraries.end(); ++lIt) {
                         if(lIt->type==LIB_CODEPAGE) {
@@ -1586,19 +1586,19 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                     break;
                 case IDC_RADIO1:
                     CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO1);
-                    EnableWindow(GetDlgItem(hwnd,IDC_COMBO1),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO),false);
                     break;
                 case IDC_RADIO2:
                     CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO2);
-                    EnableWindow(GetDlgItem(hwnd,IDC_COMBO1),true);
+                    EnableWindow(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO),true);
                     break;
                 case IDC_RADIO3:
                     CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO3);
-                    EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO),false);
                     break;
                 case IDC_RADIO4:
                     CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO4);
-                    EnableWindow(GetDlgItem(hwnd,IDC_COMBO2),true);
+                    EnableWindow(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO),true);
                     break;
                 case IDC_USE3DCONTROLSCHECK:
                     check3DChanged=true;
