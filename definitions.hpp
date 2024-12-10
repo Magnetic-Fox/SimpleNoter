@@ -7,9 +7,9 @@
 
 typedef struct editWindow {
     HWND hwnd;
-    HWND hStatic, hStatic2, hStatic3, hStatic4;
-    HWND hEditBox, hEditBox2;
-    HWND hButton, hButton2, hButton3;
+    HWND hStaticSubject, hStaticEntry, hStaticGrayBox, hStaticStatus;
+    HWND hEditBoxSubject, hEditBoxEntry;
+    HWND hButtonAddUp, hButtonProps, hButtonClose;
     std::string windowTitle;
     bool subjectChanged, entryChanged;
     long int lastResult;
