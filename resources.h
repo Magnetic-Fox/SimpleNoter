@@ -70,11 +70,11 @@
 
 // Preferences dialog
 #define IDD_PREFERENCES                     700
-#define IDC_RADIO1                          701
-#define IDC_RADIO2                          702
+#define IDC_SYSDISPRADIO                    701
+#define IDC_MAINDISPASRADIO                 702
 #define IDC_MAINWINDISPCOMBO                703
-#define IDC_RADIO3                          704
-#define IDC_RADIO4                          705
+#define IDC_EDITDISPASMAINRADIO             704
+#define IDC_EDITDISPASRADIO                 705
 #define IDC_EDITWINDISPCOMBO                706
 #define IDC_AUTORELOADCHECK                 707
 #define IDC_USE3DCONTROLSCHECK              708
@@ -139,10 +139,10 @@
 #define IDC_EXPORT                          1401
 #define IDC_BROWSEBUTTON                    1402
 #define IDC_IGNOREFILENAMECHECK             1403
-#define IDC_RADIO5                          1404
-#define IDC_RADIO6                          1405
-#define IDC_RADIO7                          1406
-#define IDC_RADIO8                          1407
+#define IDC_EXPORTTOONEFILERADIO            1404
+#define IDC_EXPORTTOMANYFILESRADIO          1405
+#define IDC_NUMASIDSRADIO                   1406
+#define IDC_NUMSTARTSFROMRADIO              1407
 #define IDC_EDIT13                          1408
 #define IDC_EDIT14                          1409
 #define IDC_ADDPREFIXCHECK                  1410

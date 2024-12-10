@@ -1486,19 +1486,19 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
             SendMessage(GetDlgItem(hwnd, IDC_LANGUAGECOMBO),    WM_PAINT, 0, 0);
             SendMessage(GetDlgItem(hwnd, IDC_CODEPAGECOMBO),    WM_PAINT, 0, 0);
             if(mainSettings.mainWindowSystem) {
-                CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO1);
+                CheckRadioButton(hwnd, IDC_SYSDISPRADIO, IDC_MAINDISPASRADIO, IDC_SYSDISPRADIO);
                 EnableWindow(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO),false);
             }
             else {
-                CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO2);
+                CheckRadioButton(hwnd, IDC_SYSDISPRADIO, IDC_MAINDISPASRADIO, IDC_MAINDISPASRADIO);
                 EnableWindow(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO),true);
             }
             if(mainSettings.editWindowSystem) {
-                CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO3);
+                CheckRadioButton(hwnd, IDC_EDITDISPASMAINRADIO, IDC_EDITDISPASRADIO, IDC_EDITDISPASMAINRADIO);
                 EnableWindow(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO),false);
             }
             else {
-                CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO4);
+                CheckRadioButton(hwnd, IDC_EDITDISPASMAINRADIO, IDC_EDITDISPASRADIO, IDC_EDITDISPASRADIO);
                 EnableWindow(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO),true);
             }
             CheckDlgButton(hwnd, IDC_AUTORELOADCHECK,       mainSettings.autoReload     ? BST_CHECKED : BST_UNCHECKED);
@@ -1523,8 +1523,8 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                 case IDOK:
                     GetModuleFileName(g_hInstance,buffer,32767);
                     iniFile=getDefaultIniFile(buffer);
-                    mainSettings.mainWindowSystem=IsDlgButtonChecked(hwnd, IDC_RADIO1);
-                    mainSettings.editWindowSystem=IsDlgButtonChecked(hwnd, IDC_RADIO3);
+                    mainSettings.mainWindowSystem=IsDlgButtonChecked(hwnd, IDC_SYSDISPRADIO);
+                    mainSettings.editWindowSystem=IsDlgButtonChecked(hwnd, IDC_EDITDISPASMAINRADIO);
                     mainSettings.mainWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO), CB_GETCURSEL, 0, 0);
                     mainSettings.editWindowStyle=SendMessage(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO), CB_GETCURSEL, 0, 0);
                     mainSettings.autoReload= IsDlgButtonChecked(hwnd, IDC_AUTORELOADCHECK);
@@ -1584,20 +1584,20 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                 case IDCANCEL:
                     EndDialog(hwnd,IDCANCEL);
                     break;
-                case IDC_RADIO1:
-                    CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO1);
+                case IDC_SYSDISPRADIO:
+                    CheckRadioButton(hwnd, IDC_SYSDISPRADIO, IDC_MAINDISPASRADIO, IDC_SYSDISPRADIO);
                     EnableWindow(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO),false);
                     break;
-                case IDC_RADIO2:
-                    CheckRadioButton(hwnd, IDC_RADIO1, IDC_RADIO2, IDC_RADIO2);
+                case IDC_MAINDISPASRADIO:
+                    CheckRadioButton(hwnd, IDC_SYSDISPRADIO, IDC_MAINDISPASRADIO, IDC_MAINDISPASRADIO);
                     EnableWindow(GetDlgItem(hwnd,IDC_MAINWINDISPCOMBO),true);
                     break;
-                case IDC_RADIO3:
-                    CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO3);
+                case IDC_EDITDISPASMAINRADIO:
+                    CheckRadioButton(hwnd, IDC_EDITDISPASMAINRADIO, IDC_EDITDISPASRADIO, IDC_EDITDISPASMAINRADIO);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO),false);
                     break;
-                case IDC_RADIO4:
-                    CheckRadioButton(hwnd, IDC_RADIO3, IDC_RADIO4, IDC_RADIO4);
+                case IDC_EDITDISPASRADIO:
+                    CheckRadioButton(hwnd, IDC_EDITDISPASMAINRADIO, IDC_EDITDISPASRADIO, IDC_EDITDISPASRADIO);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDITWINDISPCOMBO),true);
                     break;
                 case IDC_USE3DCONTROLSCHECK:
@@ -2266,21 +2266,21 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             CheckDlgButton(hwnd, IDC_ONELINEGAPCHECK, BST_CHECKED);
             CheckDlgButton(hwnd, IDC_ADDINFOATENDCHECK, BST_CHECKED);
             CheckDlgButton(hwnd, IDC_SEPARATEINFOCHECK, BST_CHECKED);
-            CheckRadioButton(hwnd, IDC_RADIO7, IDC_RADIO8, IDC_RADIO7);
+            CheckRadioButton(hwnd, IDC_NUMASIDSRADIO, IDC_NUMSTARTSFROMRADIO, IDC_NUMASIDSRADIO);
             EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
             EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
             EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),false);
             EnableWindow(GetDlgItem(hwnd,IDC_SEPARATENOTESINFILESCHECK),false);
             if(SendMessage(GetDlgItem(GetParent(hwnd),ID_LISTBOX),LB_GETSELCOUNT, 0, 0)>1) {
-                CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO6);
+                CheckRadioButton(hwnd, IDC_EXPORTTOONEFILERADIO, IDC_EXPORTTOMANYFILESRADIO, IDC_EXPORTTOMANYFILESRADIO);
                 CheckDlgButton(hwnd, IDC_IGNOREFILENAMECHECK, BST_CHECKED);
             }
             else {
-                CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO5);
+                CheckRadioButton(hwnd, IDC_EXPORTTOONEFILERADIO, IDC_EXPORTTOMANYFILESRADIO, IDC_EXPORTTOONEFILERADIO);
                 EnableWindow(GetDlgItem(hwnd,IDC_IGNOREFILENAMECHECK),false);
-                EnableWindow(GetDlgItem(hwnd,IDC_RADIO6),false);
-                EnableWindow(GetDlgItem(hwnd,IDC_RADIO7),false);
-                EnableWindow(GetDlgItem(hwnd,IDC_RADIO8),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_EXPORTTOMANYFILESRADIO),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_NUMASIDSRADIO),false);
+                EnableWindow(GetDlgItem(hwnd,IDC_NUMSTARTSFROMRADIO),false);
                 EnableWindow(GetDlgItem(hwnd,IDC_CONTINUEONERRORSCHECK),false);
             }
             break;
@@ -2299,9 +2299,9 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             break;
         case WM_COMMAND:
             switch(wParam) {
-                case IDC_RADIO5:
-                    EnableWindow(GetDlgItem(hwnd,IDC_RADIO7),false);
-                    EnableWindow(GetDlgItem(hwnd,IDC_RADIO8),false);
+                case IDC_EXPORTTOONEFILERADIO:
+                    EnableWindow(GetDlgItem(hwnd,IDC_NUMASIDSRADIO),false);
+                    EnableWindow(GetDlgItem(hwnd,IDC_NUMSTARTSFROMRADIO),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
@@ -2311,12 +2311,12 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     else {
                         EnableWindow(GetDlgItem(hwnd,IDC_SEPARATENOTESINFILESCHECK),false);
                     }
-                    CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO5);
+                    CheckRadioButton(hwnd, IDC_EXPORTTOONEFILERADIO, IDC_EXPORTTOMANYFILESRADIO, IDC_EXPORTTOONEFILERADIO);
                     break;
-                case IDC_RADIO6:
-                    EnableWindow(GetDlgItem(hwnd,IDC_RADIO7),true);
-                    EnableWindow(GetDlgItem(hwnd,IDC_RADIO8),true);
-                    if(IsDlgButtonChecked(hwnd,IDC_RADIO8)) {
+                case IDC_EXPORTTOMANYFILESRADIO:
+                    EnableWindow(GetDlgItem(hwnd,IDC_NUMASIDSRADIO),true);
+                    EnableWindow(GetDlgItem(hwnd,IDC_NUMSTARTSFROMRADIO),true);
+                    if(IsDlgButtonChecked(hwnd,IDC_NUMSTARTSFROMRADIO)) {
                         EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),true);
                         EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),true);
                         EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),IsDlgButtonChecked(hwnd,IDC_ADDPREFIXCHECK));
@@ -2326,16 +2326,16 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),false);
                     }
                     EnableWindow(GetDlgItem(hwnd,IDC_SEPARATENOTESINFILESCHECK),false);
-                    CheckRadioButton(hwnd, IDC_RADIO5, IDC_RADIO6, IDC_RADIO6);
+                    CheckRadioButton(hwnd, IDC_EXPORTTOONEFILERADIO, IDC_EXPORTTOMANYFILESRADIO, IDC_EXPORTTOMANYFILESRADIO);
                     break;
-                case IDC_RADIO7:
-                    CheckRadioButton(hwnd, IDC_RADIO7, IDC_RADIO8, IDC_RADIO7);
+                case IDC_NUMASIDSRADIO:
+                    CheckRadioButton(hwnd, IDC_NUMASIDSRADIO, IDC_NUMSTARTSFROMRADIO, IDC_NUMASIDSRADIO);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),false);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),false);
                     break;
-                case IDC_RADIO8:
-                    CheckRadioButton(hwnd, IDC_RADIO7, IDC_RADIO8, IDC_RADIO8);
+                case IDC_NUMSTARTSFROMRADIO:
+                    CheckRadioButton(hwnd, IDC_NUMASIDSRADIO, IDC_NUMSTARTSFROMRADIO, IDC_NUMSTARTSFROMRADIO);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDIT14),true);
                     EnableWindow(GetDlgItem(hwnd,IDC_ADDPREFIXCHECK),true);
                     EnableWindow(GetDlgItem(hwnd,IDC_EDIT15),IsDlgButtonChecked(hwnd,IDC_ADDPREFIXCHECK));

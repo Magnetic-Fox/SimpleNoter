@@ -167,15 +167,15 @@ BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,309,132,50,14
     PUSHBUTTON      "&Anuluj",IDCANCEL,359,132,50,14
     GROUPBOX        "G³ówne okno",IDC_STATIC,7,7,201,40
-    RADIOBUTTON     "Wyœwietl zgodnie z ustawieniami systemowymi",IDC_RADIO1,
+    RADIOBUTTON     "Wyœwietl zgodnie z ustawieniami systemowymi",IDC_SYSDISPRADIO,
                     11,17,189,10,WS_TABSTOP
-    RADIOBUTTON     "Wyœwietl jako:",IDC_RADIO2,11,28,64,10,WS_TABSTOP
+    RADIOBUTTON     "Wyœwietl jako:",IDC_MAINDISPASRADIO,11,28,64,10,WS_TABSTOP
     COMBOBOX        IDC_MAINWINDISPCOMBO,78,27,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     GROUPBOX        "Okno edycji",IDC_STATIC,7,47,201,40
-    RADIOBUTTON     "Wyœwietl tak, jak g³ówne okno",IDC_RADIO3,11,57,189,10,
+    RADIOBUTTON     "Wyœwietl tak, jak g³ówne okno",IDC_EDITDISPASMAINRADIO,11,57,189,10,
                     WS_TABSTOP
-    RADIOBUTTON     "Wyœwietl jako:",IDC_RADIO4,11,68,64,10,WS_TABSTOP
+    RADIOBUTTON     "Wyœwietl jako:",IDC_EDITDISPASRADIO,11,68,64,10,WS_TABSTOP
     COMBOBOX        IDC_EDITWINDISPCOMBO,78,67,122,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     GROUPBOX        "Ustawienia regionalne",IDC_STATIC,7,87,201,42
@@ -327,10 +327,10 @@ BEGIN
                     IDC_IGNOREFILENAMECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,46,
                     178,10
     GROUPBOX        "Opcje zapisu",IDC_STATIC,7,59,186,69
-    RADIOBUTTON     "Eksportuj do jednego pliku",IDC_RADIO5,11,69,178,10,WS_TABSTOP
-    RADIOBUTTON     "Eksportuj do osobnych plików",IDC_RADIO6,11,80,178,10,WS_TABSTOP
-    RADIOBUTTON     "Numeruj zgodnie z ID notatek",IDC_RADIO7,21,91,168,10,WS_TABSTOP
-    RADIOBUTTON     "Numeruj rozpoczynaj¹c od:",IDC_RADIO8,21,102,103,10,WS_TABSTOP
+    RADIOBUTTON     "Eksportuj do jednego pliku",IDC_EXPORTTOONEFILERADIO,11,69,178,10,WS_TABSTOP
+    RADIOBUTTON     "Eksportuj do osobnych plików",IDC_EXPORTTOMANYFILESRADIO,11,80,178,10,WS_TABSTOP
+    RADIOBUTTON     "Numeruj zgodnie z ID notatek",IDC_NUMASIDSRADIO,21,91,168,10,WS_TABSTOP
+    RADIOBUTTON     "Numeruj rozpoczynaj¹c od:",IDC_NUMSTARTSFROMRADIO,21,102,103,10,WS_TABSTOP
     EDITTEXT        IDC_EDIT14,127,101,62,12,ES_AUTOHSCROLL
     CONTROL         "Do³¹cz prefiks:",IDC_ADDPREFIXCHECK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,31,114,66,10
