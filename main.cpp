@@ -91,6 +91,7 @@ BOOL CALLBACK NotesExpDlgProc   (HWND, UINT, WPARAM, LPARAM);
 //
 //////////////////////////////////////
 
+// Editor window creation function
 HWND createEditWindow(HWND hwnd, HINSTANCE hInstance, WINDOWMEMORY &winMem, NOTE *note) {
     EDITWINDOW *editWin = new EDITWINDOW;
 
@@ -213,6 +214,7 @@ HWND createEditWindow(HWND hwnd, HINSTANCE hInstance, WINDOWMEMORY &winMem, NOTE
 //
 //////////////////////////////////////
 
+// Main window class registration function
 ATOM registerMainWindowClass(WNDCLASS *wc, HINSTANCE &hInstance) {
     wc->style=          0;
     wc->lpfnWndProc=    MainWndProc;
@@ -227,6 +229,7 @@ ATOM registerMainWindowClass(WNDCLASS *wc, HINSTANCE &hInstance) {
     return RegisterClass(wc);
 }
 
+// Editor window class registration function
 ATOM registerEditWindowClass(WNDCLASS *wc, HINSTANCE &hInstance) {
     wc->style=          0;
     wc->lpfnWndProc=    EditWndProc;
@@ -241,6 +244,7 @@ ATOM registerEditWindowClass(WNDCLASS *wc, HINSTANCE &hInstance) {
     return RegisterClass(wc);
 }
 
+// Procedure for freeing global resources
 void freeGlobalResources(void) {
     WSACleanup();
     DeleteObject(g_hBrushBtnFace);
@@ -250,6 +254,7 @@ void freeGlobalResources(void) {
     return;
 }
 
+// Inline procedure for handling selection changes
 void inline onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&selection) {
     count=(unsigned int)SendMessage(GetDlgItem(hwnd,ID_LISTBOX), LB_GETSELCOUNT, 0, 0);
     if(count==0) {
@@ -286,7 +291,7 @@ void inline onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&sel
                             maxLM=&notes[selection[x]].lastModified;
                         }
                     }
-                    SetWindowText(GetDlgItem(hwnd,IDC_NOTEID),(IntToStr(*maxID)+" - "+IntToStr(*minID)).c_str());
+                    SetWindowText(GetDlgItem(hwnd,IDC_NOTEID),(IntToStr(*maxID)+" - "+IntToStr(*minID)+" => "+IntToStr(count)).c_str());
                     SetWindowText(GetDlgItem(hwnd,IDC_NOTELASTMOD),((*maxLM)+" - "+(*minLM)).c_str());
                 }
                 else {
@@ -311,6 +316,7 @@ void inline onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&sel
 //
 //////////////////////////////////////
 
+// Main program function (WinMain)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     storeStringTableInstance(           hInstance);
     storeConnectionSettingsReference(   &connectionSettings);
@@ -514,6 +520,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 //
 //////////////////////////////////////
 
+// Main window message processing function
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Local variables
     std::string tempString="";
@@ -948,6 +955,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 //
 //////////////////////////////////////
 
+// Editor window message processing function
 LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Local variables
     unsigned long int width;
@@ -1333,6 +1341,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 //
 //////////////////////////////////////
 
+// Note properties dialog message processing function
 BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Local variables
     NOTE tempNote;
@@ -1407,6 +1416,7 @@ BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 //
 //////////////////////////////////////
 
+// Program information dialog message processing function
 BOOL CALLBACK AboutDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Local variables
     NOTE tempNote;
@@ -1436,6 +1446,7 @@ BOOL CALLBACK AboutDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 //
 //////////////////////////////////////
 
+// Preferences dialog message processing function
 BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Local variables
     bool enabled;
@@ -1630,6 +1641,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 //
 //////////////////////////////////////
 
+// Connection settings dialog message processing function
 BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Local variables
     NOTER_SERVER_INFO serverInfo;
@@ -1764,6 +1776,7 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 //
 //////////////////////////////////////
 
+// Credentials settings dialog message processing procedure
 BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Local variables
     USER_INFO userInfo;
@@ -2001,6 +2014,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 //
 //////////////////////////////////////
 
+// User registration dialog message processing function
 BOOL CALLBACK UserRegDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Local variables
     NOTER_CREDENTIALS tempCredentials;
@@ -2091,6 +2105,7 @@ BOOL CALLBACK UserRegDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 //
 //////////////////////////////////////
 
+// Password confirmation dialog message processing function
 BOOL CALLBACK PassConfirmDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Local variables
     long int result;
@@ -2156,6 +2171,7 @@ BOOL CALLBACK PassConfirmDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 //
 //////////////////////////////////////
 
+// Password change dialog message processing function
 BOOL CALLBACK PassChangeDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Local variables
     std::string tempOldPassword, tempNewPassword, tempSecNewPassword;
@@ -2253,6 +2269,7 @@ BOOL CALLBACK PassChangeDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 //
 //////////////////////////////////////
 
+// Notes export dialog message processing function
 BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Switch section
     switch(msg) {
