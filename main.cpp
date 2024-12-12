@@ -33,7 +33,7 @@ HBRUSH                      g_hBrushBtnFace=CreateSolidBrush(GetSysColor(COLOR_B
 HBRUSH                      g_hBrushActCapt=CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
 HBRUSH                      g_hBrushWindow= CreateSolidBrush(GetSysColor(COLOR_WINDOW));
 HWND                        g_hwnd;
-HINSTANCE                   g_hInstance=NULL, hCodePageLib=NULL;
+HINSTANCE                   hCodePageLib=NULL;
 HGLOBAL                     hCodePageDefinition=NULL;
 MSG                         *g_Msg;
 
@@ -91,13 +91,13 @@ BOOL CALLBACK NotesExpDlgProc   (HWND, UINT, WPARAM, LPARAM);
 //
 //////////////////////////////////////
 
-HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
+HWND createEditWindow(HWND hwnd, HINSTANCE hInstance, WINDOWMEMORY &winMem, NOTE *note) {
     EDITWINDOW *editWin = new EDITWINDOW;
 
     makeEditWindowTitle(editWin,note,false,mappedCodePage);
     
     editWin->hwnd=  CreateWindow(NOTER_EDITWINDOW, editWin->windowTitle.c_str(), WS_OVERLAPPEDWINDOW,
-                                    CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, g_hInstance, NULL);
+                                    CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
 
     if(editWin->hwnd==NULL) {
         delete editWin;
@@ -125,43 +125,43 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
         }
         
         editWin->hStaticSubject= CreateWindow(WC_STATIC, getStringFromTable(IDS_STRING_EDITWIN_TITLE), WS_CHILD | WS_VISIBLE | SS_LEFT,
-                                                0, 0, 600, 16, editWin->hwnd, (HMENU)IDC_EDIT_SUBJECT, g_hInstance, NULL);
+                                                0, 0, 600, 16, editWin->hwnd, (HMENU)IDC_EDIT_SUBJECT, hInstance, NULL);
 
         editWin->hEditBoxSubject=CreateWindow(WC_EDIT, NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL,
-                                                0, 16, 600, 24, editWin->hwnd, (HMENU)IDE_EDIT_SUBJECT, g_hInstance, NULL);
+                                                0, 16, 600, 24, editWin->hwnd, (HMENU)IDE_EDIT_SUBJECT, hInstance, NULL);
 
         editWin->hStaticEntry=   CreateWindow(WC_STATIC, getStringFromTable(IDS_STRING_EDITWIN_ENTRY), WS_CHILD | WS_VISIBLE | SS_LEFT,
-                                                0, 40, 600, 16, editWin->hwnd, (HMENU)IDC_EDIT_ENTRY, g_hInstance, NULL);
+                                                0, 40, 600, 16, editWin->hwnd, (HMENU)IDC_EDIT_ENTRY, hInstance, NULL);
 
         editWin->hEditBoxEntry=  CreateWindow(WC_EDIT, NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP | ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN,
-                                                0, 56, 600, 300, editWin->hwnd, (HMENU)IDE_EDIT_ENTRY, g_hInstance, NULL);
+                                                0, 56, 600, 300, editWin->hwnd, (HMENU)IDE_EDIT_ENTRY, hInstance, NULL);
 
         if(editWin->note->id==0) {
             editWin->hButtonAddUp=  CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_ADD), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
-                                                    0, 356, 96, 21, editWin->hwnd, (HMENU)IDB_EDIT_ADDUP, g_hInstance, NULL);
+                                                    0, 356, 96, 21, editWin->hwnd, (HMENU)IDB_EDIT_ADDUP, hInstance, NULL);
         }
         else {
             editWin->hButtonAddUp=  CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_UPDATE), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
-                                                    0, 356, 96, 21, editWin->hwnd, (HMENU)IDB_EDIT_ADDUP, g_hInstance, NULL);
+                                                    0, 356, 96, 21, editWin->hwnd, (HMENU)IDB_EDIT_ADDUP, hInstance, NULL);
         }
 
         if(editWin->note->id==0) {
             editWin->hButtonProps=  CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_PROPERTIES), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_DISABLED,
-                                                    96, 356, 96, 21, editWin->hwnd, (HMENU)IDB_EDIT_PROPERTIES, g_hInstance, NULL);
+                                                    96, 356, 96, 21, editWin->hwnd, (HMENU)IDB_EDIT_PROPERTIES, hInstance, NULL);
         }
         else {
             editWin->hButtonProps=  CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_PROPERTIES), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
-                                                    96, 356, 96, 21, editWin->hwnd, (HMENU)IDB_EDIT_PROPERTIES, g_hInstance, NULL);
+                                                    96, 356, 96, 21, editWin->hwnd, (HMENU)IDB_EDIT_PROPERTIES, hInstance, NULL);
         }
 
         editWin->hButtonClose=  CreateWindow(WC_BUTTON, getStringFromTable(IDS_STRING_CLOSE), WS_CHILD | WS_VISIBLE | WS_TABSTOP,
-                                                192, 356, 96, 21, editWin->hwnd, (HMENU)IDB_EDIT_CLOSE, g_hInstance, NULL);
+                                                192, 356, 96, 21, editWin->hwnd, (HMENU)IDB_EDIT_CLOSE, hInstance, NULL);
 
         editWin->hStaticGrayBox=CreateWindow(WC_STATIC, NULL, WS_CHILD | WS_VISIBLE | SS_GRAYRECT,
-                                                288, 356, 312, 21, editWin->hwnd, (HMENU)IDC_EDIT_GRAYBOX, g_hInstance, NULL);
+                                                288, 356, 312, 21, editWin->hwnd, (HMENU)IDC_EDIT_GRAYBOX, hInstance, NULL);
 
         editWin->hStaticStatus= CreateWindow(WC_STATIC, getStringFromTable(IDS_STRING_INFO_OK), WS_CHILD | WS_VISIBLE | SS_LEFT,
-                                                0, 377, 600, 16, editWin->hwnd, (HMENU)IDC_EDIT_STATUS, g_hInstance, NULL);
+                                                0, 377, 600, 16, editWin->hwnd, (HMENU)IDC_EDIT_STATUS, hInstance, NULL);
 
         bool warningState=false;
         if(editWin->note->id>0) {
@@ -213,13 +213,13 @@ HWND createEditWindow(HWND hwnd, WINDOWMEMORY &winMem, NOTE *note) {
 //
 //////////////////////////////////////
 
-ATOM registerMainWindowClass(WNDCLASS *wc) {
+ATOM registerMainWindowClass(WNDCLASS *wc, HINSTANCE &hInstance) {
     wc->style=          0;
     wc->lpfnWndProc=    MainWndProc;
     wc->cbClsExtra=     0;
     wc->cbWndExtra=     0;
-    wc->hInstance=      g_hInstance;
-    wc->hIcon=          LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_MAINICON));
+    wc->hInstance=      hInstance;
+    wc->hIcon=          LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MAINICON));
     wc->hCursor=        LoadCursor(NULL, IDC_ARROW);
     wc->hbrBackground=  g_hBrushBtnFace;
     wc->lpszMenuName=   MAKEINTRESOURCE(IDR_MENU_MAIN);
@@ -227,13 +227,13 @@ ATOM registerMainWindowClass(WNDCLASS *wc) {
     return RegisterClass(wc);
 }
 
-ATOM registerEditWindowClass(WNDCLASS *wc) {
+ATOM registerEditWindowClass(WNDCLASS *wc, HINSTANCE &hInstance) {
     wc->style=          0;
     wc->lpfnWndProc=    EditWndProc;
     wc->cbClsExtra=     0;
     wc->cbWndExtra=     0;
-    wc->hInstance=      g_hInstance;
-    wc->hIcon=          LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_EDITICON));
+    wc->hInstance=      hInstance;
+    wc->hIcon=          LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EDITICON));
     wc->hCursor=        LoadCursor(NULL, IDC_ARROW);
     wc->hbrBackground=  g_hBrushBtnFace;
     wc->lpszMenuName=   MAKEINTRESOURCE(IDR_MENU_EDIT);
@@ -312,8 +312,6 @@ void inline onSelectionChange(HWND hwnd, unsigned int &count, unsigned int *&sel
 //////////////////////////////////////
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-    g_hInstance=hInstance;
-
     storeStringTableInstance(           hInstance);
     storeConnectionSettingsReference(   &connectionSettings);
     storeCredentialsReference(          &credentials);
@@ -353,7 +351,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         return FALSE;
     }
 
-    if((!registerMainWindowClass(&wc)) || (!registerEditWindowClass(&wc2))) {
+    if((!registerMainWindowClass(&wc, hInstance)) || (!registerEditWindowClass(&wc2, hInstance))) {
         MessageBox(NULL,getStringFromTable(IDS_STRING_MSG_WNDCLASS_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONSTOP | MB_OK);
         freeGlobalResources();
         return FALSE;
@@ -728,7 +726,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         mainLastResult=0;
                     }
                     SetWindowText(GetDlgItem(hwnd,IDC_STATUS),getStringFromTable(IDS_STRING_CREATING_EDIT_WINDOW));
-                    if(createEditWindow(hwnd,winMem,NULL)==NULL) {
+                    if(createEditWindow(hwnd,GetWindowWord(hwnd,GWW_HINSTANCE),winMem,NULL)==NULL) {
                         SetWindowText(GetDlgItem(hwnd,IDC_STATUS),getStringFromTable(IDS_STRING_EDITWIN_CREATE_ERROR));
                         mainLastResult=-2048;
                     }
@@ -759,7 +757,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                                 NOTE *note=new NOTE;
                                 result=noter_getNote(connectionSettings,credentials,notes[index].id,buffer,*note);
                                 if(result>=0) {
-                                    HWND tempHwnd=createEditWindow(hwnd,winMem,note);
+                                    HWND tempHwnd=createEditWindow(hwnd,GetWindowWord(hwnd,GWW_HINSTANCE),winMem,note);
                                     if(tempHwnd!=NULL) {
                                         tempString=noter_getAnswerString(result)+(std::string)getStringFromTable(IDS_STRING_SPACED_LAST_MOD_DATE)+toCodePage(mappedCodePage,(char*)note->lastModified.c_str())+".";
                                         compressionRatio=getCompressionRatio();
@@ -919,7 +917,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         mainSettings.mainWindowStyle=state-1;
                     }
                     
-                    GetModuleFileName(g_hInstance,buffer,32767);
+                    GetModuleFileName(GetWindowWord(hwnd,GWW_HINSTANCE),buffer,32767);
                     saveWindowCoordinatesSettings(mainSettings,(char*)getDefaultIniFile(buffer).c_str());
                 }
                 if(winMem.size()==0) {
@@ -928,7 +926,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             }
             break;
         case WM_DESTROY:
-            if(Ctl3dEnabled() && (!Ctl3dUnregister(g_hInstance))) {
+            if(Ctl3dEnabled() && (!Ctl3dUnregister(GetWindowWord(hwnd,GWW_HINSTANCE)))) {
                 MessageBox(0,getStringFromTable(IDS_STRING_MSG_CTL3D_UNREG_ERROR),getStringFromTable(IDS_STRING_WARNING,1),MB_ICONEXCLAMATION);
             }
             if(noteCount>0) {
@@ -1520,7 +1518,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
         case WM_COMMAND:
             switch(wParam) {
                 case IDOK:
-                    GetModuleFileName(g_hInstance,buffer,32767);
+                    GetModuleFileName(GetWindowWord(hwnd,GWW_HINSTANCE),buffer,32767);
                     iniFile=getDefaultIniFile(buffer);
                     mainSettings.mainWindowSystem=IsDlgButtonChecked(hwnd, IDC_SYSDISPRADIO)==1;
                     mainSettings.editWindowSystem=IsDlgButtonChecked(hwnd, IDC_EDITDISPASMAINRADIO)==1;
@@ -1677,7 +1675,7 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                             GetWindowText(GetDlgItem(hwnd,IDC_SHAREEDIT),   buffer,65535);
                             connectionSettings.share=buffer;
                             connectionSettings.requestCompression=IsDlgButtonChecked(hwnd, IDC_COMPRESSIONCHECK)==1;
-                            GetModuleFileName(g_hInstance,buffer,32767);
+                            GetModuleFileName(GetWindowWord(hwnd,GWW_HINSTANCE),buffer,32767);
                             iniFile=getDefaultIniFile(buffer);
                             saveConnectionSettings(connectionSettings,(char*)iniFile.c_str());
                         }
@@ -1824,7 +1822,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                         credentials.username=buffer;
                         GetWindowText(GetDlgItem(hwnd,IDC_PASSWORDEDIT),buffer,65535);
                         credentials.password=buffer;
-                        GetModuleFileName(g_hInstance,buffer,32767);
+                        GetModuleFileName(GetWindowWord(hwnd,GWW_HINSTANCE),buffer,32767);
                         iniFile=getDefaultIniFile(buffer);
                         saveCredentials(credentials,(char*)iniFile.c_str());
                         EnableWindow(GetDlgItem(GetParent(hwnd),IDB_DOWNLOAD),true);
@@ -1931,7 +1929,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                                 else {
                                     credentials.username="";
                                     credentials.password="";
-                                    GetModuleFileName(g_hInstance,buffer,32767);
+                                    GetModuleFileName(GetWindowWord(hwnd,GWW_HINSTANCE),buffer,32767);
                                     iniFile=getDefaultIniFile(buffer);
                                     saveCredentials(credentials,(char*)iniFile.c_str());
                                     lockRefreshButton(GetParent(hwnd));
