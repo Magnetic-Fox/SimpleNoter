@@ -18,7 +18,7 @@ In fact, this project is heavily tied to Watcom coding style, so I think there m
 ## Components needed to run the program
 
 As I'm doing my best to make this program more customizable, more and more components are moved to DLLs that are now necessary to run this program.
-For now, the codepage definition is needed, for which code can be found in my `CP1250-DLL` repository.
+For now, the codepage definition is needed, for which code can be found here: [CP1250 DLL](https://github.com/Magnetic-Fox/CP1250-DLL) repository.
 
 ## Codes created by others
 
