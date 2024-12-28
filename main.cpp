@@ -36,6 +36,7 @@ HWND                        g_hwnd;
 HINSTANCE                   hCodePageLib=NULL;
 HGLOBAL                     hCodePageDefinition=NULL;
 MSG                         *g_Msg;
+RECT                        tempRect={0};
 
 // Own types
 WINDOWMEMORY                winMem;
@@ -54,7 +55,7 @@ long int                    mainLastResult=0;
 long int                    *minID, *maxID;
 unsigned int                ctlRegs=0;
 std::string                 *minLM, *maxLM;
-bool                        check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged;
+bool                        check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged, cpHover=false;
 char                        buffer[65536];
 
 //////////////////////////////////////
@@ -1453,6 +1454,8 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
     std::string iniFile;
     LIB_ITER lIt;
     unsigned int counter, counter2, selectedIndex, selectedIndex2;
+    POINT mousePosition;
+    HDC hdc;
     // Switch section
     switch(msg) {
         case WM_INITDIALOG:
@@ -1525,6 +1528,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
             EnableWindow(GetDlgItem(hwnd,IDC_EDITSCHECK),   enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_COMBOSCHECK),  enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_DIALOGSCHECK), enabled);
+            GetWindowRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),&tempRect);
             break;
         case WM_COMMAND:
             switch(wParam) {
@@ -1626,8 +1630,43 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                     break;
             }
             break;
+        case WM_MOUSEMOVE:
+            GetCursorPos(&mousePosition);
+            if(PtInRect(&tempRect,mousePosition)) {
+                if(!cpHover) {
+                    cpHover=true;
+                    InvalidateRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),NULL,TRUE);
+                }
+            }
+            else {
+                if(cpHover) {
+                    cpHover=false;
+                    InvalidateRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),NULL,TRUE);
+                }
+            }
+            break;
+        case WM_CTLCOLOR:
+            if(HIWORD(lParam)==CTLCOLOR_STATIC) {
+                if(LOWORD(lParam)==GetDlgItem(hwnd,IDC_CODEPAGESTATIC)) {
+                    hdc=(HDC)wParam;
+                    if(cpHover) {
+                        SetTextColor(hdc,RGB(0,0,255));
+                    }
+                    else {
+                        SetTextColor(hdc,RGB(0,0,0));
+                    }
+                    SetBkMode(hdc,TRANSPARENT);
+                    return (LRESULT)g_hBrushBtnFace;
+                }
+            }
+            break;
         case WM_CLOSE:
             EndDialog(hwnd,IDCANCEL);
+            break;
+        case WM_DESTROY:
+            if(cpHover) {
+                cpHover=false;
+            }
             break;
         default:
             return FALSE;
