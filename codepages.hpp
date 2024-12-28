@@ -16,6 +16,7 @@ typedef const int* RAWCODEPAGE;
 std::string fromCodePage(RAWCODEPAGE, char*);
 std::string toCodePage(CODEPAGE&, char*);
 void prepareCodePage(CODEPAGE&, RAWCODEPAGE);
+bool encodeWarningState(void);
 bool decodeWarningState(void);
 bool loadCodePage(char*, HINSTANCE&, HGLOBAL&, RAWCODEPAGE&);
 void unloadCodePage(HINSTANCE&, HGLOBAL&);
