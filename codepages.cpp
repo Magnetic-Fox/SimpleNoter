@@ -1,28 +1,36 @@
 #include "codepages.hpp"
 
-static long int the_index = 0;
-static long int the_length = 0;
-static long int the_char = 0;
-static long int the_byte = 0;
+static long int the_index=  0;
+static long int the_length= 0;
+static long int the_char=   0;
+static long int the_byte=   0;
 static char     *the_input;
 
-static bool decodeWarning = false;
+// Neutral defaults (7-bit characters only), but changeable
+static std::string encodeError= ".";
+static std::string decodeError= "?";
+static std::string utfError=    "~";
+
+static bool encodeWarning=  false;
+static bool decodeWarning=  false;
 
 std::string fromCodePage(RAWCODEPAGE nmCodePage, char* input) {
     std::string temp="";
+    encodeWarning=false;
     for(unsigned long int x=0; x<strlen(input); ++x) {
         if(input[x]<0x80) {
-            temp=temp+input[x];
+            temp+=input[x];
         }
         else {
             char xtest[8];
             int xout=utf8_encode(xtest,nmCodePage[input[x]-0x80]);
             if(xout==0) {
-                temp=temp+'.';
+                temp+=encodeError;
+                encodeWarning=true;
             }
             else {
                 for(unsigned int y=0; y<xout; ++y) {
-                    temp=temp+xtest[y];
+                    temp+=xtest[y];
                 }
             }
         }
@@ -38,24 +46,24 @@ std::string toCodePage(CODEPAGE &codepage, char* input) {
         long int one=utf8_decode_next();
         if(one<0) {
             if(one==UTF8_ERROR) {
-                temp=temp+'~';
+                temp+=utfError;
             }
             break;
         }
         else {
             if(one<0x80) {
-                temp=temp+(char)one;
+                temp+=(char)one;
             }
             else {
                 char test=(char)codepage[(unsigned int)one];
                 if(test<0x20) {
                     if(!((test==0x0D) || (test==0x0A))) {
-                        test='?';
+                        temp+=decodeError;
                         decodeWarning=true;
+                        continue;
                     }
                 }
-                //temp=temp+(char)codepage[one];
-                temp=temp+test;
+                temp+=test;
             }
         }
     }
@@ -70,12 +78,17 @@ void prepareCodePage(CODEPAGE &codepage, RAWCODEPAGE cpdef) {
     return;
 }
 
+bool encodeWarningState(void) {
+    return encodeWarning;
+}
+
 bool decodeWarningState(void) {
     return decodeWarning;
 }
 
 bool loadCodePage(char *libName, HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefinition, RAWCODEPAGE &rawCodePage) {
     char testString[9];
+    char testString2[17];
     hCodePageLib=LoadLibrary(libName);
     if(hCodePageLib < 32) {
         return false;
@@ -84,13 +97,27 @@ bool loadCodePage(char *libName, HINSTANCE &hCodePageLib, HGLOBAL &hCodePageDefi
         if(LoadString(hCodePageLib,IDS_LIBTYPE,testString,9)) {
             if(((std::string)testString)=="CODEPAGE") {
                 if(LoadString(hCodePageLib,IDS_USEDWORD,testString,9)) {
-                    if(((std::string)testString)=="0") {    // non-DWORD code page definition is the only allowed in this version (might be changed in the future)
+                    // non-DWORD code page definition is the only allowed in this version (might be changed in the future)
+                    if(((std::string)testString)=="0") {
                         hCodePageDefinition=LoadResource(hCodePageLib,FindResource(hCodePageLib,MAKEINTRESOURCE(IDR_CODEPAGE),RT_RCDATA));
                         if(hCodePageDefinition==NULL) {
                             return false;
                         }
                         else {
+                            // Load code page definition
                             rawCodePage=(int*)LockResource(hCodePageDefinition);
+                            // And now load optional error strings (change neutral defaults to something another)
+                            if(LoadString(hCodePageLib,IDS_ENCODEERROR,testString2,17)) {
+                                // Make it UTF-8 string immediately (to avoid any further errors)
+                                encodeError=fromCodePage(rawCodePage,testString2);
+                            }
+                            if(LoadString(hCodePageLib,IDS_DECODEERROR,testString2,17)) {
+                                decodeError=testString2;
+                            }
+                            if(LoadString(hCodePageLib,IDS_UTFERROR,testString2,17)) {
+                                utfError=testString2;
+                            }
+                            // Finish successfully
                             return true;
                         }
                     }
