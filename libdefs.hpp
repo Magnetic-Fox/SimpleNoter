@@ -7,6 +7,10 @@
 #define IDS_REVDATE                     4
 #define IDS_AUTHOR                      5
 
+#define IDS_ENCODEERROR                 6
+#define IDS_DECODEERROR                 7
+#define IDS_UTFERROR                    8
+
 #define IDR_CODEPAGE                    100
 
 #endif
