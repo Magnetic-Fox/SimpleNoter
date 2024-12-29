@@ -37,7 +37,7 @@ HWND                        g_hwnd;
 HINSTANCE                   hCodePageLib=NULL;
 HGLOBAL                     hCodePageDefinition=NULL;
 MSG                         *g_Msg;
-HFONT                       hUnderlinedFont=NULL;
+HFONT                       hUnderlinedFont=prepareUnderlinedFontObject();
 
 // Own types
 WINDOWMEMORY                winMem;
@@ -86,20 +86,6 @@ BOOL CALLBACK PassConfirmDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK PassChangeDlgProc (HWND, UINT, WPARAM, LPARAM);
 
 BOOL CALLBACK NotesExpDlgProc   (HWND, UINT, WPARAM, LPARAM);
-
-void prepareUnderlinedFontObject(void) {
-    LOGFONT logFont;
-    GetObject((HFONT)GetStockObject(SYSTEM_FONT),sizeof(LOGFONT),&logFont);
-    logFont.lfUnderline=TRUE;
-    hUnderlinedFont=CreateFontIndirect(&logFont);
-    return;
-}
-
-COLORREF getBrushColor(HBRUSH hBrush) {
-    LOGBRUSH logBrush;
-    GetObject(hBrush,sizeof(LOGBRUSH),&logBrush);
-    return logBrush.lbColor;
-}
 
 //////////////////////////////////////
 //
@@ -341,7 +327,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     storeCredentialsReference(          &credentials);
     storeGlobalHWNDReference(           &g_hwnd);
     storeWindowMemoryReference(         &winMem);
-    prepareUnderlinedFontObject();
 
     WNDCLASS wc = { 0 };
     WNDCLASS wc2= { 0 };
@@ -1219,6 +1204,7 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     break;
                 case IDB_EDIT_ADDUP:
+                    bool subEncErr=false, entEncErr=false;
                     if((!IsWindowEnabled(GetDlgItem(g_hwnd,IDB_EXIT))) || (!IsWindowEnabled(GetDlgItem(hwnd,IDB_EDIT_ADDUP)))) {
                         break;
                     }
@@ -1228,8 +1214,10 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     }
                     GetWindowText(GetDlgItem(hwnd,IDE_EDIT_SUBJECT),buffer,65535);
                     winMem[hwnd]->note->subject=fromCodePage(rawCodePage,buffer);
+                    subEncErr=encodeWarningState();
                     GetWindowText(GetDlgItem(hwnd,IDE_EDIT_ENTRY),  buffer,65535);
                     winMem[hwnd]->note->entry=fromCodePage(rawCodePage,buffer);
+                    entEncErr=encodeWarningState();
                     if(winMem[hwnd]->note->id==0) {
                         edit_LockAllButtons(g_hwnd,hwnd);
                         winMem[hwnd]->lastResult=noter_addNote(connectionSettings,credentials,*winMem[hwnd]->note,buffer);
@@ -1264,6 +1252,20 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         else {
                             EnableWindow(GetDlgItem(hwnd,IDB_EDIT_ADDUP),true);
                         }
+                    }
+                    if(subEncErr || entEncErr) {
+                        std::string preparedMessage=getStringFromTable(IDS_STRING_SOME_CHARACTERS);
+                        if(subEncErr) {
+                            preparedMessage+=getStringFromTable(IDS_STRING_OF_SUBJECT);
+                        }
+                        if(subEncErr && entEncErr) {
+                            preparedMessage+=getStringFromTable(IDS_STRING_BOTH_SPACED_AND);
+                        }
+                        if(entEncErr) {
+                            preparedMessage+=getStringFromTable(IDS_STRING_OF_ENTRY);
+                        }
+                        preparedMessage+=getStringFromTable(IDS_STRING_COULD_NOT_CONVERT_LOSS);
+                        MessageBox(hwnd,preparedMessage.c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONINFORMATION);
                     }
                     break;
                 case IDB_EDIT_PROPERTIES:
