@@ -13,6 +13,9 @@
 #define LIB_CODEPAGE    1
 #define LIB_STRINGTABLE 2
 
+#define STR_CODEPAGE    "CODEPAGE"
+#define STR_STRINGTABLE "STRINGTABLE"
+
 typedef struct LIB_FILE_INFO {
     unsigned short int type;
     std::string filename, relatedInfo;
@@ -25,5 +28,6 @@ unsigned short int getLibType(HINSTANCE);
 std::string getCodePageInfo(HINSTANCE);
 bool listAvailableLibs(char*, LIBRARIES&);
 std::string findAnyCodePage(LIBRARIES&);
+void simpleLibInfo(HWND, HINSTANCE);
 
 #endif
