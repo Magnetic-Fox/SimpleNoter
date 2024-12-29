@@ -1664,7 +1664,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
             GetCursorPos(&mousePosition);
             if(PtInRect(&tempRect,mousePosition)) {
                 if(cpClick) {
-                    // TODO: add something AT THIS POINT!
+                    simpleLibInfo(hwnd,hCodePageLib);
                     cpHover=false;
                     InvalidateRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),NULL,TRUE);
                     SendMessage(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),WM_SETFONT,(WPARAM)(HFONT)GetStockObject(SYSTEM_FONT),0);
