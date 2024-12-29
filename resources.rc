@@ -1,8 +1,8 @@
 #include "resources.h"
 
 VS_VERSION VERSIONINFO
-FILEVERSION 0, 7, 9, 0
-PRODUCTVERSION 0, 7, 9, 0
+FILEVERSION 0, 8, 0, 0
+PRODUCTVERSION 0, 8, 0, 0
 FILETYPE 0x1L
 BEGIN
     BLOCK "StringFileInfo"
@@ -10,14 +10,14 @@ BEGIN
         BLOCK "041504e2"
         BEGIN
             VALUE "CompanyName",        "Magnetic-Fox\0"
-            VALUE "FileVersion",        "0.79\0"
+            VALUE "FileVersion",        "0.8\0"
             VALUE "FileDescription",    "Simple Noter\0"
-            VALUE "InternalName",       "SNotr079.exe\0"
+            VALUE "InternalName",       "SNotr08.exe\0"
             VALUE "LegalCopyright",     "©2021-2024 Magnetic-Fox\0"
             VALUE "LegalTrademarks",    "Noter™\0"
             VALUE "OriginalFilename",   "SimpleNoter.exe\0"
-            VALUE "ProductName",        "Simple Noter v0.79\0"
-            VALUE "ProductVersion",     "0.79\0"
+            VALUE "ProductName",        "Simple Noter v0.8\0"
+            VALUE "ProductVersion",     "0.8\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -357,9 +357,9 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
-    IDS_HELPFILE                        "SNOTER07.HLP"
-    IDS_APPNAME                         "Simple Noter v0.79"
-    IDS_USER_AGENT                      "SimpleNoter/0.79"
+    IDS_HELPFILE                        "SNOTER08.HLP"
+    IDS_APPNAME                         "Simple Noter v0.8"
+    IDS_USER_AGENT                      "SimpleNoter/0.8"
     IDS_STRING_BUILTIN_LANGUAGE         "Polski (wbudowany)"
     IDS_STRING_NEW_NOTE                 "~ Nowa notatka ~ - "
     IDS_STRING_WRONG_RESPONSE           "Nie uda³o siê po³¹czyæ z serwerem."
@@ -461,4 +461,9 @@ BEGIN
     IDS_STRING_NOT_ALL_NOTES_REMOVED    "Nie wszystkie notatki zosta³y usuniête."
     IDS_STRING_MULTIPLE_CHOSEN          "-- wybrano kilka --"
     IDS_STRING_REMOVING_NOTE            "Usuwanie notatki..."
+    IDS_STRING_SOME_CHARACTERS          "Niektórych znaków "
+    IDS_STRING_OF_SUBJECT               "tematu"
+    IDS_STRING_BOTH_SPACED_AND          " oraz "
+    IDS_STRING_OF_ENTRY                 "treœci"
+    IDS_STRING_COULD_NOT_CONVERT_LOSS   " nie uda³o siê skonwertowaæ do UTF-8.\nCzêœæ danych mog³a zostaæ utracona."
 END
