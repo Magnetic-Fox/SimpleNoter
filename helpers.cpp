@@ -103,3 +103,16 @@ void freeSelectionBuffer(unsigned int *&selected) {
     delete[] selected;
     return;
 }
+
+HFONT prepareUnderlinedFontObject(void) {
+    LOGFONT logFont;
+    GetObject((HFONT)GetStockObject(SYSTEM_FONT),sizeof(LOGFONT),&logFont);
+    logFont.lfUnderline=TRUE;
+    return CreateFontIndirect(&logFont);
+}
+
+COLORREF getBrushColor(HBRUSH hBrush) {
+    LOGBRUSH logBrush;
+    GetObject(hBrush,sizeof(LOGBRUSH),&logBrush);
+    return logBrush.lbColor;
+}

@@ -23,6 +23,8 @@ unsigned int getSelection(HWND, unsigned int*&);
 void setSelection(HWND, unsigned int*&, unsigned int);
 void selectIndexes(HWND, unsigned int*&, unsigned int, NOTE_SUMMARY*&, unsigned int);
 void freeSelectionBuffer(unsigned int*&);
+HFONT prepareUnderlinedFontObject(void);
+COLORREF getBrushColor(HBRUSH);
 void inline lockExitButton(HWND);
 void inline unlockExitButton(HWND);
 void inline lockRefreshButton(HWND);
