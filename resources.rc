@@ -1,8 +1,8 @@
 #include "resources.h"
 
 VS_VERSION VERSIONINFO
-FILEVERSION 0, 8, 0, 0
-PRODUCTVERSION 0, 8, 0, 0
+FILEVERSION 0, 8, 1, 0
+PRODUCTVERSION 0, 8, 1, 0
 FILETYPE 0x1L
 BEGIN
     BLOCK "StringFileInfo"
@@ -10,14 +10,14 @@ BEGIN
         BLOCK "041504e2"
         BEGIN
             VALUE "CompanyName",        "Magnetic-Fox\0"
-            VALUE "FileVersion",        "0.8\0"
+            VALUE "FileVersion",        "0.81\0"
             VALUE "FileDescription",    "Simple Noter\0"
-            VALUE "InternalName",       "SNotr08.exe\0"
+            VALUE "InternalName",       "SNotr081.exe\0"
             VALUE "LegalCopyright",     "©2021-2024 Magnetic-Fox\0"
             VALUE "LegalTrademarks",    "Noter™\0"
             VALUE "OriginalFilename",   "SimpleNoter.exe\0"
-            VALUE "ProductName",        "Simple Noter v0.8\0"
-            VALUE "ProductVersion",     "0.8\0"
+            VALUE "ProductName",        "Simple Noter v0.81\0"
+            VALUE "ProductVersion",     "0.81\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -358,8 +358,8 @@ END
 STRINGTABLE DISCARDABLE
 BEGIN
     IDS_HELPFILE                        "SNOTER08.HLP"
-    IDS_APPNAME                         "Simple Noter v0.8"
-    IDS_USER_AGENT                      "SimpleNoter/0.8"
+    IDS_APPNAME                         "Simple Noter v0.81"
+    IDS_USER_AGENT                      "SimpleNoter/0.81"
     IDS_STRING_BUILTIN_LANGUAGE         "Polski (wbudowany)"
     IDS_STRING_NEW_NOTE                 "~ Nowa notatka ~ - "
     IDS_STRING_WRONG_RESPONSE           "Nie uda³o siê po³¹czyæ z serwerem."
@@ -466,4 +466,15 @@ BEGIN
     IDS_STRING_BOTH_SPACED_AND          " oraz "
     IDS_STRING_OF_ENTRY                 "treœci"
     IDS_STRING_COULD_NOT_CONVERT_LOSS   " nie uda³o siê skonwertowaæ do UTF-8.\nCzêœæ danych mog³a zostaæ utracona."
+    IDS_STRING_LIB_CODEPAGE_DEFINITION  "definicja strony kodowej"
+    IDS_STRING_LIB_LANGUAGE_PACK        "pakiet jêzykowy"
+    IDS_STRING_LIB_UNKNOWN              "nieznany"
+    IDS_STRING_LIB_INFO                 "Informacje o bibliotece"
+    IDS_STRING_LIB_TYPE                 "Typ:\t\t\t"
+    IDS_STRING_LIB_CODEPAGE             "Strona kodowa:\t\t"
+    IDS_STRING_LIB_USES_DWORD           "Poszerzona iloœæ bajtów:\t"
+    IDS_STRING_LIB_YES                  "TAK"
+    IDS_STRING_LIB_NO                   "NIE"
+    IDS_STRING_LIB_REVISION             "Data rewizji:\t\t"
+    IDS_STRING_LIB_AUTHOR               "Autor biblioteki:\t\t"
 END

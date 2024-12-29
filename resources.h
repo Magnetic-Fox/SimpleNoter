@@ -316,5 +316,16 @@
 #define IDS_STRING_BOTH_SPACED_AND          3106
 #define IDS_STRING_OF_ENTRY                 3107
 #define IDS_STRING_COULD_NOT_CONVERT_LOSS   3108
+#define IDS_STRING_LIB_CODEPAGE_DEFINITION  3109
+#define IDS_STRING_LIB_LANGUAGE_PACK        3110
+#define IDS_STRING_LIB_UNKNOWN              3111
+#define IDS_STRING_LIB_INFO                 3112
+#define IDS_STRING_LIB_TYPE                 3113
+#define IDS_STRING_LIB_CODEPAGE             3114
+#define IDS_STRING_LIB_USES_DWORD           3115
+#define IDS_STRING_LIB_YES                  3116
+#define IDS_STRING_LIB_NO                   3117
+#define IDS_STRING_LIB_REVISION             3118
+#define IDS_STRING_LIB_AUTHOR               3119
 
 #endif
