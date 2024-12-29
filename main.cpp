@@ -32,11 +32,12 @@
 HBRUSH                      g_hBrushBtnFace=CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
 HBRUSH                      g_hBrushActCapt=CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
 HBRUSH                      g_hBrushWindow= CreateSolidBrush(GetSysColor(COLOR_WINDOW));
+HBRUSH                      g_hBrushWinText=CreateSolidBrush(GetSysColor(COLOR_WINDOWTEXT));
 HWND                        g_hwnd;
 HINSTANCE                   hCodePageLib=NULL;
 HGLOBAL                     hCodePageDefinition=NULL;
 MSG                         *g_Msg;
-RECT                        tempRect={0};
+HFONT                       hUnderlinedFont=NULL;
 
 // Own types
 WINDOWMEMORY                winMem;
@@ -55,7 +56,7 @@ long int                    mainLastResult=0;
 long int                    *minID, *maxID;
 unsigned int                ctlRegs=0;
 std::string                 *minLM, *maxLM;
-bool                        check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged, cpHover=false;
+bool                        check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged, cpHover=false, cpClick=false;
 char                        buffer[65536];
 
 //////////////////////////////////////
@@ -85,6 +86,20 @@ BOOL CALLBACK PassConfirmDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK PassChangeDlgProc (HWND, UINT, WPARAM, LPARAM);
 
 BOOL CALLBACK NotesExpDlgProc   (HWND, UINT, WPARAM, LPARAM);
+
+void prepareUnderlinedFontObject(void) {
+    LOGFONT logFont;
+    GetObject((HFONT)GetStockObject(SYSTEM_FONT),sizeof(LOGFONT),&logFont);
+    logFont.lfUnderline=TRUE;
+    hUnderlinedFont=CreateFontIndirect(&logFont);
+    return;
+}
+
+COLORREF getBrushColor(HBRUSH hBrush) {
+    LOGBRUSH logBrush;
+    GetObject(hBrush,sizeof(LOGBRUSH),&logBrush);
+    return logBrush.lbColor;
+}
 
 //////////////////////////////////////
 //
@@ -251,6 +266,8 @@ void freeGlobalResources(void) {
     DeleteObject(g_hBrushBtnFace);
     DeleteObject(g_hBrushActCapt);
     DeleteObject(g_hBrushWindow);
+    DeleteObject(g_hBrushWinText);
+    DeleteObject(hUnderlinedFont);
     unloadCodePage(hCodePageLib,hCodePageDefinition);
     return;
 }
@@ -324,6 +341,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     storeCredentialsReference(          &credentials);
     storeGlobalHWNDReference(           &g_hwnd);
     storeWindowMemoryReference(         &winMem);
+    prepareUnderlinedFontObject();
 
     WNDCLASS wc = { 0 };
     WNDCLASS wc2= { 0 };
@@ -1455,6 +1473,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
     LIB_ITER lIt;
     unsigned int counter, counter2, selectedIndex, selectedIndex2;
     POINT mousePosition;
+    RECT tempRect;
     HDC hdc;
     // Switch section
     switch(msg) {
@@ -1528,7 +1547,6 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
             EnableWindow(GetDlgItem(hwnd,IDC_EDITSCHECK),   enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_COMBOSCHECK),  enabled);
             EnableWindow(GetDlgItem(hwnd,IDC_DIALOGSCHECK), enabled);
-            GetWindowRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),&tempRect);
             break;
         case WM_COMMAND:
             switch(wParam) {
@@ -1630,18 +1648,45 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                     break;
             }
             break;
+        case WM_LBUTTONDOWN:
+            GetWindowRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),&tempRect);
+            GetCursorPos(&mousePosition);
+            if(PtInRect(&tempRect,mousePosition)) {
+                if(!cpClick) {
+                    cpClick=true;
+                }
+            }
+            break;
+        case WM_LBUTTONUP:
+            GetWindowRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),&tempRect);
+            GetCursorPos(&mousePosition);
+            if(PtInRect(&tempRect,mousePosition)) {
+                if(cpClick) {
+                    // TODO: add something AT THIS POINT!
+                    cpHover=false;
+                    InvalidateRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),NULL,TRUE);
+                    SendMessage(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),WM_SETFONT,(WPARAM)(HFONT)GetStockObject(SYSTEM_FONT),0);
+                }
+            }
+            if(cpClick) {
+                cpClick=false;
+            }
+            break;
         case WM_MOUSEMOVE:
+            GetWindowRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),&tempRect);
             GetCursorPos(&mousePosition);
             if(PtInRect(&tempRect,mousePosition)) {
                 if(!cpHover) {
                     cpHover=true;
                     InvalidateRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),NULL,TRUE);
+                    SendMessage(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),WM_SETFONT,(WPARAM)hUnderlinedFont,0);
                 }
             }
             else {
                 if(cpHover) {
                     cpHover=false;
                     InvalidateRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),NULL,TRUE);
+                    SendMessage(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),WM_SETFONT,(WPARAM)(HFONT)GetStockObject(SYSTEM_FONT),0);
                 }
             }
             break;
@@ -1653,7 +1698,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                         SetTextColor(hdc,RGB(0,0,255));
                     }
                     else {
-                        SetTextColor(hdc,RGB(0,0,0));
+                        SetTextColor(hdc,getBrushColor(g_hBrushWinText));
                     }
                     SetBkMode(hdc,TRANSPARENT);
                     return (LRESULT)g_hBrushBtnFace;
@@ -1664,9 +1709,8 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
             EndDialog(hwnd,IDCANCEL);
             break;
         case WM_DESTROY:
-            if(cpHover) {
-                cpHover=false;
-            }
+            cpHover=false;
+            cpClick=false;
             break;
         default:
             return FALSE;
