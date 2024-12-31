@@ -34,10 +34,10 @@ HBRUSH                      g_hBrushActCapt=CreateSolidBrush(GetSysColor(COLOR_A
 HBRUSH                      g_hBrushWindow= CreateSolidBrush(GetSysColor(COLOR_WINDOW));
 HBRUSH                      g_hBrushWinText=CreateSolidBrush(GetSysColor(COLOR_WINDOWTEXT));
 HWND                        g_hwnd;
-HINSTANCE                   hCodePageLib=NULL;
-HGLOBAL                     hCodePageDefinition=NULL;
 MSG                         *g_Msg;
 HFONT                       hUnderlinedFont=prepareUnderlinedFontObject();
+HINSTANCE                   hCodePageLib=NULL;
+HGLOBAL                     hCodePageDefinition=NULL;
 
 // Own types
 WINDOWMEMORY                winMem;
@@ -739,7 +739,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     SetWindowText(GetDlgItem(hwnd,IDC_STATUS),getStringFromTable(IDS_STRING_CREATING_EDIT_WINDOW));
                     if(createEditWindow(hwnd,GetWindowWord(hwnd,GWW_HINSTANCE),winMem,NULL)==NULL) {
                         SetWindowText(GetDlgItem(hwnd,IDC_STATUS),getStringFromTable(IDS_STRING_EDITWIN_CREATE_ERROR));
-                        mainLastResult=-2048;
+                        mainLastResult=ERROR_PROGRAM_FAILURE;
                     }
                     else {
                         SetWindowText(GetDlgItem(hwnd,IDC_STATUS),(char*)noter_getAnswerString(INFO_OK).c_str());
@@ -781,7 +781,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                                     }
                                     else {
                                         SetWindowText(GetDlgItem(hwnd,IDC_STATUS),getStringFromTable(IDS_STRING_EDITWIN_CREATE_ERROR));
-                                        mainLastResult=-2048;
+                                        mainLastResult=ERROR_PROGRAM_FAILURE;
                                         ++errorCount;
                                     }
                                 }

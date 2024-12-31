@@ -47,4 +47,6 @@
 #define CHANGE_ACTION           "change"
 #define REMOVE_ACTION           "remove"
 
+#define ERROR_PROGRAM_FAILURE   -2048
+
 #endif
