@@ -39,7 +39,7 @@ As JSON and Noter backend itself utilizes UTF-8, there is need to convert text t
 * I've implemented 1250 codepage translation table only (which is used mostly in Polish Windows distributions). If You like to use this program with Your own codepage, You'll have to create conversion table on Your own according to the `CP1250-DLL` repository.
 * Converting from ANSI to UTF-8 and then to URL encoded takes huge amounts of memory and can quickly exceed 32K size of internal string variable even if written text is not so long. This will cause string class to reallocate internal buffer and make it twice as big, which unfortunately causes program to hang (at least under Windows XP). I'm not sure why this happens (OS should not allow allocating too big memory section when using non-huge pointers or at least Watcom compiler should be aware of this problem). Probably the best solution for this would be to program own memory handler and simple "string-like" class. As this would take huge amount of time to do, I haven't done it for now - maybe someday.
 
-## Tests information
+## Testing information
 
 The program was tested under Windows XP (32-bit version running at 64-bit Intel Pentium), under Windows for Workgroups 3.11 (running on Intel 386) and under Linux Mint (using Wine).
 
