@@ -28,6 +28,5 @@ unsigned short int getLibType(HINSTANCE);
 std::string getCodePageInfo(HINSTANCE);
 bool listAvailableLibs(char*, LIBRARIES&);
 std::string findAnyCodePage(LIBRARIES&);
-void simpleLibInfo(HWND, HINSTANCE);
 
 #endif

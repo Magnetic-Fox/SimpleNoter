@@ -91,39 +91,3 @@ std::string findAnyCodePage(LIBRARIES &libraries) {
     }
     return selectedFile;
 }
-
-void simpleLibInfo(HWND hwnd, HINSTANCE hLib) {
-    char test[64]; 
-    std::string preparedMessage=getStringFromTable(IDS_STRING_LIB_INFO);
-    preparedMessage+="\n\n";
-    preparedMessage+=getStringFromTable(IDS_STRING_LIB_TYPE);
-    LoadString(hLib,IDS_LIBTYPE,test,64);
-    if(((std::string)test)==STR_CODEPAGE) {
-        preparedMessage+=getStringFromTable(IDS_STRING_LIB_CODEPAGE_DEFINITION);
-        preparedMessage+="\n";
-        preparedMessage+=getStringFromTable(IDS_STRING_LIB_CODEPAGE);
-        LoadString(hLib,IDS_CPNAME,test,64);
-        preparedMessage+=test;
-        preparedMessage+="\n";
-        preparedMessage+=getStringFromTable(IDS_STRING_LIB_USES_DWORD);
-        LoadString(hLib,IDS_USEDWORD,test,64);
-        preparedMessage+=(((std::string)test=="0")?getStringFromTable(IDS_STRING_LIB_NO):getStringFromTable(IDS_STRING_LIB_YES));
-    }
-    else if (((std::string)test)==STR_STRINGTABLE) {
-        preparedMessage+=getStringFromTable(IDS_STRING_LIB_LANGUAGE_PACK);
-        // TODO: get more info
-    }
-    else {
-        preparedMessage+=getStringFromTable(IDS_STRING_LIB_UNKNOWN);
-    }
-    preparedMessage+="\n";
-    preparedMessage+=getStringFromTable(IDS_STRING_LIB_REVISION);
-    LoadString(hLib,IDS_REVDATE,test,64);
-    preparedMessage+=test;
-    preparedMessage+="\n";
-    preparedMessage+=getStringFromTable(IDS_STRING_LIB_AUTHOR);
-    LoadString(hLib,IDS_AUTHOR,test,64);
-    preparedMessage+=test;
-    MessageBox(hwnd,preparedMessage.c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONINFORMATION);
-    return;
-}
