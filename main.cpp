@@ -86,6 +86,7 @@ BOOL CALLBACK PassConfirmDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK PassChangeDlgProc (HWND, UINT, WPARAM, LPARAM);
 
 BOOL CALLBACK NotesExpDlgProc   (HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK LibInfoDlgProc    (HWND, UINT, WPARAM, LPARAM);
 
 //////////////////////////////////////
 //
@@ -1664,7 +1665,8 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
             GetCursorPos(&mousePosition);
             if(PtInRect(&tempRect,mousePosition)) {
                 if(cpClick) {
-                    simpleLibInfo(hwnd,hCodePageLib);
+                    //simpleLibInfo(hwnd,hCodePageLib);
+                    MakeDialogBoxParam(hwnd,IDD_LIBINFO,LibInfoDlgProc,(LPARAM)hCodePageLib);
                     cpHover=false;
                     InvalidateRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),NULL,TRUE);
                     SendMessage(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),WM_SETFONT,(WPARAM)(HFONT)GetStockObject(SYSTEM_FONT),0);
@@ -2459,6 +2461,55 @@ BOOL CALLBACK NotesExpDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             break;
         case WM_CLOSE:
             EndDialog(hwnd,IDCANCEL);
+            break;
+        default:
+            return FALSE;
+    }
+    return TRUE;
+}
+
+//////////////////////////////////////
+//
+//  LIBRARY INFORMATION DIALOG PROCEDURE
+//
+//////////////////////////////////////
+
+// Library information dialog message processing function
+BOOL CALLBACK LibInfoDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    static char test[64];
+    // Switch section
+    switch(msg) {
+        case WM_INITDIALOG:
+            test[0]=0x00;
+            LoadString((HINSTANCE)lParam,IDS_LIBTYPE,test,64);
+            if(((std::string)test)==STR_CODEPAGE) {
+                SetWindowText(GetDlgItem(hwnd,IDC_LIBTYPEDATA),getStringFromTable(IDS_STRING_LIB_CODEPAGE_DEFINITION));
+                LoadString((HINSTANCE)lParam,IDS_CPNAME,test,64);
+                SetWindowText(GetDlgItem(hwnd,IDC_LIBLINE1DATA),test);
+                LoadString((HINSTANCE)lParam,IDS_USEDWORD,test,64);
+                SetWindowText(GetDlgItem(hwnd,IDC_LIBLINE2DATA),(((std::string)test=="0")?getStringFromTable(IDS_STRING_LIB_NO):getStringFromTable(IDS_STRING_LIB_YES)));
+            }
+            else if (((std::string)test)==STR_STRINGTABLE) {
+                SetWindowText(GetDlgItem(hwnd,IDC_LIBTYPEDATA),getStringFromTable(IDS_STRING_LIB_LANGUAGE_PACK));
+                // TODO: get more info
+            }
+            else {
+                SetWindowText(GetDlgItem(hwnd,IDC_LIBTYPEDATA),getStringFromTable(IDS_STRING_LIB_UNKNOWN));
+            }
+            LoadString((HINSTANCE)lParam,IDS_REVDATE,test,64);
+            SetWindowText(GetDlgItem(hwnd,IDC_LIBLINE3DATA),test);
+            LoadString((HINSTANCE)lParam,IDS_AUTHOR,test,64);
+            SetWindowText(GetDlgItem(hwnd,IDC_LIBLINE4DATA),test);
+            break;
+        case WM_COMMAND:
+            switch(wParam) {
+                case IDOK:
+                    EndDialog(hwnd,IDOK);
+                    break;
+            }
+            break;
+        case WM_CLOSE:
+            EndDialog(hwnd,IDOK);
             break;
         default:
             return FALSE;
