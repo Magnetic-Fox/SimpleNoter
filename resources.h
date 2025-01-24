@@ -206,6 +206,20 @@
 #define IDC_EXPORTSETTINGSSTATIC            1422
 #define IDC_PROGRESSSTATIC                  1423
 
+// Library information dialog
+#define IDD_LIBINFO                         1500
+#define IDC_DLLINFORMATION                  1501
+#define IDC_LIBTYPE                         1502
+#define IDC_LIBLINE1                        1503
+#define IDC_LIBLINE2                        1504
+#define IDC_LIBLINE3                        1505
+#define IDC_LIBLINE4                        1506
+#define IDC_LIBTYPEDATA                     1507
+#define IDC_LIBLINE1DATA                    1508
+#define IDC_LIBLINE2DATA                    1509
+#define IDC_LIBLINE3DATA                    1510
+#define IDC_LIBLINE4DATA                    1511
+
 // String table constants
 #define IDS_HELPFILE                        3000
 #define IDS_APPNAME                         3001

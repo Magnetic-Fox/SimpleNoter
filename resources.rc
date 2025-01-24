@@ -355,6 +355,25 @@ BEGIN
     PUSHBUTTON      "&Zamknij",IDCANCEL,143,239,50,14
 END
 
+IDD_LIBINFO DIALOG DISCARDABLE  0, 0, 210, 82
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Informacje o bibliotece"
+FONT 10, "System"
+BEGIN
+    DEFPUSHBUTTON   "&OK",IDOK,153,7,50,14
+    LTEXT           "Informacje o bibliotece DLL",IDC_DLLINFORMATION,7,7,142,8
+    LTEXT           "Typ biblioteki:",IDC_LIBTYPE,7,27,86,8
+    LTEXT           "Strona kodowa:",IDC_LIBLINE1,7,37,86,8
+    LTEXT           "Wykorzystuje DWORD:",IDC_LIBLINE2,7,47,86,8
+    LTEXT           "Data rewizji:",IDC_LIBLINE3,7,57,86,8
+    LTEXT           "Autor biblioteki:",IDC_LIBLINE4,7,67,86,8
+    LTEXT           "?",IDC_LIBTYPEDATA,96,27,107,8
+    LTEXT           "?",IDC_LIBLINE1DATA,96,37,107,8
+    LTEXT           "?",IDC_LIBLINE2DATA,96,47,107,8
+    LTEXT           "?",IDC_LIBLINE3DATA,96,57,107,8
+    LTEXT           "?",IDC_LIBLINE4DATA,96,67,107,8
+END
+
 STRINGTABLE DISCARDABLE
 BEGIN
     IDS_HELPFILE                        "SNOTER08.HLP"
@@ -470,11 +489,11 @@ BEGIN
     IDS_STRING_LIB_LANGUAGE_PACK        "pakiet jêzykowy"
     IDS_STRING_LIB_UNKNOWN              "nieznany"
     IDS_STRING_LIB_INFO                 "Informacje o bibliotece"
-    IDS_STRING_LIB_TYPE                 "Typ biblioteki:\t\t"
-    IDS_STRING_LIB_CODEPAGE             "Strona kodowa:\t\t"
-    IDS_STRING_LIB_USES_DWORD           "Wykorzystuje DWORD:\t"
+    IDS_STRING_LIB_TYPE                 "Typ biblioteki:"
+    IDS_STRING_LIB_CODEPAGE             "Strona kodowa:"
+    IDS_STRING_LIB_USES_DWORD           "Wykorzystuje DWORD:"
     IDS_STRING_LIB_YES                  "TAK"
     IDS_STRING_LIB_NO                   "NIE"
-    IDS_STRING_LIB_REVISION             "Data rewizji:\t\t"
-    IDS_STRING_LIB_AUTHOR               "Autor biblioteki:\t\t"
+    IDS_STRING_LIB_REVISION             "Data rewizji:"
+    IDS_STRING_LIB_AUTHOR               "Autor biblioteki:"
 END
