@@ -13,7 +13,7 @@ BEGIN
             VALUE "FileVersion",        "0.81\0"
             VALUE "FileDescription",    "Simple Noter\0"
             VALUE "InternalName",       "SNotr081.exe\0"
-            VALUE "LegalCopyright",     "©2021-2024 Magnetic-Fox\0"
+            VALUE "LegalCopyright",     "©2021-2025 Magnetic-Fox\0"
             VALUE "LegalTrademarks",    "Noter™\0"
             VALUE "OriginalFilename",   "SimpleNoter.exe\0"
             VALUE "ProductName",        "Simple Noter v0.81\0"
@@ -154,7 +154,7 @@ BEGIN
                     36,105,149,8
     LTEXT           "bzip2.c ©1996, 1997 Julian Seward\n    with patch ©2024 Magnetic-Fox",
                     IDC_BZIP2STATIC,36,115,149,16
-    LTEXT           "©2021-2024 Bart³omiej ""Magnetic-Fox"" Wêgrzyn",
+    LTEXT           "©2021-2025 Bart³omiej ""Magnetic-Fox"" Wêgrzyn",
                     IDC_AUTHORCOPYRIGHTSTATIC,28,143,175,8
     DEFPUSHBUTTON   "&OK",IDOK,153,7,50,14
 END
