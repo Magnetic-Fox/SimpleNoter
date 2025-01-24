@@ -1440,8 +1440,6 @@ BOOL CALLBACK NotePropDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 // Program information dialog message processing function
 BOOL CALLBACK AboutDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    // Local variables
-    NOTE tempNote;
     // Switch section
     switch(msg) {
         case WM_INITDIALOG:
@@ -1665,7 +1663,6 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
             GetCursorPos(&mousePosition);
             if(PtInRect(&tempRect,mousePosition)) {
                 if(cpClick) {
-                    //simpleLibInfo(hwnd,hCodePageLib);
                     MakeDialogBoxParam(hwnd,IDD_LIBINFO,LibInfoDlgProc,(LPARAM)hCodePageLib);
                     cpHover=false;
                     InvalidateRect(GetDlgItem(hwnd,IDC_CODEPAGESTATIC),NULL,TRUE);
