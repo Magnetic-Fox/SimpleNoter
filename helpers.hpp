@@ -46,6 +46,7 @@ void inline credentials_UnlockAllButtons(HWND);
 void inline userEdit_LockAllButtons(HWND);
 void inline userEdit_UnlockAllButtons(HWND);
 long int inline MakeDialogBox(HWND, unsigned int, void*);
+long int inline MakeDialogBoxParam(HWND, unsigned int, void*, LPARAM);
 void inline processMessages(MSG*);
 void inline storeConnectionSettingsReference(NOTER_CONNECTION_SETTINGS*);
 void inline storeCredentialsReference(NOTER_CREDENTIALS*);
@@ -199,6 +200,15 @@ long int inline MakeDialogBox(HWND hwnd, unsigned int type, void* procedure) {
     HANDLE instHandle=(HINSTANCE)GetWindowWord(hwnd,GWW_HINSTANCE);
     FARPROC proc=MakeProcInstance((FARPROC)procedure, instHandle);
     result=DialogBox(instHandle, MAKEINTRESOURCE(type), hwnd, (DLGPROC)proc);
+    FreeProcInstance(proc);
+    return result;
+}
+
+long int inline MakeDialogBoxParam(HWND hwnd, unsigned int type, void* procedure, LPARAM parameter) {
+    long int result;
+    HANDLE instHandle=(HINSTANCE)GetWindowWord(hwnd,GWW_HINSTANCE);
+    FARPROC proc=MakeProcInstance((FARPROC)procedure, instHandle);
+    result=DialogBoxParam(instHandle, MAKEINTRESOURCE(type), hwnd, (DLGPROC)proc, parameter);
     FreeProcInstance(proc);
     return result;
 }
