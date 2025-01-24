@@ -1,8 +1,8 @@
 #include "resources.h"
 
 VS_VERSION VERSIONINFO
-FILEVERSION 0, 8, 1, 0
-PRODUCTVERSION 0, 8, 1, 0
+FILEVERSION 0, 8, 2, 0
+PRODUCTVERSION 0, 8, 2, 0
 FILETYPE 0x1L
 BEGIN
     BLOCK "StringFileInfo"
@@ -10,14 +10,14 @@ BEGIN
         BLOCK "041504e2"
         BEGIN
             VALUE "CompanyName",        "Magnetic-Fox\0"
-            VALUE "FileVersion",        "0.81\0"
+            VALUE "FileVersion",        "0.82\0"
             VALUE "FileDescription",    "Simple Noter\0"
-            VALUE "InternalName",       "SNotr081.exe\0"
+            VALUE "InternalName",       "SNotr082.exe\0"
             VALUE "LegalCopyright",     "©2021-2025 Magnetic-Fox\0"
             VALUE "LegalTrademarks",    "Noter™\0"
             VALUE "OriginalFilename",   "SimpleNoter.exe\0"
-            VALUE "ProductName",        "Simple Noter v0.81\0"
-            VALUE "ProductVersion",     "0.81\0"
+            VALUE "ProductName",        "Simple Noter v0.82\0"
+            VALUE "ProductVersion",     "0.82\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -377,8 +377,8 @@ END
 STRINGTABLE DISCARDABLE
 BEGIN
     IDS_HELPFILE                        "SNOTER08.HLP"
-    IDS_APPNAME                         "Simple Noter v0.81"
-    IDS_USER_AGENT                      "SimpleNoter/0.81"
+    IDS_APPNAME                         "Simple Noter v0.82"
+    IDS_USER_AGENT                      "SimpleNoter/0.82"
     IDS_STRING_BUILTIN_LANGUAGE         "Polski (wbudowany)"
     IDS_STRING_NEW_NOTE                 "~ Nowa notatka ~ - "
     IDS_STRING_WRONG_RESPONSE           "Nie uda³o siê po³¹czyæ z serwerem."
