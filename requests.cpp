@@ -138,8 +138,8 @@ std::string prepareContent(char* action, char* username, char* password, char* s
 
 unsigned int makeRequest(char* serverAddress, unsigned int port, char* method, char* place, char* userAgent, char* contentType, char* content, HEADERS &headers, char* output) {
     unsigned int pos=0;
+    char *temp;
     SOCKET mainSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    
     if(mainSocket == INVALID_SOCKET) {
         return INVALID_SOCKET;
     }
@@ -147,9 +147,14 @@ unsigned int makeRequest(char* serverAddress, unsigned int port, char* method, c
         sockaddr_in service;
         memset(&service, 0, sizeof(service));
         service.sin_family = AF_INET;
-        service.sin_addr.s_addr = inet_addr(getHostIP(serverAddress));
+        temp=getHostIP(serverAddress);
+        if(temp==NULL) {
+            service.sin_addr.s_addr = inet_addr(serverAddress);
+        }
+        else {
+            service.sin_addr.s_addr = inet_addr(temp);
+        }
         service.sin_port = htons(port);
-
         if(connect(mainSocket, (SOCKADDR *) &service, sizeof(service)) == SOCKET_ERROR) {
             return 0;
         }
@@ -170,18 +175,14 @@ unsigned int makeRequest(char* serverAddress, unsigned int port, char* method, c
                     return 0;
                 }
             }
-
             std::string oneline="";
             char lastCharacter=0x00;
             bool first=true, readingHeaders=true;
-
             while(true) {
                 bytesRecv = recv(mainSocket, recvbuf, 2048, 0);
-
                 if(bytesRecv == 0 || bytesRecv == WSAECONNRESET) {
                     break;
                 }
-
                 for(unsigned int x=0; x<bytesRecv; ++x) {
                     if(readingHeaders) {
                         if(recvbuf[x]>=0x20) {
