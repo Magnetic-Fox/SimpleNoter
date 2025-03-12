@@ -2194,30 +2194,48 @@ BOOL CALLBACK UserRegDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         break;
                     }
                     GetWindowText(GetDlgItem(hwnd,IDC_REGUSERNAMEEDIT),buffer,65535);
-                    tempUserName=buffer;
-                    GetWindowText(GetDlgItem(hwnd,IDC_REGPASSWORDEDIT),buffer,65535);
-                    tempPassword=buffer;
-                    GetWindowText(GetDlgItem(hwnd,IDC_REGPSREPEATEDIT),buffer,65535);
-                    tempSecPassword=buffer;
-                    if(tempPassword==tempSecPassword) {
-                        tempCredentials.username=tempUserName;
-                        tempCredentials.password=tempPassword;
-                        userEdit_LockAllButtons(hwnd);
-                        result=noter_registerUser(connectionSettings,tempCredentials,buffer);
-                        userEdit_UnlockAllButtons(hwnd);
-                        if(result>=0) {
-                            auxCredentials->username=tempCredentials.username;
-                            auxCredentials->password=tempCredentials.password;
-                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_REGISTRATION_SUCC),getStringFromTable(IDS_APPNAME,1),MB_ICONINFORMATION | MB_OK);
-                            EndDialog(hwnd,IDOK);
-                        }
-                        else {
-                            tempString=(std::string)getStringFromTable(IDS_STRING_MSG_REGISTRATION_ERROR,1)+noter_getAnswerString(result);
-                            MessageBox(hwnd,(char*)tempString.c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
-                        }
+                    trimChar(buffer);
+                    if(buffer[0]==0) {
+                        MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_USERNAME),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
                     }
                     else {
-                        MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_PASSWORDS_NO_MATCH),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
+                        tempUserName=buffer;
+                        GetWindowText(GetDlgItem(hwnd,IDC_REGPASSWORDEDIT),buffer,65535);
+                        trimChar(buffer);
+                        if(buffer[0]==0) {
+                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                        }
+                        else {
+                            tempPassword=buffer;
+                            GetWindowText(GetDlgItem(hwnd,IDC_REGPSREPEATEDIT),buffer,65535);
+                            trimChar(buffer);
+                            if(buffer[0]==0) {
+                                MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                            }
+                            else {
+                                tempSecPassword=buffer;
+                                if(tempPassword==tempSecPassword) {
+                                    tempCredentials.username=tempUserName;
+                                    tempCredentials.password=tempPassword;
+                                    userEdit_LockAllButtons(hwnd);
+                                    result=noter_registerUser(connectionSettings,tempCredentials,buffer);
+                                    userEdit_UnlockAllButtons(hwnd);
+                                    if(result>=0) {
+                                        auxCredentials->username=tempCredentials.username;
+                                        auxCredentials->password=tempCredentials.password;
+                                        MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_REGISTRATION_SUCC),getStringFromTable(IDS_APPNAME,1),MB_ICONINFORMATION | MB_OK);
+                                        EndDialog(hwnd,IDOK);
+                                    }
+                                    else {
+                                        tempString=(std::string)getStringFromTable(IDS_STRING_MSG_REGISTRATION_ERROR,1)+noter_getAnswerString(result);
+                                        MessageBox(hwnd,(char*)tempString.c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
+                                    }
+                                }
+                                else {
+                                    MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_PASSWORDS_NO_MATCH),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
+                                }
+                            }
+                        }
                     }
                     break;
                 case IDCANCEL:
