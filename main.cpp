@@ -1736,7 +1736,8 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     NOTER_SERVER_INFO serverInfo;
     NOTER_CONNECTION_SETTINGS tempConnectionSettings;
     char* ipAddress=NULL;
-    std::string iniFile;
+    std::string iniFile, serverAddress;
+    unsigned int port;
     // Switch section
     switch(msg) {
         case WM_INITDIALOG:
@@ -1767,20 +1768,44 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         break;
                     }
                     GetWindowText(GetDlgItem(hwnd,IDC_PORTEDIT),buffer,65535);
+                    trimChar(buffer);
                     if(checkIfInt(buffer)) {
                         if(editsChanged) {
                             GetWindowText(GetDlgItem(hwnd,IDC_ADDRESSEDIT), buffer,65535);
-                            connectionSettings.serverAddress=buffer;
-                            GetWindowText(GetDlgItem(hwnd,IDC_PORTEDIT),    buffer,65535);
-                            connectionSettings.port=StrToInt(buffer);
-                            GetWindowText(GetDlgItem(hwnd,IDC_SHAREEDIT),   buffer,65535);
-                            connectionSettings.share=buffer;
-                            connectionSettings.requestCompression=IsDlgButtonChecked(hwnd, IDC_COMPRESSIONCHECK)==1;
-                            GetModuleFileName(GetWindowWord(hwnd,GWW_HINSTANCE),buffer,32767);
-                            iniFile=getDefaultIniFile(buffer);
-                            saveConnectionSettings(connectionSettings,(char*)iniFile.c_str());
+                            trimChar(buffer);
+                            if(buffer[0]==0) {
+                                MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_SERVER_ADDRESS),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                            }
+                            else {
+                                serverAddress=buffer;
+                                GetWindowText(GetDlgItem(hwnd,IDC_PORTEDIT),    buffer,65535);
+                                trimChar(buffer);
+                                if(buffer[0]==0) {
+                                    MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PORT_NUMBER),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                                }
+                                else {
+                                    port=StrToInt(buffer);
+                                    GetWindowText(GetDlgItem(hwnd,IDC_SHAREEDIT),   buffer,65535);
+                                    trimChar(buffer);
+                                    if(buffer[0]==0) {
+                                        MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_SHARE),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                                    }
+                                    else {
+                                        connectionSettings.serverAddress=serverAddress;
+                                        connectionSettings.port=port;
+                                        connectionSettings.share=buffer;
+                                        connectionSettings.requestCompression=IsDlgButtonChecked(hwnd, IDC_COMPRESSIONCHECK)==1;
+                                        GetModuleFileName(GetWindowWord(hwnd,GWW_HINSTANCE),buffer,32767);
+                                        iniFile=getDefaultIniFile(buffer);
+                                        saveConnectionSettings(connectionSettings,(char*)iniFile.c_str());
+                                        EndDialog(hwnd,IDOK);
+                                    }
+                                }
+                            }
                         }
-                        EndDialog(hwnd,IDOK);
+                        else {
+                            EndDialog(hwnd,IDOK);
+                        }
                     }
                     else {
                         MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PORT_NUMBER),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
@@ -1800,27 +1825,46 @@ BOOL CALLBACK ConnSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         break;
                     }
                     GetWindowText(GetDlgItem(hwnd,IDC_PORTEDIT),buffer,65535);
+                    trimChar(buffer);
                     if(checkIfInt(buffer)) {
                         GetWindowText(GetDlgItem(hwnd,IDC_ADDRESSEDIT), buffer,65535);
-                        tempConnectionSettings.serverAddress=buffer;
-                        GetWindowText(GetDlgItem(hwnd,IDC_PORTEDIT),    buffer,65535);
-                        tempConnectionSettings.port=StrToInt(buffer);
-                        GetWindowText(GetDlgItem(hwnd,IDC_SHAREEDIT),   buffer,65535);
-                        tempConnectionSettings.share=buffer;
-                        connection_LockAllButtons(hwnd);
-                        serverInfo=noter_getServerInfo(tempConnectionSettings,buffer);
-                        connection_UnlockAllButtons(hwnd);
-                        if(noter_checkServerVersion(serverInfo)) {
-                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERNAMESTATIC),    (char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
-                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERTIMEZONESTATIC),(char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
-                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERVERSIONSTATIC), (char*)toCodePage(mappedCodePage,(char*)serverInfo.version.c_str()).c_str());
-                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_CONN_ESTABLISHED),getStringFromTable(IDS_STRING_INFORMATION,1),MB_ICONINFORMATION | MB_OK);
+                        trimChar(buffer);
+                        if(buffer[0]==0) {
+                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_SERVER_ADDRESS),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
                         }
                         else {
-                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERNAMESTATIC),    getStringFromTable(IDS_STRING_NOT_CONNECTED));
-                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERTIMEZONESTATIC),getStringFromTable(IDS_STRING_NOT_CONNECTED));
-                            SetWindowText(GetDlgItem(hwnd,IDC_SERVERVERSIONSTATIC), getStringFromTable(IDS_STRING_NOT_CONNECTED));
-                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_CONNECTION_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                            tempConnectionSettings.serverAddress=buffer;
+                            GetWindowText(GetDlgItem(hwnd,IDC_PORTEDIT),    buffer,65535);
+                            trimChar(buffer);
+                            if(buffer[0]==0) {
+                                MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PORT_NUMBER),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                            }
+                            else {
+                                tempConnectionSettings.port=StrToInt(buffer);
+                                GetWindowText(GetDlgItem(hwnd,IDC_SHAREEDIT),   buffer,65535);
+                                trimChar(buffer);
+                                if(buffer[0]==0) {
+                                    MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_SHARE),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                                }
+                                else {
+                                    tempConnectionSettings.share=buffer;
+                                    connection_LockAllButtons(hwnd);
+                                    serverInfo=noter_getServerInfo(tempConnectionSettings,buffer);
+                                    connection_UnlockAllButtons(hwnd);
+                                    if(noter_checkServerVersion(serverInfo)) {
+                                        SetWindowText(GetDlgItem(hwnd,IDC_SERVERNAMESTATIC),    (char*)toCodePage(mappedCodePage,(char*)serverInfo.name.c_str()).c_str());
+                                        SetWindowText(GetDlgItem(hwnd,IDC_SERVERTIMEZONESTATIC),(char*)toCodePage(mappedCodePage,(char*)serverInfo.timezone.c_str()).c_str());
+                                        SetWindowText(GetDlgItem(hwnd,IDC_SERVERVERSIONSTATIC), (char*)toCodePage(mappedCodePage,(char*)serverInfo.version.c_str()).c_str());
+                                        MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_CONN_ESTABLISHED),getStringFromTable(IDS_STRING_INFORMATION,1),MB_ICONINFORMATION | MB_OK);
+                                    }
+                                    else {
+                                        SetWindowText(GetDlgItem(hwnd,IDC_SERVERNAMESTATIC),    getStringFromTable(IDS_STRING_NOT_CONNECTED));
+                                        SetWindowText(GetDlgItem(hwnd,IDC_SERVERTIMEZONESTATIC),getStringFromTable(IDS_STRING_NOT_CONNECTED));
+                                        SetWindowText(GetDlgItem(hwnd,IDC_SERVERVERSIONSTATIC), getStringFromTable(IDS_STRING_NOT_CONNECTED));
+                                        MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_CONNECTION_ERROR),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                                    }
+                                }
+                            }
                         }
                     }
                     else {
