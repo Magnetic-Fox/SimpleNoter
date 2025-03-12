@@ -2280,11 +2280,11 @@ BOOL CALLBACK UserRegDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 
 //////////////////////////////////////
 //
-//  PASSWORD CONFIRMATION DIALOG PROCEDURE
+//  PASSWORD CONFIRMATION DIALOG PROCEDURE (USER REMOVAL)
 //
 //////////////////////////////////////
 
-// Password confirmation dialog message processing function
+// Password confirmation dialog message processing function (user removal)
 BOOL CALLBACK PassConfirmDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     // Local variables
     long int result;
@@ -2301,20 +2301,26 @@ BOOL CALLBACK PassConfirmDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                         break;
                     }
                     GetWindowText(GetDlgItem(hwnd,IDC_ACCREMPASSWORDEDIT),buffer,65535);
-                    tempSecPassword=buffer;
-                    if(tempSecPassword==auxCredentials->password) {
-                        result=noter_removeUser(connectionSettings,*auxCredentials,buffer);
-                        if(result>=0) {
-                            tempString=(std::string)getStringFromTable(IDS_STRING_MSG_USER_SPACED)+auxCredentials->username+(std::string)getStringFromTable(IDS_STRING_MSG_USER_DELETED_SPACED,1);
-                            MessageBox(hwnd,(char*)tempString.c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONINFORMATION | MB_OK);
-                            EndDialog(hwnd,IDOK);
-                        }
-                        else {
-                            MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
-                        }
+                    trimChar(buffer);
+                    if(buffer[0]==0) {
+                        MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
                     }
                     else {
-                        MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
+                        tempSecPassword=buffer;
+                        if(tempSecPassword==auxCredentials->password) {
+                            result=noter_removeUser(connectionSettings,*auxCredentials,buffer);
+                            if(result>=0) {
+                                tempString=(std::string)getStringFromTable(IDS_STRING_MSG_USER_SPACED)+auxCredentials->username+(std::string)getStringFromTable(IDS_STRING_MSG_USER_DELETED_SPACED,1);
+                                MessageBox(hwnd,(char*)tempString.c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONINFORMATION | MB_OK);
+                                EndDialog(hwnd,IDOK);
+                            }
+                            else {
+                                MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
+                            }
+                        }
+                        else {
+                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
+                        }
                     }
                     break;
                 case IDCANCEL:
