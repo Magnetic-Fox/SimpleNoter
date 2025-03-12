@@ -147,12 +147,20 @@ unsigned int makeRequest(char* serverAddress, unsigned int port, char* method, c
         sockaddr_in service;
         memset(&service, 0, sizeof(service));
         service.sin_family = AF_INET;
-        temp=getHostIP(serverAddress);
-        if(temp==NULL) {
-            service.sin_addr.s_addr = inet_addr(serverAddress);
+        if(serverAddress!=NULL) {
+            service.sin_addr.s_addr=inet_addr(serverAddress);
+            if((service.sin_addr.s_addr==INADDR_NONE) || (service.sin_addr.s_addr==INADDR_ANY)) {
+                temp=getHostIP(serverAddress);
+                if(temp==NULL) {
+                    return 0;
+                }
+                else {
+                    service.sin_addr.s_addr = inet_addr(temp);
+                }
+            }
         }
         else {
-            service.sin_addr.s_addr = inet_addr(temp);
+            return 0;
         }
         service.sin_port = htons(port);
         if(connect(mainSocket, (SOCKADDR *) &service, sizeof(service)) == SOCKET_ERROR) {
@@ -162,11 +170,8 @@ unsigned int makeRequest(char* serverAddress, unsigned int port, char* method, c
             int bytesSent;
             int bytesRecv;
             char recvbuf[2048];
-
             std::string req=prepareRequest(method,place,userAgent,serverAddress,port,contentType,content);
-
             bytesSent = send(mainSocket, req.c_str(), strlen(req.c_str()), 0);
-
             if(bytesSent<0) {
                 return 0;
             }
