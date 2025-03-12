@@ -2374,31 +2374,49 @@ BOOL CALLBACK PassChangeDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
                         break;
                     }
                     GetWindowText(GetDlgItem(hwnd,IDC_OLDPASSWORDEDIT),buffer,65535);
-                    tempOldPassword=buffer;
-                    GetWindowText(GetDlgItem(hwnd,IDC_NEWPASSWORDEDIT),buffer,65535);
-                    tempNewPassword=buffer;
-                    GetWindowText(GetDlgItem(hwnd,IDC_NEWPSREPEATEDIT),buffer,65535);
-                    tempSecNewPassword=buffer;
-                    if(tempNewPassword==tempSecNewPassword) {
-                        if(tempOldPassword==auxCredentials->password) {
-                            userEdit_LockAllButtons(hwnd);
-                            result=noter_changeUserPassword(connectionSettings,*auxCredentials,(char*)tempNewPassword.c_str(),buffer);
-                            userEdit_UnlockAllButtons(hwnd);
-                            if(result>=0) {
-                                auxCredentials->password=tempNewPassword;
-                                MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_PASSWORD_CHANGED),getStringFromTable(IDS_APPNAME,1),MB_ICONINFORMATION | MB_OK);
-                                EndDialog(hwnd,IDOK);
-                            }
-                            else {
-                                MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_APPNAME,1), MB_ICONEXCLAMATION | MB_OK);
-                            }
-                        }
-                        else {
-                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
-                        }
+                    trimChar(buffer);
+                    if(buffer[0]==0) {
+                        MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
                     }
                     else {
-                        MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_PASSWORDS_NO_MATCH),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
+                        tempOldPassword=buffer;
+                        GetWindowText(GetDlgItem(hwnd,IDC_NEWPASSWORDEDIT),buffer,65535);
+                        trimChar(buffer);
+                        if(buffer[0]==0) {
+                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
+                        }
+                        else {
+                            tempNewPassword=buffer;
+                            GetWindowText(GetDlgItem(hwnd,IDC_NEWPSREPEATEDIT),buffer,65535);
+                            trimChar(buffer);
+                            if(buffer[0]==0) {
+                                MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
+                            }
+                            else {
+                                tempSecNewPassword=buffer;
+                                if(tempNewPassword==tempSecNewPassword) {
+                                    if(tempOldPassword==auxCredentials->password) {
+                                        userEdit_LockAllButtons(hwnd);
+                                        result=noter_changeUserPassword(connectionSettings,*auxCredentials,(char*)tempNewPassword.c_str(),buffer);
+                                        userEdit_UnlockAllButtons(hwnd);
+                                        if(result>=0) {
+                                            auxCredentials->password=tempNewPassword;
+                                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_PASSWORD_CHANGED),getStringFromTable(IDS_APPNAME,1),MB_ICONINFORMATION | MB_OK);
+                                            EndDialog(hwnd,IDOK);
+                                        }
+                                        else {
+                                            MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_APPNAME,1), MB_ICONEXCLAMATION | MB_OK);
+                                        }
+                                    }
+                                    else {
+                                        MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
+                                    }
+                                }
+                                else {
+                                    MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_PASSWORDS_NO_MATCH),getStringFromTable(IDS_APPNAME,1),MB_ICONEXCLAMATION | MB_OK);
+                                }
+                            }
+                        }
                     }
                     break;
                 case IDCANCEL:
