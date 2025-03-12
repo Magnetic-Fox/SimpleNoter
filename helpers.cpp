@@ -8,7 +8,7 @@ bool checkIfInt(char* input) {
         }
         ++x;
     }
-    return true;
+    return input[0]!=0;
 }
 
 unsigned int getState(HWND hwnd) {

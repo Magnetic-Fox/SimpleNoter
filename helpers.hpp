@@ -53,6 +53,8 @@ void inline storeCredentialsReference(NOTER_CREDENTIALS*);
 void inline storeGlobalHWNDReference(HWND*);
 void inline storeWindowMemoryReference(WINDOWMEMORY*);
 void inline setProgress(HWND, int, int, unsigned short int);
+std::string inline trim(std::string);
+void inline trimChar(char*);
 
 void inline lockExitButton(HWND hwnd) {
     EnableWindow(GetDlgItem(hwnd,IDB_EXIT),false);
@@ -244,6 +246,17 @@ void inline setProgress(HWND dlgHwnd, int dlgItem, int dlgItemRelative, unsigned
     GetWindowRect(GetDlgItem(dlgHwnd,dlgItemRelative),&rect);
     GetWindowRect(GetDlgItem(dlgHwnd,dlgItem),&rect2);
     SetWindowPos(GetDlgItem(dlgHwnd,dlgItem),NULL,0,0,(unsigned int)((rect.right-rect.left-(2*(rect2.left-rect.left)))*(progress/100.0)),16,SWP_NOMOVE | SWP_NOZORDER);
+    return;
+}
+
+std::string inline trim(std::string input) {
+    input.erase(input.find_last_not_of(' ')+1);
+    input.erase(0, input.find_first_not_of(' '));
+    return input;
+}
+
+void inline trimChar(char* array) {
+    strcpy(array,trim((std::string)array).c_str());
     return;
 }
 
