@@ -249,6 +249,7 @@ void inline setProgress(HWND dlgHwnd, int dlgItem, int dlgItemRelative, unsigned
     return;
 }
 
+// Based on nice code found on Stack Overflow
 std::string inline trim(std::string input) {
     input.erase(input.find_last_not_of(' ')+1);
     input.erase(0, input.find_first_not_of(' '));
