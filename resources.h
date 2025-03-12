@@ -341,5 +341,7 @@
 #define IDS_STRING_LIB_NO                   3117
 #define IDS_STRING_LIB_REVISION             3118
 #define IDS_STRING_LIB_AUTHOR               3119
+#define IDS_STRING_MSG_WRONG_SERVER_ADDRESS 3120
+#define IDS_STRING_MSG_WRONG_SHARE          3121
 
 #endif

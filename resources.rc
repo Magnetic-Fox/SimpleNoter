@@ -1,8 +1,8 @@
 #include "resources.h"
 
 VS_VERSION VERSIONINFO
-FILEVERSION 0, 8, 3, 0
-PRODUCTVERSION 0, 8, 3, 0
+FILEVERSION 0, 8, 4, 0
+PRODUCTVERSION 0, 8, 4, 0
 FILETYPE 0x1L
 BEGIN
     BLOCK "StringFileInfo"
@@ -10,14 +10,14 @@ BEGIN
         BLOCK "041504e2"
         BEGIN
             VALUE "CompanyName",        "Magnetic-Fox\0"
-            VALUE "FileVersion",        "0.83\0"
+            VALUE "FileVersion",        "0.84\0"
             VALUE "FileDescription",    "Simple Noter\0"
-            VALUE "InternalName",       "SNotr083.exe\0"
+            VALUE "InternalName",       "SNotr084.exe\0"
             VALUE "LegalCopyright",     "©2021-2025 Magnetic-Fox\0"
             VALUE "LegalTrademarks",    "Noter™\0"
             VALUE "OriginalFilename",   "SimpleNoter.exe\0"
-            VALUE "ProductName",        "Simple Noter v0.83\0"
-            VALUE "ProductVersion",     "0.83\0"
+            VALUE "ProductName",        "Simple Noter v0.84\0"
+            VALUE "ProductVersion",     "0.84\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -377,8 +377,8 @@ END
 STRINGTABLE DISCARDABLE
 BEGIN
     IDS_HELPFILE                        "SNOTER08.HLP"
-    IDS_APPNAME                         "Simple Noter v0.83"
-    IDS_USER_AGENT                      "SimpleNoter/0.83"
+    IDS_APPNAME                         "Simple Noter v0.84"
+    IDS_USER_AGENT                      "SimpleNoter/0.84"
     IDS_STRING_BUILTIN_LANGUAGE         "Polski (wbudowany)"
     IDS_STRING_NEW_NOTE                 "~ Nowa notatka ~ - "
     IDS_STRING_WRONG_RESPONSE           "Nie uda³o siê po³¹czyæ z serwerem."
@@ -496,4 +496,6 @@ BEGIN
     IDS_STRING_LIB_NO                   "NIE"
     IDS_STRING_LIB_REVISION             "Data rewizji:"
     IDS_STRING_LIB_AUTHOR               "Autor biblioteki:"
+    IDS_STRING_MSG_WRONG_SERVER_ADDRESS "Nieprawid³owy adres serwera."
+    IDS_STRING_MSG_WRONG_SHARE          "Nieprawid³owy udzia³."
 END
