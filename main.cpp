@@ -1914,7 +1914,7 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
     // Local variables
     USER_INFO userInfo;
     long int result;
-    std::string tempString, iniFile;
+    std::string tempString, iniFile, username;
     // Switch section
     switch(msg) {
         case WM_INITDIALOG:
@@ -1965,15 +1965,31 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                     }
                     if(editsChanged) {
                         GetWindowText(GetDlgItem(hwnd,IDC_USERNAMEEDIT),buffer,65535);
-                        credentials.username=buffer;
-                        GetWindowText(GetDlgItem(hwnd,IDC_PASSWORDEDIT),buffer,65535);
-                        credentials.password=buffer;
-                        GetModuleFileName(GetWindowWord(hwnd,GWW_HINSTANCE),buffer,32767);
-                        iniFile=getDefaultIniFile(buffer);
-                        saveCredentials(credentials,(char*)iniFile.c_str());
-                        EnableWindow(GetDlgItem(GetParent(hwnd),IDB_DOWNLOAD),true);
+                        trimChar(buffer);
+                        if(buffer[0]==0) {
+                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_USERNAME),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                        }
+                        else {
+                            username=buffer;
+                            GetWindowText(GetDlgItem(hwnd,IDC_PASSWORDEDIT),buffer,65535);
+                            trimChar(buffer);
+                            if(buffer[0]==0) {
+                                MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                            }
+                            else {
+                                credentials.username=username;
+                                credentials.password=buffer;
+                                GetModuleFileName(GetWindowWord(hwnd,GWW_HINSTANCE),buffer,32767);
+                                iniFile=getDefaultIniFile(buffer);
+                                saveCredentials(credentials,(char*)iniFile.c_str());
+                                EnableWindow(GetDlgItem(GetParent(hwnd),IDB_DOWNLOAD),true);
+                                EndDialog(hwnd,IDOK);
+                            }
+                        }
                     }
-                    EndDialog(hwnd,IDOK);
+                    else {
+                        EndDialog(hwnd,IDOK);
+                    }
                     break;
                 case IDCANCEL:
                     if(!IsWindowEnabled(GetDlgItem(hwnd,IDCANCEL))) {
@@ -2004,41 +2020,53 @@ BOOL CALLBACK CredsSettDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
                     }
                     if(noter_connectionSettingsAvailable(connectionSettings)) {
                         GetWindowText(GetDlgItem(hwnd,IDC_USERNAMEEDIT),buffer,65535);
-                        tempCredentials.username=buffer;
-                        GetWindowText(GetDlgItem(hwnd,IDC_PASSWORDEDIT),buffer,65535);
-                        tempCredentials.password=buffer;
-                        if(noter_credentialsAvailable(tempCredentials)) {
-                            credentials_LockAllButtons(hwnd);
-                            result=noter_getUserInfo(connectionSettings,tempCredentials,buffer,userInfo);
-                            credentials_UnlockAllButtons(hwnd);
-                            if(result>=0) {
-                                SetWindowText(GetDlgItem(hwnd,IDC_USERIDSTATIC),            (char*)IntToStr(userInfo.ID).c_str());
-                                SetWindowText(GetDlgItem(hwnd,IDC_USERREGDATESTATIC),       (char*)userInfo.dateRegistered.c_str());
-                                SetWindowText(GetDlgItem(hwnd,IDC_USERREGUSINGSTATIC),      (char*)userInfo.userAgent.c_str());
-                                SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODSTATIC),       (char*)userInfo.lastChanged.c_str());
-                                SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODUSINGSTATIC),  (char*)userInfo.lastUserAgent.c_str());
-                                if(editsChanged) {
-                                    useTestCredentials=true;
-                                }
-                                EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON), true);
-                                EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),true);
-                                if(lParam!=IDC_REGISTERBUTTON) {
-                                    MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_LOGIN_SUCCESSFUL),getStringFromTable(IDS_STRING_INFORMATION,1),MB_ICONINFORMATION | MB_OK);
-                                }
-                            }
-                            else {
-                                SetWindowText(GetDlgItem(hwnd,IDC_USERIDSTATIC),            getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                SetWindowText(GetDlgItem(hwnd,IDC_USERREGDATESTATIC),       getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                SetWindowText(GetDlgItem(hwnd,IDC_USERREGUSINGSTATIC),      getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODSTATIC),       getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODUSINGSTATIC),  getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
-                                EnableWindow( GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),         false);
-                                EnableWindow( GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),        false);
-                                MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
-                            }
+                        trimChar(buffer);
+                        if(buffer[0]==0) {
+                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_USERNAME),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
                         }
                         else {
-                            MessageBox(hwnd,getStringFromTable(IDS_STRING_NO_CREDENTIALS),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                            tempCredentials.username=buffer;
+                            GetWindowText(GetDlgItem(hwnd,IDC_PASSWORDEDIT),buffer,65535);
+                            trimChar(buffer);
+                            if(buffer[0]==0) {
+                                MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_WRONG_PASSWORD),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                            }
+                            else {
+                                tempCredentials.password=buffer;
+                                if(noter_credentialsAvailable(tempCredentials)) {
+                                    credentials_LockAllButtons(hwnd);
+                                    result=noter_getUserInfo(connectionSettings,tempCredentials,buffer,userInfo);
+                                    credentials_UnlockAllButtons(hwnd);
+                                    if(result>=0) {
+                                        SetWindowText(GetDlgItem(hwnd,IDC_USERIDSTATIC),            (char*)IntToStr(userInfo.ID).c_str());
+                                        SetWindowText(GetDlgItem(hwnd,IDC_USERREGDATESTATIC),       (char*)userInfo.dateRegistered.c_str());
+                                        SetWindowText(GetDlgItem(hwnd,IDC_USERREGUSINGSTATIC),      (char*)userInfo.userAgent.c_str());
+                                        SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODSTATIC),       (char*)userInfo.lastChanged.c_str());
+                                        SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODUSINGSTATIC),  (char*)userInfo.lastUserAgent.c_str());
+                                        if(editsChanged) {
+                                            useTestCredentials=true;
+                                        }
+                                        EnableWindow(GetDlgItem(hwnd,IDC_ACCDELETEBUTTON), true);
+                                        EnableWindow(GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),true);
+                                        if(lParam!=IDC_REGISTERBUTTON) {
+                                            MessageBox(hwnd,getStringFromTable(IDS_STRING_MSG_LOGIN_SUCCESSFUL),getStringFromTable(IDS_STRING_INFORMATION,1),MB_ICONINFORMATION | MB_OK);
+                                        }
+                                    }
+                                    else {
+                                        SetWindowText(GetDlgItem(hwnd,IDC_USERIDSTATIC),            getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                        SetWindowText(GetDlgItem(hwnd,IDC_USERREGDATESTATIC),       getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                        SetWindowText(GetDlgItem(hwnd,IDC_USERREGUSINGSTATIC),      getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                        SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODSTATIC),       getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                        SetWindowText(GetDlgItem(hwnd,IDC_USERLASTMODUSINGSTATIC),  getStringFromTable(IDS_STRING_NOT_LOGGED_IN));
+                                        EnableWindow( GetDlgItem(hwnd,IDC_ACCDELETEBUTTON),         false);
+                                        EnableWindow( GetDlgItem(hwnd,IDC_PASSCHANGEBUTTON),        false);
+                                        MessageBox(hwnd,(char*)noter_getAnswerString(result).c_str(),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                                    }
+                                }
+                                else {
+                                    MessageBox(hwnd,getStringFromTable(IDS_STRING_NO_CREDENTIALS),getStringFromTable(IDS_STRING_ERROR,1),MB_ICONEXCLAMATION | MB_OK);
+                                }
+                            }
                         }
                     }
                     else {
