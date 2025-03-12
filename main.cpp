@@ -1702,7 +1702,12 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                         SetTextColor(hdc,getBrushColor(g_hBrushWinText));
                     }
                     SetBkMode(hdc,TRANSPARENT);
-                    return (LRESULT)g_hBrushBtnFace;
+                    if(Ctl3dEnabled() && mainSettings.use3DControls && mainSettings.use3DDialogs) {
+                        return (LRESULT)g_hBrushBtnFace;
+                    }
+                    else {
+                        return (LRESULT)g_hBrushWindow;
+                    }
                 }
             }
             break;
