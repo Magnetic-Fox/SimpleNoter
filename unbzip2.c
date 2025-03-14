@@ -2,7 +2,8 @@
 // Open Watcom for Win16 target. Original code has been remade
 // as a "ready to use" library for decompressing data arrays.
 
-// This (ugly) patched version by Magnetic-Fox, 16th March 2024.
+// This (ugly) patched version by Magnetic-Fox, 16th March 2024
+// and 14th March 2025.
 
 // IMPORTANT: THIS IS NOT AN ORIGINAL CODE OF BZIP2 NOR I'M
 // THE AUTHOR OF THIS WONDERFUL COMPRESSION/DECOMPRESSION TOOL!
@@ -119,6 +120,8 @@ UInt32  dstBufferPos;
 
 UInt32  srcBufferMax;
 UInt32  dstBufferMax;
+
+static short int error;
 
 typedef struct {
         Int32 ll;
@@ -424,12 +427,34 @@ void setDecompressStructureSizes(Int32 newSize100k) {
         Int32 n = 100000 * newSize100k;
         ll16    = halloc ( n, sizeof(UInt16) );
         ll4     = halloc ( ((n+1) >> 1), sizeof(UChar) );
+        if((ll16==NULL) || (ll4==NULL)) {
+            if(ll16==NULL) {
+                hfree(ll16);
+            }
+            if(ll4==NULL) {
+                hfree(ll4);
+            }
+            error=1;
+            return;
+        }
     }
     else {
         Int32 n = 100000 * newSize100k;
         ll8     = halloc ( n, sizeof(UChar) );
         tt      = halloc ( n, sizeof(Int32) );
+        if((ll8==NULL) || (tt==NULL)) {
+            if(ll8==NULL) {
+                hfree(ll8);
+            }
+            if(tt==NULL) {
+                hfree(tt);
+            }
+            error=1;
+            return;
+        }
     }
+    error=0;
+    return;
 }
 
 void makeMaps(void) {
@@ -1308,6 +1333,9 @@ Bool uncompressStream(UChar *zStream, UChar *stream) {
     }
 
     setDecompressStructureSizes ( magic4 - '0' );
+    if(error) {
+        return False;
+    }
     computedCombinedCRC = 0;
 
     currBlockNo = 0;
@@ -1349,7 +1377,7 @@ Bool uncompressStream(UChar *zStream, UChar *stream) {
     return True;
 }
 
-// Okay, it's time for my code ;-)
+// Okay, it's time for 100% my code ;-)
 Bool initialize(void) {
     UInt32 temp;
     
@@ -1360,7 +1388,7 @@ Bool initialize(void) {
     tt            = NULL;
     block         = NULL;
     zptr          = NULL;
-    smallMode     = False;
+    smallMode     = True; // as far as I can see, everything works much better using small mode
     blockSize100k = 0;
     bsStream      = NULL;
     workFactor    = 30;
@@ -1461,6 +1489,21 @@ void freeAll(void) {
     if(minLens!=NULL) {
         hfree(minLens);
     }
+
+    if(ll16!=NULL) {
+        hfree(ll16);
+    }
+    if(ll4!=NULL) {
+        hfree(ll4);
+    }
+    if(ll8!=NULL) {
+        hfree(ll8);
+    }
+    if(tt!=NULL) {
+        hfree(tt);
+    }
+    
+    return;
 }
 
 void setSourceBufferSize(UInt32 size) {
@@ -1497,4 +1540,8 @@ UInt32 uncompressDataInPlace(UChar *buffer, UInt32 inputSize, UInt32 outputSize)
         hfree(tempBuffer);
         return temp;
     }
+}
+
+Bool wasError(void) {
+    return error==1;
 }
