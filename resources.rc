@@ -1,8 +1,8 @@
 #include "resources.h"
 
 VS_VERSION VERSIONINFO
-FILEVERSION 0, 8, 4, 0
-PRODUCTVERSION 0, 8, 4, 0
+FILEVERSION 0, 8, 5, 0
+PRODUCTVERSION 0, 8, 5, 0
 FILETYPE 0x1L
 BEGIN
     BLOCK "StringFileInfo"
@@ -10,14 +10,14 @@ BEGIN
         BLOCK "041504e2"
         BEGIN
             VALUE "CompanyName",        "Magnetic-Fox\0"
-            VALUE "FileVersion",        "0.84\0"
+            VALUE "FileVersion",        "0.85\0"
             VALUE "FileDescription",    "Simple Noter\0"
-            VALUE "InternalName",       "SNotr084.exe\0"
+            VALUE "InternalName",       "SNotr085.exe\0"
             VALUE "LegalCopyright",     "©2021-2025 Magnetic-Fox\0"
             VALUE "LegalTrademarks",    "Noter™\0"
             VALUE "OriginalFilename",   "SimpleNoter.exe\0"
-            VALUE "ProductName",        "Simple Noter v0.84\0"
-            VALUE "ProductVersion",     "0.84\0"
+            VALUE "ProductName",        "Simple Noter v0.85\0"
+            VALUE "ProductVersion",     "0.85\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -152,7 +152,7 @@ BEGIN
     LTEXT           "utf8_decode.c ©2005 JSON.org",IDC_UTF8DECODESTATIC,36,95,149,8
     LTEXT           "utf8_encode.cpp © Ondøej Hruška",IDC_UTF8ENCODESTATIC,
                     36,105,149,8
-    LTEXT           "bzip2.c ©1996, 1997 Julian Seward\n    with patch ©2024 Magnetic-Fox",
+    LTEXT           "bzip2.c ©1996, 1997 Julian Seward\n    with patch ©2024-2025 Magnetic-Fox",
                     IDC_BZIP2STATIC,36,115,149,16
     LTEXT           "©2021-2025 Bart³omiej ""Magnetic-Fox"" Wêgrzyn",
                     IDC_AUTHORCOPYRIGHTSTATIC,28,143,175,8
@@ -377,8 +377,8 @@ END
 STRINGTABLE DISCARDABLE
 BEGIN
     IDS_HELPFILE                        "SNOTER08.HLP"
-    IDS_APPNAME                         "Simple Noter v0.84"
-    IDS_USER_AGENT                      "SimpleNoter/0.84"
+    IDS_APPNAME                         "Simple Noter v0.85"
+    IDS_USER_AGENT                      "SimpleNoter/0.85"
     IDS_STRING_BUILTIN_LANGUAGE         "Polski (wbudowany)"
     IDS_STRING_NEW_NOTE                 "~ Nowa notatka ~ - "
     IDS_STRING_WRONG_RESPONSE           "Nie uda³o siê po³¹czyæ z serwerem."
