@@ -55,6 +55,8 @@ void inline storeWindowMemoryReference(WINDOWMEMORY*);
 void inline setProgress(HWND, int, int, unsigned short int);
 std::string inline trim(std::string);
 void inline trimChar(char*);
+void inline updateMainWindowControls(HWND *hwnd);
+void inline updateEditWindowControls(HWND *hwnd);
 
 void inline lockExitButton(HWND hwnd) {
     EnableWindow(GetDlgItem(hwnd,IDB_EXIT),false);
@@ -258,6 +260,60 @@ std::string inline trim(std::string input) {
 
 void inline trimChar(char* array) {
     strcpy(array,trim((std::string)array).c_str());
+    return;
+}
+
+void inline updateMainWindowControls(HWND *hwnd) {
+    InvalidateRect(GetDlgItem(*hwnd,IDB_DOWNLOAD),   NULL,   FALSE);
+    InvalidateRect(GetDlgItem(*hwnd,IDB_CREATE),     NULL,   FALSE);
+    InvalidateRect(GetDlgItem(*hwnd,IDB_OPEN),       NULL,   FALSE);
+    InvalidateRect(GetDlgItem(*hwnd,IDB_DELETE),     NULL,   FALSE);
+    InvalidateRect(GetDlgItem(*hwnd,IDB_EXIT),       NULL,   FALSE);
+    InvalidateRect(GetDlgItem(*hwnd,IDC_GRAYBOX),    NULL,   TRUE);
+    InvalidateRect(GetDlgItem(*hwnd,ID_LISTBOX),     NULL,   FALSE);
+    InvalidateRect(GetDlgItem(*hwnd,IDC_SID),        NULL,   TRUE);
+    InvalidateRect(GetDlgItem(*hwnd,IDC_LASTCHANGED),NULL,   TRUE);
+    InvalidateRect(GetDlgItem(*hwnd,IDC_NOTEID),     NULL,   TRUE);
+    InvalidateRect(GetDlgItem(*hwnd,IDC_NOTELASTMOD),NULL,   TRUE);
+    InvalidateRect(GetDlgItem(*hwnd,IDC_STATUS),     NULL,   TRUE);
+
+    UpdateWindow(GetDlgItem(*hwnd,IDB_DOWNLOAD));
+    UpdateWindow(GetDlgItem(*hwnd,IDB_CREATE));
+    UpdateWindow(GetDlgItem(*hwnd,IDB_OPEN));
+    UpdateWindow(GetDlgItem(*hwnd,IDB_DELETE));
+    UpdateWindow(GetDlgItem(*hwnd,IDB_EXIT));
+    UpdateWindow(GetDlgItem(*hwnd,IDC_GRAYBOX));
+    UpdateWindow(GetDlgItem(*hwnd,ID_LISTBOX));
+    UpdateWindow(GetDlgItem(*hwnd,IDC_SID));
+    UpdateWindow(GetDlgItem(*hwnd,IDC_LASTCHANGED));
+    UpdateWindow(GetDlgItem(*hwnd,IDC_NOTEID));
+    UpdateWindow(GetDlgItem(*hwnd,IDC_NOTELASTMOD));
+    UpdateWindow(GetDlgItem(*hwnd,IDC_STATUS));
+    
+    return;
+}
+
+void inline updateEditWindowControls(HWND *hwnd) {
+    InvalidateRect(GetDlgItem(*hwnd,IDC_EDIT_SUBJECT),      NULL,   TRUE);
+    InvalidateRect(GetDlgItem(*hwnd,IDE_EDIT_SUBJECT),      NULL,   FALSE);
+    InvalidateRect(GetDlgItem(*hwnd,IDC_EDIT_ENTRY),        NULL,   TRUE);
+    InvalidateRect(GetDlgItem(*hwnd,IDE_EDIT_ENTRY),        NULL,   TRUE);
+    InvalidateRect(GetDlgItem(*hwnd,IDB_EDIT_ADDUP),        NULL,   FALSE);
+    InvalidateRect(GetDlgItem(*hwnd,IDB_EDIT_PROPERTIES),   NULL,   FALSE);
+    InvalidateRect(GetDlgItem(*hwnd,IDB_EDIT_CLOSE),        NULL,   FALSE);
+    InvalidateRect(GetDlgItem(*hwnd,IDC_EDIT_GRAYBOX),      NULL,   TRUE);
+    InvalidateRect(GetDlgItem(*hwnd,IDC_EDIT_STATUS),       NULL,   TRUE);
+
+    UpdateWindow(GetDlgItem(*hwnd,IDC_EDIT_SUBJECT));
+    UpdateWindow(GetDlgItem(*hwnd,IDE_EDIT_SUBJECT));
+    UpdateWindow(GetDlgItem(*hwnd,IDC_EDIT_ENTRY));
+    UpdateWindow(GetDlgItem(*hwnd,IDE_EDIT_ENTRY));
+    UpdateWindow(GetDlgItem(*hwnd,IDB_EDIT_ADDUP));
+    UpdateWindow(GetDlgItem(*hwnd,IDB_EDIT_PROPERTIES));
+    UpdateWindow(GetDlgItem(*hwnd,IDB_EDIT_CLOSE));
+    UpdateWindow(GetDlgItem(*hwnd,IDC_EDIT_GRAYBOX));
+    UpdateWindow(GetDlgItem(*hwnd,IDC_EDIT_STATUS));
+    
     return;
 }
 
