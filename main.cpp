@@ -56,7 +56,7 @@ long int                    mainLastResult=0;
 long int                    *minID, *maxID;
 unsigned int                ctlRegs=0;
 std::string                 *minLM, *maxLM;
-bool                        check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged, cpHover=false, cpClick=false;
+bool                        check3DChanged, editsChanged, editsChanged2, useTestCredentials, firstOptions=false, codePageChanged, cpHover=false, cpClick=false, ctlDialog=false;
 char                        buffer[65536];
 
 //////////////////////////////////////
@@ -452,6 +452,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 ctlRegs=ctlRegs & ~(CTL3D_COMBOS);
             }
             Ctl3dSubclassDlg(hwnd,ctlRegs);
+            ctlDialog = mainSettings.use3DDialogs;
             if(mainSettings.use3DDialogs) {
                 Ctl3dAutoSubclass(hInstance);
             }
@@ -711,7 +712,8 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                                 tempString=tempString+(std::string)getStringFromTable(IDS_STRING_SPACED_COMPRESSION)+IntToStr(getCompressionRatio())+"%.";
                             }
                             SetWindowText(GetDlgItem(hwnd,IDC_STATUS),(char*)tempString.c_str());
-                        } else {
+                        }
+                        else {
                             SetWindowText(GetDlgItem(hwnd,IDC_STATUS),getStringFromTable(IDS_STRING_INFO_OK));
                         }
                     }
@@ -728,6 +730,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         EnableWindow(GetDlgItem(hwnd,IDB_DELETE),   false);
                     }
                     freeSelectionBuffer(selection);
+                    updateMainWindowControls(&hwnd);
                     break;
                 // Create button
                 case IDB_CREATE:
@@ -885,24 +888,32 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
         case WM_SIZE:
             width= LOWORD(lParam);
             height=HIWORD(lParam);
+            
             if(width<240) {
                 width=240;
             }
             if(height<240) {
                 height=240;
             }
+            
             if(mainSettings.use3DLists) {
                 SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),   NULL,0,0,(int)width,        (int)(height-88),   SWP_NOZORDER | SWP_NOMOVE);
             }
             else {
                 SetWindowPos(GetDlgItem(hwnd,ID_LISTBOX),   NULL,0,0,(int)width,        (int)(height-86),   SWP_NOZORDER | SWP_NOMOVE);
             }
+            
             SetWindowPos(GetDlgItem(hwnd,IDC_GRAYBOX),      NULL,0,0,(int)(width-400),  21,                 SWP_NOZORDER | SWP_NOMOVE);
             SetWindowPos(GetDlgItem(hwnd,IDC_SID),          NULL,8,  (int)(height-57),  0,0,                SWP_NOZORDER | SWP_NOSIZE);
             SetWindowPos(GetDlgItem(hwnd,IDC_LASTCHANGED),  NULL,8,  (int)(height-40),  0,0,                SWP_NOZORDER | SWP_NOSIZE);
             SetWindowPos(GetDlgItem(hwnd,IDC_NOTEID),       NULL,137,(int)(height-57),  (int)(width-146),16,SWP_NOZORDER);
             SetWindowPos(GetDlgItem(hwnd,IDC_NOTELASTMOD),  NULL,137,(int)(height-40),  (int)(width-146),16,SWP_NOZORDER);
             SetWindowPos(GetDlgItem(hwnd,IDC_STATUS),       NULL,0,  (int)(height-16),  (int)width,16,      SWP_NOZORDER);
+
+            if(IsWindowEnabled(GetDlgItem(hwnd,IDB_DOWNLOAD))) {
+                updateMainWindowControls(&hwnd);
+            }
+            
             break;
         case WM_GETMINMAXINFO:
             lpMMI=(MINMAXINFO*)lParam;
@@ -1294,12 +1305,14 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
         case WM_SIZE:
             width= LOWORD(lParam);
             height=HIWORD(lParam);
+            
             if(width<240) {
                 width=240;
             }
             if(height<240) {
                 height=240;
             }
+            
             SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_SUBJECT),     NULL,0,0,(int)width,16,                         SWP_NOZORDER | SWP_NOMOVE);
             SetWindowPos(GetDlgItem(hwnd,IDE_EDIT_SUBJECT),     NULL,0,0,(int)width,24,                         SWP_NOZORDER | SWP_NOMOVE);
             SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_ENTRY),       NULL,0,0,(int)width,16,                         SWP_NOZORDER | SWP_NOMOVE);
@@ -1309,6 +1322,9 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
             SetWindowPos(GetDlgItem(hwnd,IDB_EDIT_CLOSE),       NULL,192,(int)(height-37),0,0,                  SWP_NOZORDER | SWP_NOSIZE);
             SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_GRAYBOX),     NULL,288,(int)(height-37),(int)(width-288),21,  SWP_NOZORDER);
             SetWindowPos(GetDlgItem(hwnd,IDC_EDIT_STATUS),      NULL,0,  (int)(height-16),(int)width,16,        SWP_NOZORDER);
+
+            updateEditWindowControls(&hwnd);
+            
             break;
         case WM_GETMINMAXINFO:
             lpMMI=(MINMAXINFO*)lParam;
@@ -1702,7 +1718,7 @@ BOOL CALLBACK PreferencesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
                         SetTextColor(hdc,getBrushColor(g_hBrushWinText));
                     }
                     SetBkMode(hdc,TRANSPARENT);
-                    if(Ctl3dEnabled() && mainSettings.use3DControls && mainSettings.use3DDialogs) {
+                    if(Ctl3dEnabled() && ctlDialog) {
                         return (LRESULT)g_hBrushBtnFace;
                     }
                     else {
