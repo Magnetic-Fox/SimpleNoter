@@ -548,6 +548,12 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                         SetBkMode((HDC)wParam, TRANSPARENT);
                         return g_hBrushBtnFace;
                     }
+                    else {
+                        if(LOWORD(lParam)==GetDlgItem(hwnd,IDC_STATUS)) {
+                            SetBkMode((HDC)wParam, TRANSPARENT);
+                            return g_hBrushWindow;
+                        }
+                    }
                     break;
                 case CTLCOLOR_BTN:
                     SetBkMode((HDC)wParam, TRANSPARENT);
@@ -989,6 +995,12 @@ LRESULT CALLBACK EditWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     if((LOWORD(lParam)!=GetDlgItem(hwnd,IDC_EDIT_GRAYBOX)) && (LOWORD(lParam)!=GetDlgItem(hwnd,IDC_EDIT_STATUS))) {
                         SetBkMode((HDC)wParam, TRANSPARENT);
                         return g_hBrushBtnFace;
+                    }
+                    else {
+                        if(LOWORD(lParam)==GetDlgItem(hwnd,IDC_EDIT_STATUS)) {
+                            SetBkMode((HDC)wParam, TRANSPARENT);
+                            return g_hBrushWindow;
+                        }
                     }
                     break;
                 case CTLCOLOR_BTN:
